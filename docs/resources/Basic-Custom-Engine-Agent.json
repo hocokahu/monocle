@@ -1,0 +1,36 @@
+[
+    {
+        "name": "workflow",
+        "context": {
+            "trace_id": "5a3028632543e0cad299215b8485e6e6",
+            "span_id": "71f6d9121a2f9452",
+            "trace_flags": 1
+        },
+        "kind": 0,
+        "parent_id": "None",
+        "start_time": "2025-06-12T04:24:05.392000Z",
+        "end_time": "2025-06-12T04:24:06.390000Z",
+        "status": {
+            "status_code": "OK",
+            "description": ""
+        },
+        "attributes": {
+            "span.type": "workflow",
+            "entity.1.name": "teams-ai-bot",
+            "entity.1.type": "workflow.generic",
+            "entity.2.type": "app_hosting.generic",
+            "entity.2.name": "generic",
+            "monocle_apptrace.version": "0.2.0-beta.1",
+            "monocle_apptrace.language": "js",
+            "span.source": "async /Users/quanghoc/AgentsToolkitProjects/basic-custom-engine-agent/src/index.ts:31",
+            "workflow.name": "teams-ai-bot"
+        },
+        "events": [],
+        "links": [],
+        "resource": {
+            "attributes": {
+                "service.name": "teams-ai-bot"
+            }
+        }
+    }
+]

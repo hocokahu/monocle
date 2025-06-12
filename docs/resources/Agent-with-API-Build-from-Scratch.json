@@ -1,0 +1,410 @@
+[{
+    "name": "openai.resources.chat.completions.completions.AsyncCompletions",
+    "context": {
+        "trace_id": "0x11de2eff7cc56e2c8a1505dd974398eb",
+        "span_id": "0x08576ef11390e2f6",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xae46fbee622934aa",
+    "start_time": "2025-06-11T21:42:05.706607Z",
+    "end_time": "2025-06-11T21:42:07.071069Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.0",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/AgentsToolkitProjects/teams-ai-custom-api-1/.venv/lib/python3.11/site-packages/teams/ai/models/openai_model.py:237",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "inference.modelapi",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.models.openai_model.OpenAIModel",
+    "context": {
+        "trace_id": "0x11de2eff7cc56e2c8a1505dd974398eb",
+        "span_id": "0xae46fbee622934aa",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x752c1fc27a9ffc91",
+    "start_time": "2025-06-11T21:42:05.703710Z",
+    "end_time": "2025-06-11T21:42:07.072038Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.0",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/AgentsToolkitProjects/teams-ai-custom-api-1/.venv/lib/python3.11/site-packages/teams/ai/clients/llm_client.py:217",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "inference.framework",
+        "entity.1.type": "inference.azure_openai",
+        "entity.1.provider_name": "okahu-openai-dev.openai.azure.com",
+        "entity.1.inference_endpoint": "https://okahu-openai-dev.openai.azure.com/openai/deployments/gpt-4o-mini/",
+        "entity.2.name": "gpt-4o-mini",
+        "entity.2.type": "model.llm.gpt-4o-mini",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 2
+    },
+    "events": [
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-11T21:42:07.070951Z",
+            "attributes": {
+                "completion_tokens": 103,
+                "prompt_tokens": 439,
+                "total_tokens": 542
+            }
+        },
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-11T21:42:07.071893Z",
+            "attributes": {
+                "input": "call mom at 3pm"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-11T21:42:07.071990Z",
+            "attributes": {
+                "status": "success",
+                "status_code": "success",
+                "response": "{\"thoughts\":{\"thought\":\"The user wants to create a task to call their mom at 3 PM.\",\"reasoning\":\"Creating a task for the user to remind them to call their mom is a straightforward request that helps them manage their time effectively.\",\"plan\":\"- Create a task titled 'Call Mom'\\n- Set the description to remind the user to call at 3 PM\"},\"action\":{\"name\":\"createTask\",\"parameters\":{\"title\":\"Call Mom\",\"description\":\"Call mom at 3 PM\"}}}"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.planners.action_planner.ActionPlanner",
+    "context": {
+        "trace_id": "0x11de2eff7cc56e2c8a1505dd974398eb",
+        "span_id": "0x752c1fc27a9ffc91",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x1b6aca50f58848fc",
+    "start_time": "2025-06-11T21:42:05.643430Z",
+    "end_time": "2025-06-11T21:42:07.089399Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.0",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/AgentsToolkitProjects/teams-ai-custom-api-1/.venv/lib/python3.11/site-packages/monocle_apptrace/instrumentation/common/wrapper.py:232",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "generic",
+        "entity.1.type": "teams.planner",
+        "entity.1.planner_type": "ActionPlanner",
+        "entity.2.model": "OpenAIModel",
+        "entity.2.tokenizer": "GPTTokenizer",
+        "entity.2.prompt_name": "planner",
+        "entity.2.validator": "MonologueAugmentation",
+        "entity.2.memory_type": "AppTurnState",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 2
+    },
+    "events": [
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-11T21:42:07.089356Z",
+            "attributes": {
+                "feedback_enabled": false
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+{
+    "name": "openai.resources.chat.completions.completions.AsyncCompletions",
+    "context": {
+        "trace_id": "0x11de2eff7cc56e2c8a1505dd974398eb",
+        "span_id": "0x7f1315aba80844ce",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x0e23661b4a4bbd84",
+    "start_time": "2025-06-11T21:42:07.103870Z",
+    "end_time": "2025-06-11T21:42:08.329720Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.0",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/AgentsToolkitProjects/teams-ai-custom-api-1/.venv/lib/python3.11/site-packages/teams/ai/models/openai_model.py:237",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "inference.modelapi",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.models.openai_model.OpenAIModel",
+    "context": {
+        "trace_id": "0x11de2eff7cc56e2c8a1505dd974398eb",
+        "span_id": "0x0e23661b4a4bbd84",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xd1ebc5d78a5de3ae",
+    "start_time": "2025-06-11T21:42:07.095590Z",
+    "end_time": "2025-06-11T21:42:08.330117Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.0",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/AgentsToolkitProjects/teams-ai-custom-api-1/.venv/lib/python3.11/site-packages/teams/ai/clients/llm_client.py:217",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "inference.framework",
+        "entity.1.type": "inference.azure_openai",
+        "entity.1.provider_name": "okahu-openai-dev.openai.azure.com",
+        "entity.1.inference_endpoint": "https://okahu-openai-dev.openai.azure.com/openai/deployments/gpt-4o-mini/",
+        "entity.2.name": "gpt-4o-mini",
+        "entity.2.type": "model.llm.gpt-4o-mini",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 2
+    },
+    "events": [
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-11T21:42:08.329684Z",
+            "attributes": {
+                "completion_tokens": 109,
+                "prompt_tokens": 582,
+                "total_tokens": 691
+            }
+        },
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-11T21:42:08.330051Z",
+            "attributes": {
+                "input": "call mom at 3pm"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-11T21:42:08.330093Z",
+            "attributes": {
+                "status": "success",
+                "status_code": "success",
+                "response": "{\"thoughts\":{\"thought\":\"I have successfully created the task to call Mom at 3 PM.\",\"reasoning\":\"The user requested to create a task, and I have fulfilled that request. Now, I should confirm the creation of the task to the user.\",\"plan\":\"- Confirm the task creation with the user\\n- Provide details of the newly created task\"},\"action\":{\"name\":\"SAY\",\"parameters\":{\"text\":\"The task 'Call Mom' has been created with the description: 'Call mom at 3 PM'.\"}}}"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.planners.action_planner.ActionPlanner",
+    "context": {
+        "trace_id": "0x11de2eff7cc56e2c8a1505dd974398eb",
+        "span_id": "0xd1ebc5d78a5de3ae",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x1b6aca50f58848fc",
+    "start_time": "2025-06-11T21:42:07.092862Z",
+    "end_time": "2025-06-11T21:42:08.340911Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.0",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/AgentsToolkitProjects/teams-ai-custom-api-1/.venv/lib/python3.11/site-packages/monocle_apptrace/instrumentation/common/wrapper.py:232",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "generic",
+        "entity.1.type": "teams.planner",
+        "entity.1.planner_type": "ActionPlanner",
+        "entity.2.model": "OpenAIModel",
+        "entity.2.tokenizer": "GPTTokenizer",
+        "entity.2.prompt_name": "planner",
+        "entity.2.validator": "MonologueAugmentation",
+        "entity.2.memory_type": "AppTurnState",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 2
+    },
+    "events": [
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-11T21:42:08.340891Z",
+            "attributes": {
+                "feedback_enabled": false
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "aiohttp.web_app.Application",
+    "context": {
+        "trace_id": "0x11de2eff7cc56e2c8a1505dd974398eb",
+        "span_id": "0x1b6aca50f58848fc",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xc9617c2bf62fd4b9",
+    "start_time": "2025-06-11T21:42:05.620078Z",
+    "end_time": "2025-06-11T21:42:08.369344Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.0",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/AgentsToolkitProjects/teams-ai-custom-api-1/.venv/lib/python3.11/site-packages/aiohttp/web_protocol.py:510",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "http.process",
+        "entity.1.method": "POST",
+        "entity.1.route": "/api/messages",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-11T21:42:08.369281Z",
+            "attributes": {}
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-11T21:42:08.369314Z",
+            "attributes": {
+                "status": "201"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "workflow",
+    "context": {
+        "trace_id": "0x11de2eff7cc56e2c8a1505dd974398eb",
+        "span_id": "0xc9617c2bf62fd4b9",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2025-06-11T21:42:05.619727Z",
+    "end_time": "2025-06-11T21:42:08.369391Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.0",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/AgentsToolkitProjects/teams-ai-custom-api-1/.venv/lib/python3.11/site-packages/aiohttp/web_protocol.py:510",
+        "span.type": "workflow",
+        "entity.1.name": "teams-ai-bot",
+        "entity.1.type": "workflow.generic",
+        "entity.2.type": "app_hosting.generic",
+        "entity.2.name": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+]

@@ -1,0 +1,299 @@
+[{
+    "name": "openai.resources.embeddings.AsyncEmbeddings",
+    "context": {
+        "trace_id": "0x2722a37a63b643a56d2129c1d21b47e9",
+        "span_id": "0xa4ca9ad21aeb4fbd",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x3955a14bff5b06de",
+    "start_time": "2025-06-12T05:34:56.586687Z",
+    "end_time": "2025-06-12T05:34:57.233143Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a3",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-search/.venv/lib/python3.11/site-packages/teams/ai/embeddings/azure_openai_embeddings.py:91",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "retrieval.modelapi",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "openai.resources.chat.completions.completions.AsyncCompletions",
+    "context": {
+        "trace_id": "0x2722a37a63b643a56d2129c1d21b47e9",
+        "span_id": "0x68e3347f47e059d6",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x3955a14bff5b06de",
+    "start_time": "2025-06-12T05:34:58.104619Z",
+    "end_time": "2025-06-12T05:34:59.418181Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a3",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-search/.venv/lib/python3.11/site-packages/teams/ai/models/openai_model.py:237",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "inference.modelapi",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.models.openai_model.OpenAIModel",
+    "context": {
+        "trace_id": "0x2722a37a63b643a56d2129c1d21b47e9",
+        "span_id": "0x3955a14bff5b06de",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x973f8541f551e122",
+    "start_time": "2025-06-12T05:34:56.422211Z",
+    "end_time": "2025-06-12T05:34:59.418746Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a3",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-search/.venv/lib/python3.11/site-packages/teams/ai/clients/llm_client.py:217",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "inference.framework",
+        "entity.1.type": "inference.azure_openai",
+        "entity.1.provider_name": "okahu-openai-dev.openai.azure.com",
+        "entity.1.inference_endpoint": "https://okahu-openai-dev.openai.azure.com/openai/deployments/gpt-4o-mini/",
+        "entity.2.name": "gpt-4o-mini",
+        "entity.2.type": "model.llm.gpt-4o-mini",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 2
+    },
+    "events": [
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-12T05:34:59.418134Z",
+            "attributes": {
+                "completion_tokens": 38,
+                "prompt_tokens": 213,
+                "total_tokens": 251
+            }
+        },
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-12T05:34:59.418649Z",
+            "attributes": {
+                "input": [
+                    "{'system': 'The following is a conversation with an AI assistant, who is an expert on answering questions over the given context.\\nResponses should be in a short journalistic style with no more than 80 words, and provide citations.\\nUse the context provided in the `<context></context>` tags as the source for your answers.\\nResponse should be a json array, list all the answers and citations. \\nIf citationTitle is not empty, citationContent mustn\\'t be empty!!!\\n# citationTitle must be a file name!!!\\nIf the answer no citation, set the citationTitle and citationContent as empty.\\nData format:\\n{\\n    \"results\":[\\n        {\\n            \"answer\":\"{$answer1}\",\\n            \"citationTitle\":\"{$citationTitle1}\",\\n            \"citationContent\":\"{$citationContent1}\"\\n        },\\n        {\\n            \"answer\":\"{$answer2}\",\\n            \"citationTitle\":\"{$citationTitle2}\",\\n            \"citationContent\":\"{$citationContent2}\"\\n        },\\n        ...\\n    ]\\n} '}",
+                    "{'user': 'hi from 10:34pm'}"
+                ]
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-12T05:34:59.418731Z",
+            "attributes": {
+                "status": "success",
+                "status_code": "success",
+                "response": "{\n    \"results\":[\n        {\n            \"answer\":\"Hello! How can I assist you today?\",\n            \"citationTitle\":\"\",\n            \"citationContent\":\"\"\n        }\n    ]\n}"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.planners.action_planner.ActionPlanner",
+    "context": {
+        "trace_id": "0x2722a37a63b643a56d2129c1d21b47e9",
+        "span_id": "0x973f8541f551e122",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x5664615ead3d4a66",
+    "start_time": "2025-06-12T05:34:56.417751Z",
+    "end_time": "2025-06-12T05:34:59.419301Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a3",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-search/.venv/lib/python3.11/site-packages/monocle_apptrace/instrumentation/common/wrapper.py:232",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "generic",
+        "entity.1.type": "teams.planner",
+        "entity.1.planner_type": "ActionPlanner",
+        "entity.2.model": "OpenAIModel",
+        "entity.2.tokenizer": "GPTTokenizer",
+        "entity.2.validator": "DefaultAugmentation",
+        "entity.2.memory_type": "TurnState",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 2
+    },
+    "events": [
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-12T05:34:59.419242Z",
+            "attributes": {
+                "feedback_enabled": false
+            }
+        },
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-12T05:34:59.419292Z",
+            "attributes": {
+                "prompt_name": "chat",
+                "prompt_template": "The following is a conversation with an AI assistant, who is an expert on answering questions over the given context.\nResponses should be in a short journalistic style with no more than 80 words, and provide citations.\nUse the context provided in the `<context></context>` tags as the source for your answers.\nResponse should be a json array, list all the answers and citations. \nIf citationTitle is not empty, citationContent mustn't be empty!!!\n# citationTitle must be a file name!!!\nIf the answer no citation, set the citationTitle and citationContent as empty.\nData format:\n{\n    \"results\":[\n        {\n            \"answer\":\"{$answer1}\",\n            \"citationTitle\":\"{$citationTitle1}\",\n            \"citationContent\":\"{$citationContent1}\"\n        },\n        {\n            \"answer\":\"{$answer2}\",\n            \"citationTitle\":\"{$citationTitle2}\",\n            \"citationContent\":\"{$citationContent2}\"\n        },\n        ...\n    ]\n} ",
+                "prompt_description": "Chat with Teams RAG"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "aiohttp.web_app.Application",
+    "context": {
+        "trace_id": "0x2722a37a63b643a56d2129c1d21b47e9",
+        "span_id": "0x5664615ead3d4a66",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x6048adcc065fb353",
+    "start_time": "2025-06-12T05:34:56.209240Z",
+    "end_time": "2025-06-12T05:34:59.437181Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a3",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-search/.venv/lib/python3.11/site-packages/aiohttp/web_protocol.py:510",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "http.process",
+        "entity.1.method": "POST",
+        "entity.1.route": "/api/messages",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-12T05:34:59.436847Z",
+            "attributes": {}
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-12T05:34:59.437144Z",
+            "attributes": {
+                "status": "201"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "workflow",
+    "context": {
+        "trace_id": "0x2722a37a63b643a56d2129c1d21b47e9",
+        "span_id": "0x6048adcc065fb353",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2025-06-12T05:34:56.208253Z",
+    "end_time": "2025-06-12T05:34:59.437255Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a3",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-search/.venv/lib/python3.11/site-packages/aiohttp/web_protocol.py:510",
+        "span.type": "workflow",
+        "entity.1.name": "teams-ai-bot",
+        "entity.1.type": "workflow.generic",
+        "entity.2.type": "app_hosting.generic",
+        "entity.2.name": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+]
