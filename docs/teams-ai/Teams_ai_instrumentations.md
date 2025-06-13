@@ -1,7 +1,11 @@
 # Teams AI Support
-## What's Supported in monocle_apptrace v0.4.0
+## What's Supported
 
-## Summary of Instrumented Method
+- Python: monocle_apptrace v0.4.0
+
+- Typescript: Monocle v0.2.0-beta.1
+
+## Summary of Instrumented Methods
 
 ### 1. Basic Custom Engine Agent (Typescript)
 
@@ -12,6 +16,7 @@
 
 **Traces**: [Basic-Custom-Engine-Agent.json](../resources/Basic-Custom-Engine-Agent.json)
 
+> This `workflow` is not useful for users because it doesn't show the details of the steps.
 
 ### 2. Basic Bot
 
@@ -52,7 +57,9 @@
 
 ![](../resources/AI-Bot-with-Azure-AI-Search.png)
 
-**Traces**: [AI-Bot-with-Azure-AI-Search.json](../resources/AI-Bot-with-Azure-AI-Search.json)
+
+**Traces**: [AI-Bot-with-Azure-AI-Search.json](../resources/AI-Bot-with-Azure-AI-Search.
+json)
 
 
 ## Code Flow
@@ -124,11 +131,50 @@ sequenceDiagram
 
 ## Instrumentation Recommendations
 
-> **Work-in-progress** - For `Agent with API Build from Scratch
+### 1. Basic Custom Engine Agent (Typescript)
+
+### 2. Basic Bot
+
+
+### 3. Agent with API Build from Scratch
 
 To gain deeper insights into the application's behavior, performance, and potential issues, we recommend instrumenting the following classes and methods. This complements the existing instrumentations on `aiohttp`, `ActionPlanner`, `OpenAIModel`, and `openai`.
 
-*Note: The exact "method" may need to be verified.*
+> Note: The exact "method" may need to be verified. This is due to the use of Template Method Pattern in Teams AI SDK.
+>
+> For example, the Moderator's review_output() is defined in various files:
+>
+> ```python
+> # Base abstract class (interface)
+> class Moderator(ABC):
+> @abstractmethod
+> async def review_output(self): pass
+>
+> # Concrete implementations
+> class DefaultModerator(Moderator):
+> async def review_output(self):
+> return plan # Simple pass-through
+>
+> class OpenAIModerator(Moderator):
+> async def review_output(self):
+> # Complex OpenAI moderation logic
+>
+> class AzureContentSafetyModerator(Moderator):
+> async def review_output(self):
+> # Complex Azure moderation logic
+> ```
+>
+> The method exists everywhere because:
+> - Moderator (base class) defines it as an abstract method that all moderators must implement
+> - Each concrete moderator class (`DefaultModerator`, `OpenAIModerator`, `AzureContentSafetyModerator`) provides its own implementation:
+> - `DefaultModerator`: Simple pass-through, no moderation
+> - `OpenAIModerator`: Uses OpenAI's moderation API
+> - `AzureContentSafetyModerator`: Uses Azure Content Safety API
+>
+> This pattern allows the Teams AI framework to:
+> - Use any moderator interchangeably (polymorphism)
+> - Ensure all moderators have the required methods
+> - Let each moderator implement its own moderation logic while maintaining a consistent interface
 
 | Class/Method                                              | Reason                                                                                                                                              | Inputs to Capture                                                                                          | Outputs to Capture                                                                                                     |
 | --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
@@ -139,3 +185,59 @@ To gain deeper insights into the application's behavior, performance, and potent
 | `teams.ai.moderators.moderator.Moderator.review_output`   | To monitor output content moderation and understand if/why the bot's generated response/plan is being flagged.                                        | `context: TurnContext`, `state: TurnState`, `plan: Plan`.                                                          | The (potentially modified) `Plan` object.                                                                              |
 | `src.state.AppTurnState.load`                             | To monitor the performance of loading application state from storage, helping identify state-related performance bottlenecks.                         | `context: TurnContext`, `storage: Storage`.                                                                        | The loaded `AppTurnState` object. Its size could be captured.                                                          |
 | `teams.ai.prompts.prompt_manager.PromptManager.render_prompt` | To inspect the exact prompt being sent to the LLM. This is invaluable for debugging prompt engineering and improving model responses.             | `context: TurnContext`, `state: TurnState`, `prompt` name or template.                                           | The rendered prompt string or list of messages.                                                                        |
+
+### 4. AI Bot with Azure AI Search
+
+The Azure AI Search bot extends the basic Teams AI bot with search capabilities. Here's how the flow works:
+
+1.  **Initial Request Flow**: Same as basic bot until reaching the planner.
+2.  **Search Integration Points**:
+    *   When user asks a question, the bot first converts it to embeddings using `openai.resources.embeddings.AsyncEmbeddings`.
+    *   These embeddings are used to perform vector search in Azure AI Search.
+    *   Search results are incorporated into the prompt before calling the LLM.
+    *   The LLM then generates a response based on both the search results and the conversation context.
+
+> **Note**: Azure Search instrumentation requires both client and post-processing due to data availability (*This assumption needs validation*):
+> *   `azure.search.documents.search`: Captures the initial search request but may lack complete result details.
+> *   `azure.search.documents.search_post`: Captures full search results including scores and reranking.
+>
+> ```python
+> # Example of what client vs post capture:
+> # Client capture - Basic request info
+> {
+>     "vector_queries": [{"fields": "vector", "k": 3}],
+>     "select": "docTitle,content"
+> }
+> 
+> # Post capture - Detailed results
+> {
+>     "results": [
+>         {
+>             "docTitle": "Document 1",
+>             "description": "Content...",
+>             "@search.score": 0.89,
+>             "@search.reranker_score": 0.92
+>         }
+>     ]
+> }
+> ```
+
+#### Additional Classes to Instrument
+
+| Class/Method | Reason | Inputs to Capture | Outputs to Capture |
+|---|---|---|---|
+| `azure.search.documents.SearchClient.search` ([Instrumentation](../resources/azure_search_client_processor.py)) | Monitor raw search requests and performance. Captures the query sent to Azure Search before post-processing. | `kwargs`: `search_text`, `vector_queries` (without vector data), `filter`, `select`, `top`, `skip` | `pager`: `get_count()`, `get_coverage()`, `get_facets()` |
+| `azure.search.documents.SearchClient.search_post` ([Instrumentation](../resources/azure_search_post_processor.py)) | Capture detailed search results with scores after post-processing. Essential for visibility into reranking and final document scores. | `search_request`: `search_text` and other options like `scoring_profile`, `semantic_query`. | `results`: List of documents with `docTitle`, `description`, `@search.score`, `@search.reranker_score`. |
+| `teams.ai.prompts.prompt_manager.PromptManager.render_prompt` | Debug how search results are incorporated into the final prompt sent to the LLM. | `state`: `temp.data_sources` which contains the search results. `prompt`: The prompt template object. | The fully rendered `PromptTemplate` object, including the text with citations from search results. |
+| `teams.ai.citations.citations.format_citations_response` | Monitor citation formatting. Useful for debugging cases where citations are missing or incorrect in the final response. | `content`: The raw response string from the LLM. `citations`: List of `ClientCitation` objects. | The formatted response string with citation markers (e.g., `[doc1]`). |
+
+**New Instrumented Traces**:
+- [AI-Bot-with-Azure-AI-Search.json](../resources/AI-Bot-with-Azure-AI-Search.json)
+- [AI-Bot-with-Azure-AI-Search-Instrumented.json](../resources/AI-Bot-with-Azure-AI-Search-Instrumented.json) (Sample with full search instrumentation)
+
+
+The instrumentation should focus on:
+1.  Search performance metrics (latency, result counts)
+2.  Search quality indicators (scores, reranking)
+3.  Prompt construction with search results
+4.  Citation handling and formatting
