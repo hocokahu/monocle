@@ -1,70 +1,20 @@
 # Teams AI Support
-## What's Supported
+
+## Overview
+
+Versions to understand where we are:
 
 - Python: monocle_apptrace v0.4.0
 
 - Typescript: Monocle v0.2.0-beta.1
 
-## Summary of Instrumented Methods
+The goal of this document is to identify the gaps for each of Teams AI app samples to cover the instrumentation gaps in the Teams AI SDK.
 
-### 1. Basic Custom Engine Agent (Typescript)
-
-**Spans**: 
-- workflow
-
-![](../resources/Basic-Custom-Engine-Agent.png)
-
-**Traces**: [Basic-Custom-Engine-Agent.json](../resources/Basic-Custom-Engine-Agent.json)
-
-> This `workflow` is not useful for users because it doesn't show the details of the steps.
-
-### 2. Basic Bot
-
-**Spans**: 
-- `workflow`
-- `aiohttp.web_app.Application`
-- `teams.ai.planners.action_planner.ActionPlanner`
-- `teams.ai.models.openai_model.OpenAIModel`
-- `openai.resources.chat.completions.completions.AsyncCompletions`
-
-![](../resources/Basic-Bot.png)
-
-**Traces**: [Basic-Bot.json](../resources/Basic-Bot.json)
-
-### 3. Agent with API Build from Scratch
-
-**Spans**:
-- `workflow`
-- `aiohttp.web_app.Application`
-- `teams.ai.planners.action_planner.ActionPlanner`
-- `teams.ai.models.openai_model.OpenAIModel`
-- `openai.resources.chat.completions.completions.AsyncCompletions`
-
-![](../resources/Agent-with-API-Build-from-Scratch.png)
-
-**Traces**: [Agent-with-API-Build-from-Scratch.json](../resources/Agent-with-API-Build-from-Scratch.json)
-
-
-### 4. AI Bot with Azure AI Search
-
-**Spans**:
-- `workflow`
-- `aiohttp.web_app.Application`
-- `teams.ai.planners.action_planner.ActionPlanner`
-- `teams.ai.models.openai_model.OpenAIModel`
-- `openai.resources.chat.completions.completions.AsyncCompletions`
-- `openai.resources.embeddings.AsyncEmbeddings`
-
-![](../resources/AI-Bot-with-Azure-AI-Search.png)
-
-
-**Traces**: [AI-Bot-with-Azure-AI-Search.json](../resources/AI-Bot-with-Azure-AI-Search.
-json)
-
+Sample Apps Source: https://github.com/OfficeDev/microsoft-365-agents-toolkit/tree/main/templates
 
 ## Code Flow
 
-> We will use `Agent with API Build from Scratch` bot for all diagram flow below. They are mostly similar except the usage of `ActionPlanner` SDK.
+> We will use [Agent with API Build from Scratch](https://github.com/OfficeDev/microsoft-365-agents-toolkit/tree/main/templates/python/custom-copilot-assistant-new) bot for all flow diagrams below. They are mostly similar except the usage of `ActionPlanner` SDK.
 
 This diagram illustrates the code flow from a user sending a chat message in Teams to a specific action handler, like `createTask`, being executed within the bot.
 
@@ -129,14 +79,66 @@ sequenceDiagram
 9.  **Action Handler Execution**: The `invoke` call finally executes the Python function registered for the action, i.e., the `create_task` function in `src/bot.py`. This function contains the business logic to create the task and update the application state.
 10. **Response**: The action returns a string, the AI loop may continue or end, and eventually, an HTTP response is sent back.
 
-## Instrumentation Recommendations
+## Instrumentation Requirements
 
 ### 1. Basic Custom Engine Agent (Typescript)
 
+#### Current State
+
+**Spans**: 
+- workflow
+
+![](../resources/Basic-Custom-Engine-Agent.png)
+
+**Traces**: [Basic-Custom-Engine-Agent.json](../resources/Basic-Custom-Engine-Agent.json)
+
+> This `workflow` is not useful for users because it doesn't show the details of the steps.
+
+#### Requirements
+
+At the minimum, this needs to be on-pair with Python version:
+
+- `aiohttp.web_app.Application`
+- `teams.ai.planners.action_planner.ActionPlanner`
+- `teams.ai.models.openai_model.OpenAIModel`
+- `openai.resources.chat.completions.completions.AsyncCompletions`
+
 ### 2. Basic Bot
+
+#### Current State
+
+**Spans**: 
+- `workflow`
+- `aiohttp.web_app.Application`
+- `teams.ai.planners.action_planner.ActionPlanner`
+- `teams.ai.models.openai_model.OpenAIModel`
+- `openai.resources.chat.completions.completions.AsyncCompletions`
+
+![](../resources/Basic-Bot.png)
+
+**Traces**: [Basic-Bot.json](../resources/Basic-Bot.json)
+
+#### Requirements
+
+- `teams.ai.prompts.prompt_manager.PromptManager` - We need to understand better how PromptManager transforms the prompt using variables.
 
 
 ### 3. Agent with API Build from Scratch
+
+#### Current State
+
+**Spans**:
+- `workflow`
+- `aiohttp.web_app.Application`
+- `teams.ai.planners.action_planner.ActionPlanner`
+- `teams.ai.models.openai_model.OpenAIModel`
+- `openai.resources.chat.completions.completions.AsyncCompletions`
+
+![](../resources/Agent-with-API-Build-from-Scratch.png)
+
+**Traces**: [Agent-with-API-Build-from-Scratch.json](../resources/Agent-with-API-Build-from-Scratch.json)
+
+#### Requirements
 
 The goal of this instrumentation:
 1.  **[Optional]** Trace the complete lifecycle of a user request, from the initial HTTP call to the final action execution. The caveat is that this might apply to lots of aiohttp requests as well (which will cause a large number of traces).
@@ -194,6 +196,24 @@ To gain deeper insights into the application's behavior, performance, and potent
 | `teams.ai.prompts.prompt_manager.PromptManager.render_prompt` | To inspect the exact prompt being sent to the LLM. This is invaluable for debugging prompt engineering and improving model responses.             | `context: TurnContext`, `state: TurnState`, `prompt` name or template.                                           | The rendered prompt string or list of messages.                                                                        |
 
 ### 4. AI Bot with Azure AI Search
+
+#### Current State
+
+**Spans**:
+- `workflow`
+- `aiohttp.web_app.Application`
+- `teams.ai.planners.action_planner.ActionPlanner`
+- `teams.ai.models.openai_model.OpenAIModel`
+- `openai.resources.chat.completions.completions.AsyncCompletions`
+- `openai.resources.embeddings.AsyncEmbeddings`
+
+![](../resources/AI-Bot-with-Azure-AI-Search.png)
+
+
+**Traces**: [AI-Bot-with-Azure-AI-Search.json](../resources/AI-Bot-with-Azure-AI-Search.
+json)
+
+#### Requirements
 
 The goal of this instrumentation:
 1.  Search performance metrics (latency, result counts)
