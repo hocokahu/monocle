@@ -231,10 +231,9 @@ The Azure AI Search bot extends the basic Teams AI bot with search capabilities.
 | `teams.ai.prompts.prompt_manager.PromptManager.render_prompt` | Debug how search results are incorporated into the final prompt sent to the LLM. | `state`: `temp.data_sources` which contains the search results. `prompt`: The prompt template object. | The fully rendered `PromptTemplate` object, including the text with citations from search results. |
 | `teams.ai.citations.citations.format_citations_response` | Monitor citation formatting. Useful for debugging cases where citations are missing or incorrect in the final response. | `content`: The raw response string from the LLM. `citations`: List of `ClientCitation` objects. | The formatted response string with citation markers (e.g., `[doc1]`). |
 
-**New Instrumented Traces**:
-- [AI-Bot-with-Azure-AI-Search.json](../resources/AI-Bot-with-Azure-AI-Search.json)
-- [AI-Bot-with-Azure-AI-Search-Instrumented.json](../resources/AI-Bot-with-Azure-AI-Search-Instrumented.json) (Sample with full search instrumentation)
+**New Instrumented Traces**: [AI-Bot-with-Azure-AI-Search-Instrumented.json](../resources/AI-Bot-with-Azure-AI-Search-Instrumented.json) (Sample with full search instrumentation)
 
+![](../resources/AI-Bot-with-Azure-AI-Search-Instrumented.png)
 
 The instrumentation should focus on:
 1.  Search performance metrics (latency, result counts)
