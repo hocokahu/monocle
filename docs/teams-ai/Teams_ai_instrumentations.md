@@ -138,6 +138,13 @@ sequenceDiagram
 
 ### 3. Agent with API Build from Scratch
 
+The goal of this instrumentation:
+1.  **[Optional]** Trace the complete lifecycle of a user request, from the initial HTTP call to the final action execution. The caveat is that this might apply to lots of aiohttp requests as well (which will cause a large number of traces).
+2.  Gain visibility into the AI planner's decision-making process, including which actions and parameters are chosen.
+3.  Monitor the performance and correctness of individual, custom-defined actions (the "API" part).
+4.  Debug prompt engineering by inspecting the exact prompts sent to the LLM.
+5.  **[Optional]** Understand the impact of content moderation on both user inputs and AI outputs. This is applicable to all bots using Teams AI SDK but most will rely on the LLM outputs to determine.
+
 To gain deeper insights into the application's behavior, performance, and potential issues, we recommend instrumenting the following classes and methods. This complements the existing instrumentations on `aiohttp`, `ActionPlanner`, `OpenAIModel`, and `openai`.
 
 > Note: The exact "method" may need to be verified. This is due to the use of Template Method Pattern in Teams AI SDK.
@@ -188,6 +195,12 @@ To gain deeper insights into the application's behavior, performance, and potent
 
 ### 4. AI Bot with Azure AI Search
 
+The goal of this instrumentation:
+1.  Search performance metrics (latency, result counts)
+2.  Search quality indicators (scores, reranking)
+3.  Prompt construction with search results
+4.  Citation handling and formatting
+
 The Azure AI Search bot extends the basic Teams AI bot with search capabilities. Here's how the flow works:
 
 1.  **Initial Request Flow**: Same as basic bot until reaching the planner.
@@ -222,7 +235,7 @@ The Azure AI Search bot extends the basic Teams AI bot with search capabilities.
 > }
 > ```
 
-#### Additional Classes to Instrument
+#### Classes and Methods to Instrument
 
 | Class/Method | Reason | Inputs to Capture | Outputs to Capture |
 |---|---|---|---|
@@ -234,9 +247,3 @@ The Azure AI Search bot extends the basic Teams AI bot with search capabilities.
 **New Instrumented Traces**: [AI-Bot-with-Azure-AI-Search-Instrumented.json](../resources/AI-Bot-with-Azure-AI-Search-Instrumented.json) (Sample with full search instrumentation)
 
 ![](../resources/AI-Bot-with-Azure-AI-Search-Instrumented.png)
-
-The instrumentation should focus on:
-1.  Search performance metrics (latency, result counts)
-2.  Search quality indicators (scores, reranking)
-3.  Prompt construction with search results
-4.  Citation handling and formatting
