@@ -1,5 +1,15 @@
 # Teams AI Support
 
+## Table of Contents
+
+1. [Code Flow](#code-flow)
+   - [Flow Breakdown](#flow-breakdown)
+2. [Instrumentation Requirements](#instrumentation-requirements)
+   - [Basic Custom Engine Agent (Typescript)](#1-basic-custom-engine-agent-typescript)
+   - [Basic Bot](#2-basic-bot)
+   - [Agent with API Build from Scratch](#3-agent-with-api-build-from-scratch)
+   - [AI Bot with Azure AI Search](#4-ai-bot-with-azure-ai-search)
+
 ## Overview
 
 Versions to understand where we are:
