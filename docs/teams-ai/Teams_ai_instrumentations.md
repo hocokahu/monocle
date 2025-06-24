@@ -148,7 +148,7 @@ At the minimum, this needs to be on-pair with Python version:
 
 **Traces**: [Agent-with-API-Build-from-Scratch.json](../resources/Agent-with-API-Build-from-Scratch.json)
 
-#### Requirements
+#### Requirements (UPDATED 6/23 for 0.4.1a8)
 
 The goal of this instrumentation:
 1.  **[Optional]** Trace the complete lifecycle of a user request, from the initial HTTP call to the final action execution. The caveat is that this might apply to lots of aiohttp requests as well (which will cause a large number of traces).
@@ -195,17 +195,18 @@ To gain deeper insights into the application's behavior, performance, and potent
 > - Ensure all moderators have the required methods
 > - Let each moderator implement its own moderation logic while maintaining a consistent interface
 
-| Class/Method                                              | Reason                                                                                                                                              | Inputs to Capture                                                                                          | Outputs to Capture                                                                                                     |
-| --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
-| `teams.app.Application.process`                           | To trace the entire processing of an incoming request, providing a top-level view of a single turn.                                                 | `aiohttp.web.Request` object containing headers and body.                                                          | `aiohttp.web.Response` object.                                                                                         |
-| `teams.ai.ai.AI.run`                                      | This is the main entry point for the AI logic. Instrumenting it allows seeing the entire AI chain of thought process for a turn.                     | `context: TurnContext`, `state: TurnState`. Can capture `context.activity.text` for user input.                  | Boolean for success. The final state, or any exceptions raised.                                                        |
-| `teams.ai.actions.ActionEntry.invoke`                     | To monitor the execution of individual actions predicted by the planner. Crucial for debugging action calls, parameters, and success/failure.           | `context: TurnContext`, `state: TurnState`, `parameters` for the action, `name` of the action.                    | The string result returned by the action handler.                                                                      |
-| `teams.ai.moderators.moderator.Moderator.review_input`    | To monitor input content moderation and understand if/why user input is being flagged.                                                              | `context: TurnContext`, `state: TurnState`. Can capture `context.activity.text`.                                 | A `Plan` object if the input is flagged (containing a `FLAGGED_INPUT` action), otherwise `None`.                       |
-| `teams.ai.moderators.moderator.Moderator.review_output`   | To monitor output content moderation and understand if/why the bot's generated response/plan is being flagged.                                        | `context: TurnContext`, `state: TurnState`, `plan: Plan`.                                                          | The (potentially modified) `Plan` object.                                                                              |
-| `src.state.AppTurnState.load`                             | To monitor the performance of loading application state from storage, helping identify state-related performance bottlenecks.                         | `context: TurnContext`, `storage: Storage`.                                                                        | The loaded `AppTurnState` object. Its size could be captured.                                                          |
-| `teams.ai.prompts.prompt_manager.PromptManager.render_prompt` | To inspect the exact prompt being sent to the LLM. This is invaluable for debugging prompt engineering and improving model responses.             | `context: TurnContext`, `state: TurnState`, `prompt` name or template.                                           | The rendered prompt string or list of messages.                                                                        |
+| Class/Method & Reason | Status | Details | Inputs to Capture | Outputs to Capture |
+|----------------------|--------|---------|-------------------|-------------------|
+| `teams.app.Application.process`<br/>To trace the entire processing of an incoming request, providing a top-level view of a single turn. | ✅ **Implemented** | Span name: `teams.app.application.process`<br/>Span type: `application` | `aiohttp.web.Request` object containing headers and body. | `aiohttp.web.Response` object. |
+| `teams.ai.ai.AI.run`<br/>This is the main entry point for the AI logic. Instrumenting it allows seeing the entire AI chain of thought process for a turn. | ✅ **Implemented** | Span name: `teams.ai.ai.AI.run`<br/>Span type: `application` | `context: TurnContext`, `state: TurnState`. Can capture `context.activity.text` for user input. | Boolean for success. The final state, or any exceptions raised. |
+| `teams.ai.actions.ActionEntry.invoke`<br/>To monitor the execution of individual actions predicted by the planner. Crucial for debugging action calls, parameters, and success/failure. | ✅ **Implemented** | Span name: `teams.ai.actions.action_entry.invoke`<br/>Span type: `state_management` | `context: TurnContext`, `state: TurnState`, `parameters` for the action, `name` of the action. | The string result returned by the action handler. |
+| `teams.ai.moderators.moderator.Moderator.review_input`<br/>To monitor input content moderation and understand if/why user input is being flagged. | ❌ **Not Implemented** | - | `context: TurnContext`, `state: TurnState`. Can capture `context.activity.text`. | A `Plan` object if the input is flagged (containing a `FLAGGED_INPUT` action), otherwise `None`. |
+| `teams.ai.moderators.moderator.Moderator.review_output`<br/>To monitor output content moderation and understand if/why the bot's generated response/plan is being flagged. | ❌ **Not Implemented** | - | `context: TurnContext`, `state: TurnState`, `plan: Plan`. | The (potentially modified) `Plan` object. |
+| `src.state.AppTurnState.load`<br/>To monitor the performance of loading application state from storage, helping identify state-related performance bottlenecks. | ✅ **Implemented** | Span name: `app.state.conversation_state.load`<br/>Span type: `state_management` | `context: TurnContext`, `storage: Storage`. | The loaded `AppTurnState` object. Its size could be captured. |
+| `teams.state.conversation_state.ConversationState.load`<br/>To monitor base conversation state loading from storage. | ✅ **Implemented** | Span name: `teams.state.conversation_state.load`<br/>Span type: `state_management` | `context: TurnContext`, `storage: Storage`. | The loaded `ConversationState` object. Its size could be captured. |
+| `teams.ai.prompts.prompt_manager.PromptManager.render_prompt`<br/>To inspect the exact prompt being sent to the LLM. This is invaluable for debugging prompt engineering and improving model responses. | ❌ **Not Implemented** | - | `context: TurnContext`, `state: TurnState`, `prompt` name or template. | The rendered prompt string or list of messages. |
 
-#### Example Flow
+#### Pending Implementation & Flow
 
 ##### 1-Chat Conversation
 
@@ -391,6 +392,9 @@ sequenceDiagram
     Note over AI,Planner: If LLM returns invalid JSON\nPlanner/AI returns error:\n'No valid JSON objects were found in the response. Return a valid JSON object with your thoughts and the next action to perform.'
 ```
 
+#### Summary
+[table with Class/Method/Status/Sample data collected]
+
 ### 4. AI Bot with Azure AI Search
 
 #### Current State
@@ -409,7 +413,7 @@ sequenceDiagram
 **Traces**: [AI-Bot-with-Azure-AI-Search.json](../resources/AI-Bot-with-Azure-AI-Search.
 json)
 
-#### Requirements
+#### Requirements (UPDATED 6/23 for 0.4.1a8)
 
 The goal of this instrumentation:
 1.  Search performance metrics (latency, result counts)
@@ -453,13 +457,112 @@ The Azure AI Search bot extends the basic Teams AI bot with search capabilities.
 
 #### Classes and Methods to Instrument
 
-| Class/Method | Reason | Inputs to Capture | Outputs to Capture |
-|---|---|---|---|
-| `azure.search.documents.SearchClient.search` ([Instrumentation](../resources/azure_search_client_processor.py)) | Monitor raw search requests and performance. Captures the query sent to Azure Search before post-processing. | `kwargs`: `search_text`, `vector_queries` (without vector data), `filter`, `select`, `top`, `skip` | `pager`: `get_count()`, `get_coverage()`, `get_facets()` |
-| `azure.search.documents.SearchClient.search_post` ([Instrumentation](../resources/azure_search_post_processor.py)) | Capture detailed search results with scores after post-processing. Essential for visibility into reranking and final document scores. | `search_request`: `search_text` and other options like `scoring_profile`, `semantic_query`. | `results`: List of documents with `docTitle`, `description`, `@search.score`, `@search.reranker_score`. |
-| `teams.ai.prompts.prompt_manager.PromptManager.render_prompt` | Debug how search results are incorporated into the final prompt sent to the LLM. | `state`: `temp.data_sources` which contains the search results. `prompt`: The prompt template object. | The fully rendered `PromptTemplate` object, including the text with citations from search results. |
-| `teams.ai.citations.citations.format_citations_response` | Monitor citation formatting. Useful for debugging cases where citations are missing or incorrect in the final response. | `content`: The raw response string from the LLM. `citations`: List of `ClientCitation` objects. | The formatted response string with citation markers (e.g., `[doc1]`). |
+| Class/Method & Reason | Status | Details | Inputs to Capture | Outputs to Capture |
+|---|---|---|---|---|
+| `azure.search.documents.`<br/>`SearchClient.search`<br/>Monitor raw search requests and performance. Captures the query sent to Azure Search before post-processing. | ✅ **Implemented** | Span name: `azure.search.documents.`<br/>`_search_client.SearchClient`<br/>Span type: `search` | `kwargs`: `search_text`, `vector_queries` (without vector data), `filter`, `select`, `top`, `skip` | `pager`: `get_count()`, `get_coverage()`, `get_facets()` |
+| `azure.search.documents.`<br/>`SearchClient.search_post`<br/>Capture detailed search results with scores after post-processing. Essential for visibility into reranking and final document scores. | ✅ **Implemented** | Span name: `azure.search.documents._generated.operations.`<br/>`_documents_operations.DocumentsOperations`<br/>Span type: `search` | `search_request`: `search_text` and other options like `scoring_profile`, `semantic_query`. | `results`: List of documents with `docTitle`, `description`, `@search.score`, `@search.reranker_score`. |
+| `teams.ai.prompts.prompt_manager.`<br/>`PromptManager.render_prompt`<br/>Debug how search results are incorporated into the final prompt sent to the LLM. | ❌ **Not Implemented** | - | `state`: `temp.data_sources` which contains the search results. `prompt`: The prompt template object. | The fully rendered `PromptTemplate` object, including the text with citations from search results. |
+| `teams.ai.citations.citations.`<br/>`format_citations_response`<br/>Monitor citation formatting. Useful for debugging cases where citations are missing or incorrect in the final response. | ❌ **Not Implemented** | - | `content`: The raw response string from the LLM. `citations`: List of `ClientCitation` objects. | The formatted response string with citation markers (e.g., `[doc1]`). |
 
-**New Instrumented Traces**: [AI-Bot-with-Azure-AI-Search-Instrumented.json](../resources/AI-Bot-with-Azure-AI-Search-Instrumented.json) (Sample with full search instrumentation)
+**Sample Instrumented Traces**: [AI-Bot-with-Azure-AI-Search-Instrumented.json](../resources/AI-Bot-with-Azure-AI-Search-Instrumented.json) (Sample with full search instrumentation)
 
 ![](../resources/AI-Bot-with-Azure-AI-Search-Instrumented.png)
+
+#### Pending Implementation & Flow
+
+**Flow explained in plain English:**
+
+1. **User Input**: "tell me about executive vacation days"
+
+2. **Conversation State Loading**: The bot loads the current conversation state from storage to maintain context across interactions
+
+3. **Embedding Generation**: The user's query "tell me about executive vacation days" is converted to vector embeddings using Azure OpenAI's embedding model
+
+4. **Azure AI Search - SearchClient.search**: The embeddings are used to perform vector search against the "contoso-electronics" index, with the search request captured by the instrumented `azure.search.documents._search_client.SearchClient` span
+
+5. **Azure AI Search - DocumentsOperations**: The search results are processed and returned with detailed document information, scores, and content, captured by the instrumented `azure.search.documents._generated.operations._documents_operations.DocumentsOperations` span:
+   - **Contoso_Electronics_PerkPlus_Program** (score: 0.033)
+   - **Contoso_Electronics_Company_Overview** (score: 0.033) 
+   - **Contoso_Electronics_Plan_Benefits** (score: 0.016)
+
+6. **Context Integration**: The search results are incorporated into the prompt template (Note: PromptManager.render_prompt is not yet instrumented)
+
+7. **LLM Processing**: The OpenAIModel receives the enhanced prompt with search context and generates a structured response with citations
+
+8. **Response Generation**: The ActionPlanner processes the LLM output and creates a response (Note: Citations formatting is not yet instrumented)
+
+9. **Bot Output**: The final response is sent to the user: "Executive vacation days are typically part of a broader benefits package that includes paid time off (PTO) for senior management. These days allow executives to recharge and maintain work-life balance, often exceeding standard vacation policies. Companies may offer flexible scheduling or additional days based on tenure or performance."
+
+**Key Insight**: The Azure AI Search integration enables the bot to provide accurate, contextually relevant responses by retrieving and incorporating specific document content. The current instrumentation captures both the search request (`SearchClient.search`) and detailed results (`DocumentsOperations`), providing visibility into search performance and quality.
+
+**Technical Flow:**
+
+1. **User**: Asks "tell me about executive vacation days"
+
+2. **WebApp**: Receives the HTTP request and routes it to the Teams AI application
+
+3. **ConversationState**: Loads the current conversation state from storage, including any previous context
+
+4. **AI.run**: Starts the AI processing pipeline for this user turn
+
+5. **ActionPlanner**: Analyzes the user's request and determines that search is needed
+
+6. **Embeddings**: Converts the user query to vector embeddings using Azure OpenAI
+
+7. **SearchClient.search**: Performs vector search against the contoso-electronics index with k=2 nearest neighbors (instrumented span: `azure.search.documents._search_client.SearchClient`)
+
+8. **DocumentsOperations**: Returns relevant documents with scores and content about vacation policies (instrumented span: `azure.search.documents._generated.operations._documents_operations.DocumentsOperations`)
+
+9. **Prompt Enhancement**: The search results are integrated into the prompt template with context tags (Note: PromptManager.render_prompt not instrumented)
+
+10. **OpenAIModel**: Receives the enhanced prompt and generates a structured response with citations
+
+11. **ActionPlanner**: Processes the LLM output and creates the final response
+
+12. **AI.run**: Executes the plan, starting with `PLAN_READY` to indicate the plan is ready for execution
+
+13. **ActionEntry**: Handles the `PLAN_READY` command
+
+14. **ActionEntry**: Handles the `SAY_COMMAND` by formatting the response (Note: Citations formatting not instrumented)
+
+15. **AI.run**: Returns the final response to the user
+
+16. **User**: Receives the answer with proper citations about executive vacation policies
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant WebApp as "aiohttp App (app.py)"
+    participant ConversationState
+    participant AI as "AI.run"
+    participant Planner as "ActionPlanner"
+    participant Embeddings as "Azure OpenAI Embeddings"
+    participant SearchClient as "azure.search.documents._search_client.SearchClient"
+    participant DocumentsOps as "azure.search.documents._generated.operations._documents_operations.DocumentsOperations"
+    participant OpenAI as "OpenAIModel"
+    participant ActionEntry as "action_entry (bot.py)"
+
+    %% Azure AI Search flow: User asks about executive vacation days
+    User->>WebApp: tell me about executive vacation days
+    WebApp->>ConversationState: load()
+    ConversationState-->>WebApp: state loaded
+    WebApp->>AI: AI.run(context, state)
+    AI->>Planner: planner.begin_task(context, state)
+    Planner->>Embeddings: convert query to embeddings
+    Embeddings-->>Planner: vector embeddings
+    Planner->>SearchClient: vector search (k=2, contoso-electronics index)
+    Note right of SearchClient: Search query: "tell me about executive vacation days"<br/>Index: contoso-electronics<br/>Vector fields: descriptionVector<br/>Span type: search
+    SearchClient->>DocumentsOps: process search results
+    DocumentsOps-->>Planner: Search results with scores
+    Note right of DocumentsOps: Results:<br/>• Contoso_Electronics_PerkPlus_Program (0.033)<br/>• Contoso_Electronics_Company_Overview (0.033)<br/>• Contoso_Electronics_Plan_Benefits (0.016)<br/>Span type: search
+    Planner->>OpenAI: OpenAIModel.complete_prompt(...)
+    Note right of OpenAI: Enhanced prompt with search context<br/>System: "Use context in <context></context> tags"<br/>User: "tell me about executive vacation days"<br/>Context: [Search results with vacation policies]
+    OpenAI-->>Planner: LLM returns structured response with citations
+    Planner-->>AI: Response with citations
+    AI->>ActionEntry: action_entry.invoke(context, state, parameters) ++ PLAN_READY
+    Note right of ActionEntry: Handles PLAN_READY (plan is ready to execute)
+    ActionEntry-->>AI: "Plan ready, proceeding to next command"
+    AI->>ActionEntry: action_entry.invoke(context, state, parameters) ++ SAY_COMMAND
+    Note right of ActionEntry: Handles SAY_COMMAND (send answer with citations)
+    ActionEntry-->>AI: "Executive vacation days are typically part of a broader benefits package..."
+    AI-->>User: Executive vacation days are typically part of a broader benefits package that includes paid time off (PTO) for senior management. These days allow executives to recharge and maintain work-life balance, often exceeding standard vacation policies. Companies may offer flexible scheduling or additional days based on tenure or performance.
