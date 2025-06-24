@@ -36,7 +36,7 @@ sequenceDiagram
     participant AI as "teams.ai.AI (ai.py)"
     participant Planner as "ActionPlanner"
     participant OpenAI as "OpenAI Client"
-    participant ActionHandler as "Registered Action (bot.py)"
+    participant ActionEntry as "Registered Action (bot.py)"
 
     User->>WebApp: POST /api/messages (e.g., "create a task to buy milk")
     WebApp->>Application: bot_app.process(req)
@@ -59,11 +59,11 @@ sequenceDiagram
     note right of AI: For a PredictedDoCommand, AI.run finds the registered action<br/>and invokes the default 'DO_COMMAND' handler (_on_do_command).
 
     AI->>AI: _on_do_command(context, state, command)
-    AI->>ActionHandler: action_entry.invoke(context, state, parameters)
-    note right of ActionHandler: This calls the actual Python function decorated<br/>with @bot_app.ai.action("createTask").
+    AI->>ActionEntry: action_entry.invoke(context, state, parameters)
+    note right of ActionEntry: This calls the actual Python function decorated<br/>with @bot_app.ai.action("createTask").
     
-    ActionHandler->>ActionHandler: createTask(context, state) executes
-    ActionHandler-->>AI: Returns string result (e.g. "task created...")
+    ActionEntry->>ActionEntry: createTask(context, state) executes
+    ActionEntry-->>AI: Returns string result (e.g. "task created...")
     
     AI->>Application: AI.run() completes.
     Application->>WebApp: Returns HTTP response.
@@ -204,6 +204,192 @@ To gain deeper insights into the application's behavior, performance, and potent
 | `teams.ai.moderators.moderator.Moderator.review_output`   | To monitor output content moderation and understand if/why the bot's generated response/plan is being flagged.                                        | `context: TurnContext`, `state: TurnState`, `plan: Plan`.                                                          | The (potentially modified) `Plan` object.                                                                              |
 | `src.state.AppTurnState.load`                             | To monitor the performance of loading application state from storage, helping identify state-related performance bottlenecks.                         | `context: TurnContext`, `storage: Storage`.                                                                        | The loaded `AppTurnState` object. Its size could be captured.                                                          |
 | `teams.ai.prompts.prompt_manager.PromptManager.render_prompt` | To inspect the exact prompt being sent to the LLM. This is invaluable for debugging prompt engineering and improving model responses.             | `context: TurnContext`, `state: TurnState`, `prompt` name or template.                                           | The rendered prompt string or list of messages.                                                                        |
+
+#### Example Flow
+
+##### 1-Chat Conversation
+
+**Sample Trace**: [monocle_trace_teams-ai-basic-rag-bot-1-chat.json](../resources/monocle_trace_teams-ai-basic-rag-bot-1-chat.json)
+
+**Flow explained in plain English:**
+
+1. **User Input**: "who is prasad https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md"
+
+2. **First OpenAIModel Call**: 
+   - **Prompt**: System instructions + user message + available actions (`createTask`, `deleteTask`, `extractRAGURL`, `SAY`)
+   - **What affects the prompt**: User's question + URL + available action definitions
+   - **LLM Decision**: "I need to extract the URL to find information about Prasad" → Plan: `DO` `extractRAGURL`
+
+3. **extractRAGURL Action**: Fetches and stores the `CODEOWNERS.md` content in conversation state
+
+4. **Second OpenAIModel Call**:
+   - **Prompt**: System instructions + user message + **extracted content** (now includes the maintainers list) + available actions
+   - **What affects the prompt**: User's question + **extracted content showing Prasad is a maintainer** + available action definitions
+   - **LLM Decision**: "I found Prasad in the maintainers list" → Plan: `SAY` response
+
+5. **SAY Command**: Sends final response to user
+
+6. **Bot Output**: "Prasad Mujumdar is a maintainer of the project, and you can find more about him on his GitHub profile: @prasad-okahu."
+
+**Key Insight**: The **extracted content** from the first action becomes part of the **second prompt**, enabling the LLM to provide an informed response based on the actual data from the URL.
+
+**Technical Flow:**
+
+1. **User**: Asks "who is prasad https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md"
+
+2. **WebApp**: Receives the HTTP request and routes it to the Teams AI application
+
+3. **ConversationState**: Loads the current conversation state from storage, including any previous context and extracted content
+
+4. **AI.run**: Starts the AI processing pipeline for this user turn
+
+5. **ActionPlanner**: Analyzes the user's request and determines what actions are needed
+
+6. **OpenAIModel**: Receives the prompt and generates a plan to extract information from the provided URL
+
+7. **ActionPlanner**: Creates a plan with the command `DO extractRAGURL` to fetch content from the GitHub URL
+
+8. **AI.run**: Executes the plan, starting with `PLAN_READY` to indicate the plan is ready for execution
+
+9. **ActionEntry**: Handles the `DO_COMMAND` by calling the `extractRAGURL` function, which fetches the content from the GitHub URL
+
+10. **ActionEntry**: Updates the conversation state with the extracted content (the CODEOWNERS.md file showing maintainers)
+
+11. **ActionPlanner**: Re-plans with the new context (now has the extracted content about maintainers)
+
+12. **OpenAIModel**: Receives the updated prompt (now including the extracted content) and generates a plan to respond to the user
+
+13. **ActionPlanner**: Creates a new plan with the command `SAY` to send a response to the user
+
+14. **AI.run**: Executes the new plan, starting with `PLAN_READY` for the `SAY` command
+
+15. **ActionEntry**: Handles the `SAY_COMMAND` by formatting the response using the extracted information about Prasad
+
+16. **AI.run**: Returns the final response to the user
+
+17. **User**: Receives the answer: "Prasad Mujumdar is a maintainer of the project, and you can find more about him on his GitHub profile: @prasad-okahu."
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant WebApp as "aiohttp App (app.py)"
+    participant ConversationState
+    participant AI as "AI.run"
+    participant Planner as "ActionPlanner"
+    participant OpenAI as "OpenAIModel"
+    participant ActionEntry as "action_entry (bot.py)"
+
+    %% Single chat: User asks about Prasad
+    User->>WebApp: who is prasad https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md
+    WebApp->>ConversationState: load()
+    ConversationState-->>WebApp: state loaded
+    WebApp->>AI: AI.run(context, state)
+    AI->>Planner: planner.begin_task(context, state)
+    Planner->>OpenAI: OpenAIModel.complete_prompt(...)
+    OpenAI-->>Planner: LLM returns plan (DO extractRAGURL)
+    Planner-->>AI: Plan(commands=[DO extractRAGURL])
+    AI->>ActionEntry: action_entry.invoke(context, state, parameters) ++ PLAN_READY
+    Note right of ActionEntry: Handles PLAN_READY (plan is ready to execute)
+    ActionEntry-->>AI: "Plan ready, proceeding to next command"
+    AI->>ActionEntry: action_entry.invoke(context, state, parameters) ++ DO_COMMAND
+    Note right of ActionEntry: Handles DO_COMMAND (calls extractRAGURL)
+    ActionEntry-->>AI: "Successfully extracted content from URLs..."
+    Note right of ActionEntry: Updates state with extracted content
+    AI->>Planner: planner.begin_task(context, state) [Second iteration]
+    Note right of Planner: Planner now has extracted content in state
+    Planner->>OpenAI: OpenAIModel.complete_prompt(...) [Second call]
+    OpenAI-->>Planner: LLM returns plan (SAY response)
+    Planner-->>AI: Plan(commands=[SAY])
+    AI->>ActionEntry: action_entry.invoke(context, state, parameters) ++ PLAN_READY
+    ActionEntry-->>AI: "Plan ready, proceeding to next command"
+    AI->>ActionEntry: action_entry.invoke(context, state, parameters) ++ SAY_COMMAND
+    Note right of ActionEntry: Handles SAY_COMMAND (send answer with extracted info)
+    ActionEntry-->>AI: "Prasad Mujumdar is a maintainer of the project..."
+    AI-->>User: Prasad Mujumdar is a maintainer of the project, and you can find more about him on his GitHub profile: [@prasad-okahu](https://github.com/prasad-okahu).
+```
+
+##### 3-Chat Conversation
+
+**Sample Trace**: [monocle_trace_teams-ai-basic-rag-bot-3-chat.json](../resources/monocle_trace_teams-ai-basic-rag-bot-3-chat.json)
+
+**Key Differences from 1-Chat:**
+
+1. **First Message ("hi")**: No function calls needed - direct `SAY` response
+2. **Second Message**: Calls `extractRAGURL` to fetch content, then `SAY` response  
+3. **Third Message**: Calls `extractRAGURL` again (demonstrates conversation_state persistence across messages)
+
+**Demonstrates**: How conversation_state maintains context and extracted content across multiple user interactions.
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant WebApp as "aiohttp App (app.py)"
+    participant ConversationState
+    participant AI as "AI.run"
+    participant Planner as "ActionPlanner"
+    participant OpenAI as "OpenAIModel"
+    participant ActionEntry as "action_entry (bot.py)"
+
+    %% 1. Simple greeting
+    User->>WebApp: hi
+    WebApp->>ConversationState: load()
+    ConversationState-->>WebApp: state loaded
+    WebApp->>AI: AI.run(context, state)
+    AI->>Planner: planner.begin_task(context, state)
+    Planner->>OpenAI: OpenAIModel.complete_prompt(...)
+    OpenAI-->>Planner: LLM returns plan (SAY hello)
+    Planner-->>AI: Plan(commands=[SAY])
+    AI->>ActionEntry: action_entry.invoke(context, state, parameters) ++ PLAN_READY
+    Note right of ActionEntry: Handles PLAN_READY (plan is ready to execute)
+    ActionEntry-->>AI: "Plan ready, proceeding to next command"
+    AI->>ActionEntry: action_entry.invoke(context, state, parameters) ++ SAY_COMMAND
+    Note right of ActionEntry: Handles SAY_COMMAND (send greeting)
+    ActionEntry-->>AI: "Hello! How can I assist you today?"
+    AI-->>User: Hello! How can I assist you today?
+
+    %% 2. User asks about Prasad (triggers RAG extraction)
+    User->>WebApp: who is prasad <CODEOWNERS.md>
+    WebApp->>ConversationState: load()
+    ConversationState-->>WebApp: state loaded
+    WebApp->>AI: AI.run(context, state)
+    AI->>Planner: planner.begin_task(context, state)
+    Planner->>OpenAI: OpenAIModel.complete_prompt(...)
+    OpenAI-->>Planner: LLM returns plan (DO extractRAGURL, SAY)
+    Planner-->>AI: Plan(commands=[DO extractRAGURL, SAY])
+    AI->>ActionEntry: action_entry.invoke(context, state, parameters) ++ PLAN_READY
+    Note right of ActionEntry: Handles PLAN_READY (plan is ready to execute)
+    ActionEntry-->>AI: "Plan ready, proceeding to next command"
+    AI->>ActionEntry: action_entry.invoke(context, state, parameters) ++ DO_COMMAND
+    Note right of ActionEntry: Handles DO_COMMAND (calls extractRAGURL)
+    ActionEntry-->>AI: "Prasad refers to Prasad Mujumdar..."
+    AI->>ActionEntry: action_entry.invoke(context, state, parameters) ++ SAY_COMMAND
+    Note right of ActionEntry: Handles SAY_COMMAND (send answer)
+    ActionEntry-->>AI: "Prasad refers to Prasad Mujumdar..."
+    AI-->>User: Prasad refers to Prasad Mujumdar, who is listed as a maintainer in the project...
+
+    %% 3. User asks for all maintainers (triggers RAG extraction again)
+    User->>WebApp: who else are maintainers in <CODEOWNERS.md>
+    WebApp->>ConversationState: load()
+    ConversationState-->>WebApp: state loaded
+    WebApp->>AI: AI.run(context, state)
+    AI->>Planner: planner.begin_task(context, state)
+    Planner->>OpenAI: OpenAIModel.complete_prompt(...)
+    OpenAI-->>Planner: LLM returns plan (DO extractRAGURL, SAY)
+    Planner-->>AI: Plan(commands=[DO extractRAGURL, SAY])
+    AI->>ActionEntry: action_entry.invoke(context, state, parameters) ++ PLAN_READY
+    Note right of ActionEntry: Handles PLAN_READY (plan is ready to execute)
+    ActionEntry-->>AI: "Plan ready, proceeding to next command"
+    AI->>ActionEntry: action_entry.invoke(context, state, parameters) ++ DO_COMMAND
+    Note right of ActionEntry: Handles DO_COMMAND (calls extractRAGURL)
+    ActionEntry-->>AI: "The current list of maintainers..."
+    AI->>ActionEntry: action_entry.invoke(context, state, parameters) ++ SAY_COMMAND
+    Note right of ActionEntry: Handles SAY_COMMAND (send answer)
+    ActionEntry-->>AI: "The current list of maintainers..."
+    AI-->>User: The current list of maintainers for the project is as follows: ...
+
+    %% 4. Error handling (invalid LLM output)
+    Note over AI,Planner: If LLM returns invalid JSON\nPlanner/AI returns error:\n'No valid JSON objects were found in the response. Return a valid JSON object with your thoughts and the next action to perform.'
+```
 
 ### 4. AI Bot with Azure AI Search
 
