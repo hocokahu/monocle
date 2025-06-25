@@ -146,7 +146,7 @@ At the minimum, this needs to be on-pair with Python version:
 
 ![](../resources/Agent-with-API-Build-from-Scratch.png)
 
-**Traces**: [Agent-with-API-Build-from-Scratch.json](../resources/Agent-with-API-Build-from-Scratch.json)
+**Traces (without new instrumentation)**: [Agent-with-API-Build-from-Scratch.json](../resources/Agent-with-API-Build-from-Scratch.json)
 
 #### Requirements (UPDATED 6/23 for 0.4.1a8)
 
@@ -210,7 +210,7 @@ To gain deeper insights into the application's behavior, performance, and potent
 
 ##### 1-Chat Conversation
 
-**Sample Trace**: [monocle_trace_teams-ai-basic-rag-bot-1-chat.json](../resources/monocle_trace_teams-ai-basic-rag-bot-1-chat.json)
+**Sample Trace**: [Teams-ai-basic-rag-bot-1-chat.json](../resources/Teams-ai-basic-rag-bot-1-chat.json)
 
 **Flow explained in plain English:**
 
@@ -311,7 +311,7 @@ sequenceDiagram
 
 ##### 3-Chat Conversation
 
-**Sample Trace**: [monocle_trace_teams-ai-basic-rag-bot-3-chat.json](../resources/monocle_trace_teams-ai-basic-rag-bot-3-chat.json)
+**Sample Trace**: [Teams-ai-basic-rag-bot-3-chat.json](../resources/Teams-ai-basic-rag-bot-3-chat.json)
 
 **Key Differences from 1-Chat:**
 

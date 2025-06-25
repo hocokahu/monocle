@@ -1,0 +1,808 @@
+[{
+    "name": "teams.state.conversation_state.load",
+    "context": {
+        "trace_id": "0x4383ac8a59190467b9276c0e5024570a",
+        "span_id": "0xe60244ec4615126c",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x4257b52910fc7b8a",
+    "start_time": "2025-06-24T02:07:04.673371Z",
+    "end_time": "2025-06-24T02:07:04.674161Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-search/.venv/lib/python3.11/site-packages/teams/state/turn_state.py:71",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.state.class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T02:07:04.673884Z",
+            "attributes": {
+                "has_storage": false
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T02:07:04.674095Z",
+            "attributes": {
+                "status": "success",
+                "state_type": "ConversationState",
+                "loaded_key": "msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id",
+                "state_attributes": [],
+                "state_response": "{'__key__': 'msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id'}"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T02:07:04.674129Z",
+            "attributes": {
+                "state_class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+                "operation": "conversation_state_load",
+                "component": "teams_conversation_state",
+                "operation_type": "conversation_state_load",
+                "is_base_class": true
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.state.conversation_state.load",
+    "context": {
+        "trace_id": "0x4383ac8a59190467b9276c0e5024570a",
+        "span_id": "0xa19ba33e91ed7bf7",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x4257b52910fc7b8a",
+    "start_time": "2025-06-24T02:07:04.675071Z",
+    "end_time": "2025-06-24T02:07:04.675478Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-search/.venv/lib/python3.11/site-packages/teams/state/turn_state.py:71",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.state.class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T02:07:04.675320Z",
+            "attributes": {
+                "has_storage": false
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T02:07:04.675430Z",
+            "attributes": {
+                "status": "success",
+                "state_type": "ConversationState",
+                "loaded_key": "msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id",
+                "state_attributes": [],
+                "state_response": "{'__key__': 'msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id'}"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T02:07:04.675460Z",
+            "attributes": {
+                "state_class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+                "operation": "conversation_state_load",
+                "component": "teams_conversation_state",
+                "operation_type": "conversation_state_load",
+                "is_base_class": true
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "openai.resources.embeddings.AsyncEmbeddings",
+    "context": {
+        "trace_id": "0x4383ac8a59190467b9276c0e5024570a",
+        "span_id": "0xa2b3f141c15b6358",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xfa1fb5fb6b39ccc7",
+    "start_time": "2025-06-24T02:07:04.717644Z",
+    "end_time": "2025-06-24T02:07:05.956347Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-search/.venv/lib/python3.11/site-packages/teams/ai/embeddings/azure_openai_embeddings.py:91",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "retrieval.modelapi",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "azure.search.documents._search_client.SearchClient",
+    "context": {
+        "trace_id": "0x4383ac8a59190467b9276c0e5024570a",
+        "span_id": "0x01aba917a17fc368",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xfa1fb5fb6b39ccc7",
+    "start_time": "2025-06-24T02:07:05.956940Z",
+    "end_time": "2025-06-24T02:07:05.957761Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-search/src/azure_ai_search_data_source.py:78",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "search",
+        "entity.1.type": "azure.search",
+        "entity.1.version_remove_me": "11",
+        "entity.1.index_name": "contoso-electronics",
+        "entity.1.inference_endpoint": "https://teamsaisearch1.search.windows.net",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T02:07:05.957686Z",
+            "attributes": {
+                "parameters": "{\"search_text\": \"tell me about executive vacation days\", \"select\": [\"docTitle\", \"description\", \"descriptionVector\"], \"vector_queries\": \"{'additional_properties': {}, 'kind': 'vector', 'k_nearest_neighbors': 2, 'fields': 'descriptionVector', 'exhaustive': 'null', 'oversampling': 'null', 'weight': 'null'}\"}"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T02:07:05.957720Z",
+            "attributes": {
+                "summary": "{\"count\": \"null\", \"coverage\": \"null\", \"facets\": \"null\"}"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T02:07:05.957749Z",
+            "attributes": {
+                "info": "{\"endpoint\": \"https://teamsaisearch1.search.windows.net\", \"index\": \"contoso-electronics\", \"latency_ms\": \"null\"}"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "azure.search.documents._generated.operations._documents_operations.DocumentsOperations",
+    "context": {
+        "trace_id": "0x4383ac8a59190467b9276c0e5024570a",
+        "span_id": "0xd17ebac4270bbb63",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xfa1fb5fb6b39ccc7",
+    "start_time": "2025-06-24T02:07:05.959034Z",
+    "end_time": "2025-06-24T02:07:06.864696Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-search/.venv/lib/python3.11/site-packages/azure/search/documents/_paging.py:125",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "search",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001"
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T02:07:06.864544Z",
+            "attributes": {
+                "search_text": "tell me about executive vacation days"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T02:07:06.864620Z",
+            "attributes": {
+                "results": "[{\"docTitle\": \"Contoso_Electronics_PerkPlus_Program\", \"description\": \"# Contoso Electronics PerksPlus Program\\n\\n*Disclaimer: This document contains information generated using a language model (Azure OpenAI). The information contained in this document is only for demonstration purposes and does not reflect the opinions or beliefs of Microsoft. Microsoft makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the information contained in this document. All rights reserved to Microsoft.*\\n\\n## Overview\\nIntroducing PerksPlus - the ultimate benefits program designed to support the health and wellness of employees. With PerksPlus, employees have the opportunity to expense up to $1000 for fitness-related programs, making it easier and more affordable to maintain a healthy lifestyle. PerksPlus is not only designed to support employees' physical health, but also their mental health. Regular exercise has been shown to reduce stress, improve mood, and enhance overall well-being. With PerksPlus, employees can invest in their health and wellness, while enjoying the peace of mind that comes with knowing they are getting the support they need to lead a healthy life.\\nWhat is Covered?\\n\\nPerksPlus covers a wide range of fitness activities, including but not limited to:\\n* Gym memberships\\n* Personal training sessions\\n* Yoga and Pilates classes\\n* Fitness equipment purchases\\n* Sports team fees\\n* Health retreats and spas\\n* Outdoor adventure activities (such as rock climbing, hiking, and kayaking)\\n* Group fitness classes (such as dance, martial arts, and cycling)\\n* Virtual fitness programs (such as online yoga and workout classes)\\n\\nIn addition to the wide range of fitness activities covered by PerksPlus, the program also covers a variety of lessons and experiences that promote health and wellness. Some of the lessons covered under PerksPlus include:\\n* Skiing and snowboarding lessons\\n* Scuba diving lessons\\n* Surfing lessons\\n* Horseback riding lessons\\n\\nThese lessons provide employees with the opportunity to try new things, challenge themselves, and improve their physical skills. They are also a great way to relieve stress and have fun while staying active.\\n\\nWith PerksPlus, employees can choose from a variety of fitness programs to suit their individual needs and preferences. Whether you're looking to improve your physical fitness, reduce stress, or just have some fun, PerksPlus has you covered.\\n\\n## What is Not Covered?\\nIn addition to the wide range of activities covered by PerksPlus, there is also a list of things that are not \\ncovered under the program. These include but are not limited to:\\n* Non-fitness related expenses\\n* Medical treatments and procedures\\n* Travel expenses (unless related to a fitness program)\\n* Food and supplements\", \"@search.score\": 0.03306011110544205, \"@search.reranker_score\": null}, {\"docTitle\": \"Contoso_Electronics_Company_Overview\", \"description\": \"# Contoso Electronics Company Overview\\n\\n*Disclaimer: This document contains information generated using a language model (Azure OpenAI). The information contained in this document is only for demonstration purposes and does not reflect the opinions or beliefs of Microsoft. Microsoft makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the information contained in this document. All rights reserved to Microsoft.*\\n\\n## History\\n\\nContoso Electronics, a pioneering force in the tech industry, was founded in 1985 by visionary entrepreneurs with a passion for innovation. Over the years, the company has played a pivotal role in shaping the landscape of consumer electronics.\\n\\n| Year | Milestone |\\n|------|-----------|\\n| 1985 | Company founded with a focus on cutting-edge technology |\\n| 1990 | Launched the first-ever handheld personal computer |\\n| 2000 | Introduced groundbreaking advancements in AI and robotics |\\n| 2015 | Expansion into sustainable and eco-friendly product lines |\\n\\n## Company Overview\\n\\nAt Contoso Electronics, we take pride in fostering a dynamic and inclusive workplace. Our dedicated team of experts collaborates to create innovative solutions that empower and connect people globally.\\n\\n### Core Values\\n\\n- **Innovation:** Constantly pushing the boundaries of technology.\\n- **Diversity:** Embracing different perspectives for creative excellence.\\n- **Sustainability:** Committed to eco-friendly practices in our products.\\n\\n## Vacation Perks\\n\\nWe believe in work-life balance and understand the importance of well-deserved breaks. Our vacation perks are designed to help our employees recharge and return with renewed enthusiasm.\\n\\n| Vacation Tier | Duration | Additional Benefits |\\n|---------------|----------|---------------------|\\n| Standard      | 2 weeks  | Health and wellness stipend |\\n| Senior        | 4 weeks  | Travel vouchers for a dream destination |\\n| Executive     | 6 weeks  | Luxury resort getaway with family |\\n\\n## Employee Recognition\\n\\nRecognizing the hard work and dedication of our employees is at the core of our culture. Here are some ways we celebrate achievements:\\n\\n- Monthly \\\"Innovator of the Month\\\" awards\\n- Annual gala with awards for outstanding contributions\\n- Team-building retreats for high-performing departments\\n\\n## Join Us!\\n\\nContoso Electronics is always on the lookout for talented individuals who share our passion for innovation. If you're ready to be part of a dynamic team shaping the future of technology, check out our [careers page](http://www.contoso.com) for exciting opportunities.\\n\\n[Learn more about Contoso Electronics!](http://www.contoso.com)\\n\", \"@search.score\": 0.03306011110544205, \"@search.reranker_score\": null}, {\"docTitle\": \"Contoso_Electronics_Plan_Benefits\", \"description\": \"# Contoso Electronics Plan and Benefit Packages\\n\\n*Disclaimer: This document contains information generated using a language model (Azure OpenAI). The information contained in this document is only for demonstration purposes and does not reflect the opinions or beliefs of Microsoft. Microsoft makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the information contained in this document. All rights reserved to Microsoft.*\\n\\n## Northwind Health Plus\\n\\nNorthwind Health Plus is a comprehensive plan that provides comprehensive coverage for medical, vision, and dental services. This plan also offers prescription drug coverage, mental health and substance abuse coverage, and coverage for preventive care services. With Northwind Health Plus, you can choose from a variety of in-network providers, including primary care physicians, specialists, hospitals, and pharmacies. \\n\\nThis plan also offers coverage for emergency services, both in-network and out-of-network.\\n\\n## Northwind Standard\\n\\nNorthwind Standard is a basic plan that provides coverage for medical, vision, and dental services. This plan also offers coverage for preventive care services, as well as prescription drug coverage. With Northwind Standard, you can choose from a variety of in-network providers, including primary care physicians, specialists, hospitals, and pharmacies. This plan does not offer coverage for emergency services, mental health and substance abuse coverage, or out-of-network services.\\n\\n## Comparison of Plans\\n\\nBoth plans offer coverage for routine physicals, well-child visits, immunizations, and other preventive care services. The plans also cover preventive care services such as mammograms, colonoscopies, and other cancer screenings. \\n\\nNorthwind Health Plus offers more comprehensive coverage than Northwind Standard. This plan offers coverage for emergency services, both in-network and out-of-network, as well as mental health and substance abuse coverage. Northwind Standard does not offer coverage for emergency services, mental health and substance abuse coverage, or out-of-network services. \\n\\nBoth plans offer coverage for prescription drugs. Northwind Health Plus offers a wider range of prescription drug coverage than Northwind Standard. Northwind Health Plus covers generic, brand-name, and specialty drugs, while Northwind Standard only covers generic and brand-name drugs. \\n\\nBoth plans offer coverage for vision and dental services. Northwind Health Plus offers coverage for vision exams, glasses, and contact lenses, as well as dental exams, cleanings, and fillings. Northwind Standard only offers coverage for vision exams and glasses. \\n\\nBoth plans offer coverage for medical services. Northwind Health Plus offers coverage for hospital stays, doctor visits, lab tests, and X-rays. Northwind Standard only offers coverage for doctor visits and lab tests. \\n\\nNorthwind Health Plus is a comprehensive plan that offers more coverage than Northwind Standard. Northwind Health Plus offers coverage for emergency services, mental health and substance abuse coverage, and out-of-network services, while Northwind Standard does not. Northwind Health Plus also offers a wider range of prescription drug coverage than Northwind Standard. Both plans offer coverage for vision and dental services, as well as medical services.\\n\\n## Cost Comparison\\n\\nContoso Electronics deducts the employee's portion of the healthcare cost from each paycheck. This means that the cost of the health insurance will be spread out over the course of the year, rather than being paid in one lump sum. The employee's portion of the cost will be calculated based on the selected health plan and the number of people covered by the insurance. The table below shows a cost comparison between the different health plans offered by Contoso Electronics\\n\\n|  | Northwind Standard | NorthWind Health Plus |\\n|---------------|----------|---------------------|\\n| Employee Only      | $45.00  | $55.00 |\\n| Employee +1        | $65.00  | $71.00 |\\n| Employee +2 or more     | $78.00  | $89.00 |\", \"@search.score\": 0.016129031777381897, \"@search.reranker_score\": null}]"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T02:07:06.864674Z",
+            "attributes": {
+                "options": "{\"select\": \"docTitle,description,descriptionVector\", \"include_total_result_count\": null, \"facets\": null, \"filter\": null, \"highlight_fields\": null, \"highlight_post_tag\": null, \"highlight_pre_tag\": null, \"minimum_coverage\": null, \"order_by\": null, \"query_type\": null, \"scoring_parameters\": null, \"scoring_profile\": null, \"semantic_query\": null, \"latency_ms\": null}"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "openai.resources.chat.completions.completions.AsyncCompletions",
+    "context": {
+        "trace_id": "0x4383ac8a59190467b9276c0e5024570a",
+        "span_id": "0x820062ec9e8b96cc",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xfa1fb5fb6b39ccc7",
+    "start_time": "2025-06-24T02:07:06.880049Z",
+    "end_time": "2025-06-24T02:07:08.460927Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-search/.venv/lib/python3.11/site-packages/teams/ai/models/openai_model.py:237",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "inference.modelapi",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.models.openai_model.OpenAIModel",
+    "context": {
+        "trace_id": "0x4383ac8a59190467b9276c0e5024570a",
+        "span_id": "0xfa1fb5fb6b39ccc7",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xf2fd3ed10353490d",
+    "start_time": "2025-06-24T02:07:04.686304Z",
+    "end_time": "2025-06-24T02:07:08.461338Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-search/.venv/lib/python3.11/site-packages/teams/ai/clients/llm_client.py:217",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "inference.framework",
+        "entity.1.type": "inference.azure_openai",
+        "entity.1.provider_name": "okahu-openai-dev.openai.azure.com",
+        "entity.1.inference_endpoint": "https://okahu-openai-dev.openai.azure.com/openai/deployments/gpt-4o-mini/",
+        "entity.2.name": "gpt-4o-mini",
+        "entity.2.type": "model.llm.gpt-4o-mini",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 2
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T02:07:05.956320Z",
+            "attributes": {}
+        },
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T02:07:08.460841Z",
+            "attributes": {
+                "input": [
+                    "{'system': 'The following is a conversation with an AI assistant, who is an expert on answering questions over the given context.\\nResponses should be in a short journalistic style with no more than 80 words, and provide citations.\\nUse the context provided in the `<context></context>` tags as the source for your answers.\\nResponse should be a json array, list all the answers and citations. \\nIf citationTitle is not empty, citationContent mustn\\'t be empty!!!\\n# citationTitle must be a file name!!!\\nIf the answer no citation, set the citationTitle and citationContent as empty.\\nData format:\\n{\\n    \"results\":[\\n        {\\n            \"answer\":\"{$answer1}\",\\n            \"citationTitle\":\"{$citationTitle1}\",\\n            \"citationContent\":\"{$citationContent1}\"\\n        },\\n        {\\n            \"answer\":\"{$answer2}\",\\n            \"citationTitle\":\"{$citationTitle2}\",\\n            \"citationContent\":\"{$citationContent2}\"\\n        },\\n        ...\\n    ]\\n} \\n\\n'}",
+                    "{'user': 'tell me about executive vacation days'}"
+                ]
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T02:07:08.460900Z",
+            "attributes": {
+                "completion_tokens": 101,
+                "prompt_tokens": 212,
+                "total_tokens": 313
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T02:07:08.461328Z",
+            "attributes": {
+                "status": "success",
+                "status_code": "success",
+                "response": "{\n    \"results\":[\n        {\n            \"answer\":\"Executive vacation days are typically part of a broader benefits package that includes paid time off (PTO) for senior management. These days allow executives to recharge and maintain work-life balance, often exceeding standard vacation policies. Companies may offer flexible scheduling or additional days based on tenure or performance.\",\n            \"citationTitle\":\"executive_vacation_days_policy.pdf\",\n            \"citationContent\":\"Details on executive vacation policies and benefits.\"\n        }\n    ]\n}"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.planners.action_planner.ActionPlanner",
+    "context": {
+        "trace_id": "0x4383ac8a59190467b9276c0e5024570a",
+        "span_id": "0xf2fd3ed10353490d",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x311c4d34b2ae8838",
+    "start_time": "2025-06-24T02:07:04.682496Z",
+    "end_time": "2025-06-24T02:07:08.461722Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-search/.venv/lib/python3.11/site-packages/teams/ai/planners/action_planner.py:106",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "generic",
+        "entity.1.type": "teams.planner",
+        "entity.1.planner_type": "ActionPlanner",
+        "entity.2.model": "OpenAIModel",
+        "entity.2.tokenizer": "GPTTokenizer",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 2
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T02:07:08.461669Z",
+            "attributes": {
+                "prompt_template_name": "chat",
+                "prompt_template": "The following is a conversation with an AI assistant, who is an expert on answering questions over the given context.\nResponses should be in a short journalistic style with no more than 80 words, and provide citations.\nUse the context provided in the `<context></context>` tags as the source for your answers.\nResponse should be a json array, list all the answers and citations. \nIf citationTitle is not empty, citationContent mustn't be empty!!!\n# citationTitle must be a file name!!!\nIf the answer no citation, set the citationTitle and citationContent as empty.\nData format:\n{\n    \"results\":[\n        {\n            \"answer\":\"{$answer1}\",\n            \"citationTitle\":\"{$citationTitle1}\",\n            \"citationContent\":\"{$citationContent1}\"\n        },\n        {\n            \"answer\":\"{$answer2}\",\n            \"citationTitle\":\"{$citationTitle2}\",\n            \"citationContent\":\"{$citationContent2}\"\n        },\n        ...\n    ]\n} ",
+                "prompt_template_description": "Chat with Teams RAG",
+                "prompt_template_type": "completion",
+                "validator": "DefaultAugmentation",
+                "memory_type": "TurnState"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T02:07:08.461698Z",
+            "attributes": {
+                "response": "{\n    \"results\":[\n        {\n            \"answer\":\"Executive vacation days are typically part of a broader benefits package that includes paid time off (PTO) for senior management. These days allow executives to recharge and maintain work-life balance, often exceeding standard vacation policies. Companies may offer flexible scheduling or additional days based on tenure or performance.\",\n            \"citationTitle\":\"executive_vacation_days_policy.pdf\",\n            \"citationContent\":\"Details on executive vacation policies and benefits.\"\n        }\n    ]\n}"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T02:07:08.461713Z",
+            "attributes": {
+                "feedback_enabled": false
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.actions.action_entry.invoke",
+    "context": {
+        "trace_id": "0x4383ac8a59190467b9276c0e5024570a",
+        "span_id": "0x3192c8e34bdac023",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x311c4d34b2ae8838",
+    "start_time": "2025-06-24T02:07:08.462449Z",
+    "end_time": "2025-06-24T02:07:08.462788Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-search/.venv/lib/python3.11/site-packages/teams/ai/ai.py:152",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.name": "ActionTypes.PLAN_READY",
+        "entity.1.state": "{\"conversation\": {\"chat_history\": [{\"role\": \"user\", \"content\": \"tell me about executive vacation days\", \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}, {\"role\": \"assistant\", \"content\": \"{\\n    \\\"results\\\":[\\n        {\\n            \\\"answer\\\":\\\"Executive vacation days are typically part of a broader benefits package that includes paid time off (PTO) for senior management. These days allow executives to recharge and maintain work-life balance, often exceeding standard vacation policies. Companies may offer flexible scheduling or additional days based on tenure or performance.\\\",\\n            \\\"citationTitle\\\":\\\"executive_vacation_days_policy.pdf\\\",\\n            \\\"citationContent\\\":\\\"Details on executive vacation policies and benefits.\\\"\\n        }\\n    ]\\n}\", \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}]}, \"user\": {}, \"temp\": {\"action_outputs\": {}, \"auth_tokens\": {}, \"duplicate_token_exchange\": null, \"input\": \"tell me about executive vacation days\", \"input_files\": [], \"last_output\": \"\"}}",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.actions.action_entry.invoke",
+    "context": {
+        "trace_id": "0x4383ac8a59190467b9276c0e5024570a",
+        "span_id": "0x90b0b16cbaa7c652",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x311c4d34b2ae8838",
+    "start_time": "2025-06-24T02:07:08.463190Z",
+    "end_time": "2025-06-24T02:07:08.472036Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-search/.venv/lib/python3.11/site-packages/teams/ai/ai.py:184",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.name": "ActionTypes.SAY_COMMAND",
+        "entity.1.state": "{\"conversation\": {\"chat_history\": [{\"role\": \"user\", \"content\": \"tell me about executive vacation days\", \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}, {\"role\": \"assistant\", \"content\": \"{\\n    \\\"results\\\":[\\n        {\\n            \\\"answer\\\":\\\"Executive vacation days are typically part of a broader benefits package that includes paid time off (PTO) for senior management. These days allow executives to recharge and maintain work-life balance, often exceeding standard vacation policies. Companies may offer flexible scheduling or additional days based on tenure or performance.\\\",\\n            \\\"citationTitle\\\":\\\"executive_vacation_days_policy.pdf\\\",\\n            \\\"citationContent\\\":\\\"Details on executive vacation policies and benefits.\\\"\\n        }\\n    ]\\n}\", \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}]}, \"user\": {}, \"temp\": {\"action_outputs\": {}, \"auth_tokens\": {}, \"duplicate_token_exchange\": null, \"input\": \"tell me about executive vacation days\", \"input_files\": [], \"last_output\": \"\"}}",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.ai.AI.run",
+    "context": {
+        "trace_id": "0x4383ac8a59190467b9276c0e5024570a",
+        "span_id": "0x311c4d34b2ae8838",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x4257b52910fc7b8a",
+    "start_time": "2025-06-24T02:07:04.677043Z",
+    "end_time": "2025-06-24T02:07:08.472266Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-search/.venv/lib/python3.11/site-packages/teams/app.py:846",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "application",
+        "entity.1.activity.type": "message",
+        "entity.1.activity.channel_id": "msteams",
+        "entity.1.conversation.id": "personal-chat-id",
+        "entity.1.conversation.type": "personal",
+        "entity.1.user.id": "user-id-0",
+        "entity.1.user.name": "Alex Wilber",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T02:07:08.472218Z",
+            "attributes": {
+                "activity_text": "tell me about executive vacation days",
+                "activity_type": "message",
+                "channel_id": "msteams",
+                "conversation_id": "personal-chat-id",
+                "conversation_type": "personal",
+                "user_id": "user-id-0",
+                "user_name": "Alex Wilber",
+                "recipient_id": "00000000-0000-0000-0000-00000000000011"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T02:07:08.472241Z",
+            "attributes": {
+                "status": "success",
+                "ai_run_result": true,
+                "result_summary": "True"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T02:07:08.472256Z",
+            "attributes": {
+                "processing_type": "teams_bot_framework"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.app.application.process",
+    "context": {
+        "trace_id": "0x4383ac8a59190467b9276c0e5024570a",
+        "span_id": "0x4257b52910fc7b8a",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xe927e966dc0b46f2",
+    "start_time": "2025-06-24T02:07:04.648028Z",
+    "end_time": "2025-06-24T02:07:08.473781Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-search/src/app.py:65",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "application",
+        "entity.1.request.method": "POST",
+        "entity.1.request.path": "/api/messages",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T02:07:08.473722Z",
+            "attributes": {
+                "method": "POST",
+                "path": "/api/messages",
+                "content_type": "application/json"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T02:07:08.473757Z",
+            "attributes": {
+                "status": "success",
+                "http_status": 201,
+                "result_summary": "<Response Created not prepared>"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T02:07:08.473769Z",
+            "attributes": {
+                "processing_type": "teams_bot_framework"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "aiohttp.web_app.Application",
+    "context": {
+        "trace_id": "0x4383ac8a59190467b9276c0e5024570a",
+        "span_id": "0xe927e966dc0b46f2",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x143d5f2f6ad02c2a",
+    "start_time": "2025-06-24T02:07:04.645776Z",
+    "end_time": "2025-06-24T02:07:08.473924Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-search/.venv/lib/python3.11/site-packages/aiohttp/web_protocol.py:510",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "http.process",
+        "entity.1.method": "POST",
+        "entity.1.route": "/api/messages",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T02:07:08.473897Z",
+            "attributes": {}
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T02:07:08.473915Z",
+            "attributes": {
+                "status": "201"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "workflow",
+    "context": {
+        "trace_id": "0x4383ac8a59190467b9276c0e5024570a",
+        "span_id": "0x143d5f2f6ad02c2a",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2025-06-24T02:07:04.644166Z",
+    "end_time": "2025-06-24T02:07:08.473949Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-search/.venv/lib/python3.11/site-packages/aiohttp/web_protocol.py:510",
+        "span.type": "workflow",
+        "entity.1.name": "teams-ai-bot",
+        "entity.1.type": "workflow.generic",
+        "entity.2.type": "app_hosting.generic",
+        "entity.2.name": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+]

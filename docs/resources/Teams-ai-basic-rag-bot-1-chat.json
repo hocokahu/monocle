@@ -1,0 +1,1260 @@
+[{
+    "name": "teams.state.conversation_state.load",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0x3d555e93f009aaf2",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xfde951cf502e42cc",
+    "start_time": "2025-06-24T00:33:24.405746Z",
+    "end_time": "2025-06-24T00:33:24.406420Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/teams/state/turn_state.py:71",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.state.class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T00:33:24.406196Z",
+            "attributes": {
+                "has_storage": false
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T00:33:24.406347Z",
+            "attributes": {
+                "status": "success",
+                "state_type": "ConversationState",
+                "loaded_key": "msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id",
+                "has_tasks": false,
+                "task_count": 0,
+                "state_attributes": [],
+                "state_response": "{'__key__': 'msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id', 'tasks': None}"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T00:33:24.406391Z",
+            "attributes": {
+                "state_class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+                "operation": "conversation_state_load",
+                "component": "teams_conversation_state",
+                "operation_type": "conversation_state_load",
+                "is_base_class": true
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.state.conversation_state.load",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0x63b3936d030b98cd",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xa7863424be2a8d04",
+    "start_time": "2025-06-24T00:33:24.408701Z",
+    "end_time": "2025-06-24T00:33:24.409327Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/src/state.py:17",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.state.class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T00:33:24.409101Z",
+            "attributes": {
+                "has_storage": false
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T00:33:24.409263Z",
+            "attributes": {
+                "status": "success",
+                "state_type": "AppConversationState",
+                "loaded_key": "msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id",
+                "has_tasks": false,
+                "task_count": 0,
+                "state_attributes": [
+                    "tasks"
+                ],
+                "state_response": "{'tasks': None, '__key__': 'msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id'}"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T00:33:24.409305Z",
+            "attributes": {
+                "state_class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+                "operation": "conversation_state_load",
+                "component": "teams_conversation_state",
+                "operation_type": "conversation_state_load",
+                "is_base_class": true
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "app.state.conversation_state.load",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0xa7863424be2a8d04",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xfde951cf502e42cc",
+    "start_time": "2025-06-24T00:33:24.407678Z",
+    "end_time": "2025-06-24T00:33:24.409722Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/src/state.py:27",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.state.class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T00:33:24.409537Z",
+            "attributes": {
+                "has_storage": false
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T00:33:24.409669Z",
+            "attributes": {
+                "status": "success",
+                "state_type": "AppConversationState",
+                "loaded_key": "msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id",
+                "has_tasks": false,
+                "task_count": 0,
+                "state_attributes": [
+                    "tasks"
+                ],
+                "state_response": "{'tasks': None, '__key__': 'msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id'}"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T00:33:24.409708Z",
+            "attributes": {
+                "state_class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+                "operation": "conversation_state_load",
+                "component": "teams_conversation_state",
+                "operation_type": "conversation_state_load",
+                "is_base_class": true
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.state.conversation_state.load",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0xf06b34a5d3dd45b9",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x84349bb6b2f8a2da",
+    "start_time": "2025-06-24T00:33:24.411583Z",
+    "end_time": "2025-06-24T00:33:24.412040Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/src/state.py:17",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.state.class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T00:33:24.411855Z",
+            "attributes": {
+                "has_storage": false
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T00:33:24.411987Z",
+            "attributes": {
+                "status": "success",
+                "state_type": "AppConversationState",
+                "loaded_key": "msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id",
+                "has_tasks": false,
+                "task_count": 0,
+                "state_attributes": [
+                    "tasks"
+                ],
+                "state_response": "{'tasks': None, '__key__': 'msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id'}"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T00:33:24.412023Z",
+            "attributes": {
+                "state_class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+                "operation": "conversation_state_load",
+                "component": "teams_conversation_state",
+                "operation_type": "conversation_state_load",
+                "is_base_class": true
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "app.state.conversation_state.load",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0x84349bb6b2f8a2da",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xfde951cf502e42cc",
+    "start_time": "2025-06-24T00:33:24.410766Z",
+    "end_time": "2025-06-24T00:33:24.412407Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/src/state.py:27",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.state.class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T00:33:24.412224Z",
+            "attributes": {
+                "has_storage": false
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T00:33:24.412358Z",
+            "attributes": {
+                "status": "success",
+                "state_type": "AppConversationState",
+                "loaded_key": "msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id",
+                "has_tasks": false,
+                "task_count": 0,
+                "state_attributes": [
+                    "tasks"
+                ],
+                "state_response": "{'tasks': None, '__key__': 'msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id'}"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T00:33:24.412394Z",
+            "attributes": {
+                "state_class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+                "operation": "conversation_state_load",
+                "component": "teams_conversation_state",
+                "operation_type": "conversation_state_load",
+                "is_base_class": true
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "openai.resources.chat.completions.completions.AsyncCompletions",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0x9129d244d2c769bb",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x96112d41e9e0658a",
+    "start_time": "2025-06-24T00:33:24.437967Z",
+    "end_time": "2025-06-24T00:33:27.264171Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/teams/ai/models/openai_model.py:237",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "inference.modelapi",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.models.openai_model.OpenAIModel",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0x96112d41e9e0658a",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x4515b2b4b013618f",
+    "start_time": "2025-06-24T00:33:24.424869Z",
+    "end_time": "2025-06-24T00:33:27.264753Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/teams/ai/clients/llm_client.py:217",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "inference.framework",
+        "entity.1.type": "inference.azure_openai",
+        "entity.1.provider_name": "okahu-openai-dev.openai.azure.com",
+        "entity.1.inference_endpoint": "https://okahu-openai-dev.openai.azure.com/openai/deployments/gpt-4o-mini/",
+        "entity.2.name": "gpt-4o-mini",
+        "entity.2.type": "model.llm.gpt-4o-mini",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 2
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T00:33:27.264020Z",
+            "attributes": {
+                "input": [
+                    "{'system': 'You are an AI assistant that can\\n- chat with user\\n- manage tasks for user\\n\\ninstructions:\\n- only create task user has explicitly asked to create.\\n- always show the short description of the task after creating or deleting it.\\n\\nCurrent tasks:\\n\\n\\n{\"actions\": {\"createTask\": {\"description\": \"Create a new task with title and description\", \"parameters\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to create\"}, \"description\": {\"type\": \"string\", \"description\": \"The detailed description of the task to create\"}}}, \"deleteTask\": {\"description\": \"Delete an existing task\", \"parameters\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to delete\"}}}, \"extractRAGURL\": {\"description\": \"Extract and process URLs from the chat request when the user needs information or content from specific URLs to answer their question\", \"parameters\": {\"urls\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}, \"description\": \"Array of URLs found in the chat request that contain information needed to answer the user\\'s question\"}, \"purpose\": {\"type\": \"string\", \"description\": \"Description of why these URLs are needed to answer the user\\'s request\"}}}, \"SAY\": {\"description\": \"use to ask the user a question or say something\", \"parameters\": {\"text\": {\"type\": \"string\", \"description\": \"text to say or question ask\"}}}}}\\n\\nReturn a JSON object with your thoughts and the next action to perform.\\nOnly respond with the JSON format below and base your plan on the actions above.\\nIf you\\'re not sure what to do, you can always say something by returning a SAY action.\\nIf you\\'re told your JSON response has errors, do your best to fix them.\\nResponse Format:\\n{\"thoughts\":{\"thought\":\"<your current thought>\",\"reasoning\":\"<self reflect on why you made this decision>\",\"plan\":\"- short bulleted\\\\n- list that conveys\\\\n- long-term plan\"},\"action\":{\"name\":\"<action name>\",\"parameters\":{\"<name>\":\"<value>\"}}}'}",
+                    "{'user': 'who is prasad https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md'}"
+                ]
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T00:33:27.264120Z",
+            "attributes": {
+                "completion_tokens": 138,
+                "prompt_tokens": 474,
+                "total_tokens": 612
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T00:33:27.264721Z",
+            "attributes": {
+                "status": "success",
+                "status_code": "success",
+                "response": "{\"thoughts\":{\"thought\":\"The user is asking about a person named Prasad and has provided a URL that may contain relevant information.\",\"reasoning\":\"I need to extract the URL to gather information about Prasad from the provided link, as it might contain details related to the query.\",\"plan\":\"- Extract the URL from the user's message\\n- Process the content of the URL to find information about Prasad\"},\"action\":{\"name\":\"extractRAGURL\",\"parameters\":{\"urls\":[\"https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\"],\"purpose\":\"To find information about a person named Prasad.\"}}}"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.planners.action_planner.ActionPlanner",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0x4515b2b4b013618f",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xf3aa455f039f32b0",
+    "start_time": "2025-06-24T00:33:24.423675Z",
+    "end_time": "2025-06-24T00:33:27.281138Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/teams/ai/planners/action_planner.py:106",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "generic",
+        "entity.1.type": "teams.planner",
+        "entity.1.planner_type": "ActionPlanner",
+        "entity.2.model": "OpenAIModel",
+        "entity.2.tokenizer": "GPTTokenizer",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 2
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T00:33:27.281052Z",
+            "attributes": {
+                "prompt_template_name": "planner",
+                "prompt_template": "You are an AI assistant that can\n- chat with user\n- manage tasks for user\n\ninstructions:\n- only create task user has explicitly asked to create.\n- always show the short description of the task after creating or deleting it.\n\nCurrent tasks:\n{{$conversation.tasks}}",
+                "prompt_template_description": "An agent that can chat or manage tasks.",
+                "prompt_template_type": "completion",
+                "validator": "MonologueAugmentation",
+                "memory_type": "AppTurnState"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T00:33:27.281086Z",
+            "attributes": {}
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T00:33:27.281112Z",
+            "attributes": {
+                "feedback_enabled": false
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.actions.action_entry.invoke",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0x09d35a2366362555",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xf3aa455f039f32b0",
+    "start_time": "2025-06-24T00:33:27.283404Z",
+    "end_time": "2025-06-24T00:33:27.283814Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/teams/ai/ai.py:152",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.name": "ActionTypes.PLAN_READY",
+        "entity.1.state": "{\"conversation\": {\"tasks\": null, \"planner_history\": [{\"role\": \"user\", \"content\": \"who is prasad https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\", \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}, {\"role\": \"assistant\", \"content\": {\"thoughts\": {\"thought\": \"The user is asking about a person named Prasad and has provided a URL that may contain relevant information.\", \"reasoning\": \"I need to extract the URL to gather information about Prasad from the provided link, as it might contain details related to the query.\", \"plan\": \"- Extract the URL from the user's message\\n- Process the content of the URL to find information about Prasad\"}, \"action\": {\"name\": \"extractRAGURL\", \"parameters\": {\"urls\": [\"https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\"], \"purpose\": \"To find information about a person named Prasad.\"}}}, \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}]}, \"user\": {}, \"temp\": {\"action_outputs\": {}, \"auth_tokens\": {}, \"duplicate_token_exchange\": null, \"input\": \"who is prasad https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\", \"input_files\": [], \"last_output\": \"\"}}",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.actions.action_entry.invoke",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0xc296e9fdc5859ed6",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x46f210178ead3df3",
+    "start_time": "2025-06-24T00:33:27.286528Z",
+    "end_time": "2025-06-24T00:33:27.547258Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/teams/ai/ai.py:267",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.name": "extractRAGURL",
+        "entity.1.state": "{\"conversation\": {\"tasks\": null, \"planner_history\": [{\"role\": \"user\", \"content\": \"who is prasad https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\", \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}, {\"role\": \"assistant\", \"content\": {\"thoughts\": {\"thought\": \"The user is asking about a person named Prasad and has provided a URL that may contain relevant information.\", \"reasoning\": \"I need to extract the URL to gather information about Prasad from the provided link, as it might contain details related to the query.\", \"plan\": \"- Extract the URL from the user's message\\n- Process the content of the URL to find information about Prasad\"}, \"action\": {\"name\": \"extractRAGURL\", \"parameters\": {\"urls\": [\"https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\"], \"purpose\": \"To find information about a person named Prasad.\"}}}, \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}], \"extracted_content\": {\"https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\": {\"content\": \"#MAINTAINERS\\nFollowing is the current list of maintainers on this project\\n\\nThe maintainers are listed in alphabetical order.\\n\\n- [@prasad-okahu] (https://github.com/prasad-okahu) (Prasad Mujumdar)\\n- [@oi-raanne] (https://github.com/oi-raanne) (Ravi Anne)\\n- [@akshay-okahu](https://github.com/akshay-okahu) (Akshay Yadav)\\n- [@anshul7665] (https://github.com/anshul7665) (Anshul Sharma)\\n- [@kshitiz-okahu] (https://github.com/kshitiz-okahu) (Kshitiz Vijayvargiya)\\n\", \"content_type\": \"text/plain; charset=utf-8\", \"status_code\": 200, \"purpose\": \"To find information about a person named Prasad.\"}}}, \"user\": {}, \"temp\": {\"action_outputs\": {}, \"auth_tokens\": {}, \"duplicate_token_exchange\": null, \"input\": \"who is prasad https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\", \"input_files\": [], \"last_output\": \"\"}}",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.actions.action_entry.invoke",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0x46f210178ead3df3",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xf3aa455f039f32b0",
+    "start_time": "2025-06-24T00:33:27.284892Z",
+    "end_time": "2025-06-24T00:33:27.547472Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/teams/ai/ai.py:167",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.name": "ActionTypes.DO_COMMAND",
+        "entity.1.state": "{\"conversation\": {\"tasks\": null, \"planner_history\": [{\"role\": \"user\", \"content\": \"who is prasad https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\", \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}, {\"role\": \"assistant\", \"content\": {\"thoughts\": {\"thought\": \"The user is asking about a person named Prasad and has provided a URL that may contain relevant information.\", \"reasoning\": \"I need to extract the URL to gather information about Prasad from the provided link, as it might contain details related to the query.\", \"plan\": \"- Extract the URL from the user's message\\n- Process the content of the URL to find information about Prasad\"}, \"action\": {\"name\": \"extractRAGURL\", \"parameters\": {\"urls\": [\"https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\"], \"purpose\": \"To find information about a person named Prasad.\"}}}, \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}], \"extracted_content\": {\"https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\": {\"content\": \"#MAINTAINERS\\nFollowing is the current list of maintainers on this project\\n\\nThe maintainers are listed in alphabetical order.\\n\\n- [@prasad-okahu] (https://github.com/prasad-okahu) (Prasad Mujumdar)\\n- [@oi-raanne] (https://github.com/oi-raanne) (Ravi Anne)\\n- [@akshay-okahu](https://github.com/akshay-okahu) (Akshay Yadav)\\n- [@anshul7665] (https://github.com/anshul7665) (Anshul Sharma)\\n- [@kshitiz-okahu] (https://github.com/kshitiz-okahu) (Kshitiz Vijayvargiya)\\n\", \"content_type\": \"text/plain; charset=utf-8\", \"status_code\": 200, \"purpose\": \"To find information about a person named Prasad.\"}}}, \"user\": {}, \"temp\": {\"action_outputs\": {}, \"auth_tokens\": {}, \"duplicate_token_exchange\": null, \"input\": \"who is prasad https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\", \"input_files\": [], \"last_output\": \"\"}}",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "openai.resources.chat.completions.completions.AsyncCompletions",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0x24ce71330b74d3d6",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x01e850c84e9fddaa",
+    "start_time": "2025-06-24T00:33:27.557400Z",
+    "end_time": "2025-06-24T00:33:28.980973Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/teams/ai/models/openai_model.py:237",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "inference.modelapi",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.models.openai_model.OpenAIModel",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0x01e850c84e9fddaa",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x1fe4241db2c1f5b3",
+    "start_time": "2025-06-24T00:33:27.551951Z",
+    "end_time": "2025-06-24T00:33:28.981187Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/teams/ai/clients/llm_client.py:217",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "inference.framework",
+        "entity.1.type": "inference.azure_openai",
+        "entity.1.provider_name": "okahu-openai-dev.openai.azure.com",
+        "entity.1.inference_endpoint": "https://okahu-openai-dev.openai.azure.com/openai/deployments/gpt-4o-mini/",
+        "entity.2.name": "gpt-4o-mini",
+        "entity.2.type": "model.llm.gpt-4o-mini",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 2
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T00:33:28.980906Z",
+            "attributes": {
+                "input": [
+                    "{'system': 'You are an AI assistant that can\\n- chat with user\\n- manage tasks for user\\n\\ninstructions:\\n- only create task user has explicitly asked to create.\\n- always show the short description of the task after creating or deleting it.\\n\\nCurrent tasks:\\n\\n\\n{\"actions\": {\"createTask\": {\"description\": \"Create a new task with title and description\", \"parameters\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to create\"}, \"description\": {\"type\": \"string\", \"description\": \"The detailed description of the task to create\"}}}, \"deleteTask\": {\"description\": \"Delete an existing task\", \"parameters\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to delete\"}}}, \"extractRAGURL\": {\"description\": \"Extract and process URLs from the chat request when the user needs information or content from specific URLs to answer their question\", \"parameters\": {\"urls\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}, \"description\": \"Array of URLs found in the chat request that contain information needed to answer the user\\'s question\"}, \"purpose\": {\"type\": \"string\", \"description\": \"Description of why these URLs are needed to answer the user\\'s request\"}}}, \"SAY\": {\"description\": \"use to ask the user a question or say something\", \"parameters\": {\"text\": {\"type\": \"string\", \"description\": \"text to say or question ask\"}}}}}\\n\\nReturn a JSON object with your thoughts and the next action to perform.\\nOnly respond with the JSON format below and base your plan on the actions above.\\nIf you\\'re not sure what to do, you can always say something by returning a SAY action.\\nIf you\\'re told your JSON response has errors, do your best to fix them.\\nResponse Format:\\n{\"thoughts\":{\"thought\":\"<your current thought>\",\"reasoning\":\"<self reflect on why you made this decision>\",\"plan\":\"- short bulleted\\\\n- list that conveys\\\\n- long-term plan\"},\"action\":{\"name\":\"<action name>\",\"parameters\":{\"<name>\":\"<value>\"}}}'}",
+                    "{'user': 'who is prasad https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md'}",
+                    "{'assistant': \"action:\\n  name: extractRAGURL\\n  parameters:\\n    purpose: To find information about a person named Prasad.\\n    urls:\\n    - https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\\nthoughts:\\n  plan: '- Extract the URL from the user''s message\\n\\n    - Process the content of the URL to find information about Prasad'\\n  reasoning: I need to extract the URL to gather information about Prasad from the\\n    provided link, as it might contain details related to the query.\\n  thought: The user is asking about a person named Prasad and has provided a URL that\\n    may contain relevant information.\\n\"}",
+                    "{'user': 'Successfully extracted content from URLs for: To find information about a person named Prasad.\\n\\nText content from https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md: #MAINTAINERS\\nFollowing is the current list of maintainers on this project\\n\\nThe maintainers are listed in alphabetical order.\\n\\n- [@prasad-okahu] (https://github.com/prasad-okahu) (Prasad Mujumdar)\\n- [@oi-raanne] (https://github.com/oi-raanne) (Ravi Anne)\\n- [@akshay-okahu](https://github.com/akshay-okahu) (Akshay Yadav)\\n- [@anshul7665] (https://github.com/anshul7665) (Anshul Sharma)\\n- [@kshitiz-okahu] (https://github.com/kshitiz-okahu) (Kshitiz Vijayvargiya)\\n'}"
+                ]
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T00:33:28.980944Z",
+            "attributes": {
+                "completion_tokens": 150,
+                "prompt_tokens": 827,
+                "total_tokens": 977
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T00:33:28.981173Z",
+            "attributes": {
+                "status": "success",
+                "status_code": "success",
+                "response": "{\"thoughts\":{\"thought\":\"I have successfully extracted the information about Prasad from the provided URL.\",\"reasoning\":\"The content revealed that Prasad Mujumdar is a maintainer of the project, and his GitHub handle is @prasad-okahu. This directly answers the user's query about who Prasad is.\",\"plan\":\"- Inform the user about Prasad Mujumdar's role as a maintainer\\n- Provide the GitHub link for further reference\"},\"action\":{\"name\":\"SAY\",\"parameters\":{\"text\":\"Prasad Mujumdar is a maintainer of the project, and you can find more about him on his GitHub profile: [@prasad-okahu](https://github.com/prasad-okahu).\"}}}"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.planners.action_planner.ActionPlanner",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0x1fe4241db2c1f5b3",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x9ff0b81dbce5c3e8",
+    "start_time": "2025-06-24T00:33:27.549594Z",
+    "end_time": "2025-06-24T00:33:28.988268Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/teams/ai/planners/action_planner.py:106",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "generic",
+        "entity.1.type": "teams.planner",
+        "entity.1.planner_type": "ActionPlanner",
+        "entity.2.model": "OpenAIModel",
+        "entity.2.tokenizer": "GPTTokenizer",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 2
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T00:33:28.988200Z",
+            "attributes": {
+                "prompt_template_name": "planner",
+                "prompt_template": "You are an AI assistant that can\n- chat with user\n- manage tasks for user\n\ninstructions:\n- only create task user has explicitly asked to create.\n- always show the short description of the task after creating or deleting it.\n\nCurrent tasks:\n{{$conversation.tasks}}",
+                "prompt_template_description": "An agent that can chat or manage tasks.",
+                "prompt_template_type": "completion",
+                "validator": "MonologueAugmentation",
+                "memory_type": "AppTurnState"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T00:33:28.988220Z",
+            "attributes": {}
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T00:33:28.988236Z",
+            "attributes": {
+                "feedback_enabled": false
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.actions.action_entry.invoke",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0x3e2fe990b69c112d",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x9ff0b81dbce5c3e8",
+    "start_time": "2025-06-24T00:33:28.990024Z",
+    "end_time": "2025-06-24T00:33:28.990402Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/teams/ai/ai.py:152",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.name": "ActionTypes.PLAN_READY",
+        "entity.1.state": "{\"conversation\": {\"tasks\": null, \"planner_history\": [{\"role\": \"user\", \"content\": \"who is prasad https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\", \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}, {\"role\": \"assistant\", \"content\": {\"thoughts\": {\"thought\": \"The user is asking about a person named Prasad and has provided a URL that may contain relevant information.\", \"reasoning\": \"I need to extract the URL to gather information about Prasad from the provided link, as it might contain details related to the query.\", \"plan\": \"- Extract the URL from the user's message\\n- Process the content of the URL to find information about Prasad\"}, \"action\": {\"name\": \"extractRAGURL\", \"parameters\": {\"urls\": [\"https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\"], \"purpose\": \"To find information about a person named Prasad.\"}}}, \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}, {\"role\": \"user\", \"content\": \"Successfully extracted content from URLs for: To find information about a person named Prasad.\\n\\nText content from https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md: #MAINTAINERS\\nFollowing is the current list of maintainers on this project\\n\\nThe maintainers are listed in alphabetical order.\\n\\n- [@prasad-okahu] (https://github.com/prasad-okahu) (Prasad Mujumdar)\\n- [@oi-raanne] (https://github.com/oi-raanne) (Ravi Anne)\\n- [@akshay-okahu](https://github.com/akshay-okahu) (Akshay Yadav)\\n- [@anshul7665] (https://github.com/anshul7665) (Anshul Sharma)\\n- [@kshitiz-okahu] (https://github.com/kshitiz-okahu) (Kshitiz Vijayvargiya)\\n\", \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}, {\"role\": \"assistant\", \"content\": {\"thoughts\": {\"thought\": \"I have successfully extracted the information about Prasad from the provided URL.\", \"reasoning\": \"The content revealed that Prasad Mujumdar is a maintainer of the project, and his GitHub handle is @prasad-okahu. This directly answers the user's query about who Prasad is.\", \"plan\": \"- Inform the user about Prasad Mujumdar's role as a maintainer\\n- Provide the GitHub link for further reference\"}, \"action\": {\"name\": \"SAY\", \"parameters\": {\"text\": \"Prasad Mujumdar is a maintainer of the project, and you can find more about him on his GitHub profile: [@prasad-okahu](https://github.com/prasad-okahu).\"}}}, \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}], \"extracted_content\": {\"https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\": {\"content\": \"#MAINTAINERS\\nFollowing is the current list of maintainers on this project\\n\\nThe maintainers are listed in alphabetical order.\\n\\n- [@prasad-okahu] (https://github.com/prasad-okahu) (Prasad Mujumdar)\\n- [@oi-raanne] (https://github.com/oi-raanne) (Ravi Anne)\\n- [@akshay-okahu](https://github.com/akshay-okahu) (Akshay Yadav)\\n- [@anshul7665] (https://github.com/anshul7665) (Anshul Sharma)\\n- [@kshitiz-okahu] (https://github.com/kshitiz-okahu) (Kshitiz Vijayvargiya)\\n\", \"content_type\": \"text/plain; charset=utf-8\", \"status_code\": 200, \"purpose\": \"To find information about a person named Prasad.\"}}}, \"user\": {}, \"temp\": {\"action_outputs\": {\"extractRAGURL\": \"Successfully extracted content from URLs for: To find information about a person named Prasad.\\n\\nText content from https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md: #MAINTAINERS\\nFollowing is the current list of maintainers on this project\\n\\nThe maintainers are listed in alphabetical order.\\n\\n- [@prasad-okahu] (https://github.com/prasad-okahu) (Prasad Mujumdar)\\n- [@oi-raanne] (https://github.com/oi-raanne) (Ravi Anne)\\n- [@akshay-okahu](https://github.com/akshay-okahu) (Akshay Yadav)\\n- [@anshul7665] (https://github.com/anshul7665) (Anshul Sharma)\\n- [@kshitiz-okahu] (https://github.com/kshitiz-okahu) (Kshitiz Vijayvargiya)\\n\"}, \"auth_tokens\": {}, \"duplicate_token_exchange\": null, \"input\": \"Successfully extracted content from URLs for: To find information about a person named Prasad.\\n\\nText content from https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md: #MAINTAINERS\\nFollowing is the current list of maintainers on this project\\n\\nThe maintainers are listed in alphabetical order.\\n\\n- [@prasad-okahu] (https://github.com/prasad-okahu) (Prasad Mujumdar)\\n- [@oi-raanne] (https://github.com/oi-raanne) (Ravi Anne)\\n- [@akshay-okahu](https://github.com/akshay-okahu) (Akshay Yadav)\\n- [@anshul7665] (https://github.com/anshul7665) (Anshul Sharma)\\n- [@kshitiz-okahu] (https://github.com/kshitiz-okahu) (Kshitiz Vijayvargiya)\\n\", \"input_files\": [], \"last_output\": \"Successfully extracted content from URLs for: To find information about a person named Prasad.\\n\\nText content from https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md: #MAINTAINERS\\nFollowing is the current list of maintainers on this project\\n\\nThe maintainers are listed in alphabetical order.\\n\\n- [@prasad-okahu] (https://github.com/prasad-okahu) (Prasad Mujumdar)\\n- [@oi-raanne] (https://github.com/oi-raanne) (Ravi Anne)\\n- [@akshay-okahu](https://github.com/akshay-okahu) (Akshay Yadav)\\n- [@anshul7665] (https://github.com/anshul7665) (Anshul Sharma)\\n- [@kshitiz-okahu] (https://github.com/kshitiz-okahu) (Kshitiz Vijayvargiya)\\n\"}}",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.actions.action_entry.invoke",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0xae9782b38e4f6c60",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x9ff0b81dbce5c3e8",
+    "start_time": "2025-06-24T00:33:28.991110Z",
+    "end_time": "2025-06-24T00:33:29.001425Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/teams/ai/ai.py:184",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.name": "ActionTypes.SAY_COMMAND",
+        "entity.1.state": "{\"conversation\": {\"tasks\": null, \"planner_history\": [{\"role\": \"user\", \"content\": \"who is prasad https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\", \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}, {\"role\": \"assistant\", \"content\": {\"thoughts\": {\"thought\": \"The user is asking about a person named Prasad and has provided a URL that may contain relevant information.\", \"reasoning\": \"I need to extract the URL to gather information about Prasad from the provided link, as it might contain details related to the query.\", \"plan\": \"- Extract the URL from the user's message\\n- Process the content of the URL to find information about Prasad\"}, \"action\": {\"name\": \"extractRAGURL\", \"parameters\": {\"urls\": [\"https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\"], \"purpose\": \"To find information about a person named Prasad.\"}}}, \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}, {\"role\": \"user\", \"content\": \"Successfully extracted content from URLs for: To find information about a person named Prasad.\\n\\nText content from https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md: #MAINTAINERS\\nFollowing is the current list of maintainers on this project\\n\\nThe maintainers are listed in alphabetical order.\\n\\n- [@prasad-okahu] (https://github.com/prasad-okahu) (Prasad Mujumdar)\\n- [@oi-raanne] (https://github.com/oi-raanne) (Ravi Anne)\\n- [@akshay-okahu](https://github.com/akshay-okahu) (Akshay Yadav)\\n- [@anshul7665] (https://github.com/anshul7665) (Anshul Sharma)\\n- [@kshitiz-okahu] (https://github.com/kshitiz-okahu) (Kshitiz Vijayvargiya)\\n\", \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}, {\"role\": \"assistant\", \"content\": {\"thoughts\": {\"thought\": \"I have successfully extracted the information about Prasad from the provided URL.\", \"reasoning\": \"The content revealed that Prasad Mujumdar is a maintainer of the project, and his GitHub handle is @prasad-okahu. This directly answers the user's query about who Prasad is.\", \"plan\": \"- Inform the user about Prasad Mujumdar's role as a maintainer\\n- Provide the GitHub link for further reference\"}, \"action\": {\"name\": \"SAY\", \"parameters\": {\"text\": \"Prasad Mujumdar is a maintainer of the project, and you can find more about him on his GitHub profile: [@prasad-okahu](https://github.com/prasad-okahu).\"}}}, \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}], \"extracted_content\": {\"https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\": {\"content\": \"#MAINTAINERS\\nFollowing is the current list of maintainers on this project\\n\\nThe maintainers are listed in alphabetical order.\\n\\n- [@prasad-okahu] (https://github.com/prasad-okahu) (Prasad Mujumdar)\\n- [@oi-raanne] (https://github.com/oi-raanne) (Ravi Anne)\\n- [@akshay-okahu](https://github.com/akshay-okahu) (Akshay Yadav)\\n- [@anshul7665] (https://github.com/anshul7665) (Anshul Sharma)\\n- [@kshitiz-okahu] (https://github.com/kshitiz-okahu) (Kshitiz Vijayvargiya)\\n\", \"content_type\": \"text/plain; charset=utf-8\", \"status_code\": 200, \"purpose\": \"To find information about a person named Prasad.\"}}}, \"user\": {}, \"temp\": {\"action_outputs\": {\"extractRAGURL\": \"Successfully extracted content from URLs for: To find information about a person named Prasad.\\n\\nText content from https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md: #MAINTAINERS\\nFollowing is the current list of maintainers on this project\\n\\nThe maintainers are listed in alphabetical order.\\n\\n- [@prasad-okahu] (https://github.com/prasad-okahu) (Prasad Mujumdar)\\n- [@oi-raanne] (https://github.com/oi-raanne) (Ravi Anne)\\n- [@akshay-okahu](https://github.com/akshay-okahu) (Akshay Yadav)\\n- [@anshul7665] (https://github.com/anshul7665) (Anshul Sharma)\\n- [@kshitiz-okahu] (https://github.com/kshitiz-okahu) (Kshitiz Vijayvargiya)\\n\"}, \"auth_tokens\": {}, \"duplicate_token_exchange\": null, \"input\": \"Successfully extracted content from URLs for: To find information about a person named Prasad.\\n\\nText content from https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md: #MAINTAINERS\\nFollowing is the current list of maintainers on this project\\n\\nThe maintainers are listed in alphabetical order.\\n\\n- [@prasad-okahu] (https://github.com/prasad-okahu) (Prasad Mujumdar)\\n- [@oi-raanne] (https://github.com/oi-raanne) (Ravi Anne)\\n- [@akshay-okahu](https://github.com/akshay-okahu) (Akshay Yadav)\\n- [@anshul7665] (https://github.com/anshul7665) (Anshul Sharma)\\n- [@kshitiz-okahu] (https://github.com/kshitiz-okahu) (Kshitiz Vijayvargiya)\\n\", \"input_files\": [], \"last_output\": \"Successfully extracted content from URLs for: To find information about a person named Prasad.\\n\\nText content from https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md: #MAINTAINERS\\nFollowing is the current list of maintainers on this project\\n\\nThe maintainers are listed in alphabetical order.\\n\\n- [@prasad-okahu] (https://github.com/prasad-okahu) (Prasad Mujumdar)\\n- [@oi-raanne] (https://github.com/oi-raanne) (Ravi Anne)\\n- [@akshay-okahu](https://github.com/akshay-okahu) (Akshay Yadav)\\n- [@anshul7665] (https://github.com/anshul7665) (Anshul Sharma)\\n- [@kshitiz-okahu] (https://github.com/kshitiz-okahu) (Kshitiz Vijayvargiya)\\n\"}}",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.ai.AI.run",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0x9ff0b81dbce5c3e8",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xf3aa455f039f32b0",
+    "start_time": "2025-06-24T00:33:27.548526Z",
+    "end_time": "2025-06-24T00:33:29.001715Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/teams/ai/ai.py:203",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "application",
+        "entity.1.activity.type": "message",
+        "entity.1.activity.channel_id": "msteams",
+        "entity.1.conversation.id": "personal-chat-id",
+        "entity.1.conversation.type": "personal",
+        "entity.1.user.id": "user-id-0",
+        "entity.1.user.name": "Alex Wilber",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T00:33:29.001651Z",
+            "attributes": {
+                "activity_text": "who is prasad https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md",
+                "activity_type": "message",
+                "channel_id": "msteams",
+                "conversation_id": "personal-chat-id",
+                "conversation_type": "personal",
+                "user_id": "user-id-0",
+                "user_name": "Alex Wilber",
+                "recipient_id": "00000000-0000-0000-0000-00000000000011"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T00:33:29.001684Z",
+            "attributes": {
+                "status": "success",
+                "ai_run_result": true,
+                "result_summary": "True"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T00:33:29.001701Z",
+            "attributes": {
+                "processing_type": "teams_bot_framework"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.ai.AI.run",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0xf3aa455f039f32b0",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xfde951cf502e42cc",
+    "start_time": "2025-06-24T00:33:24.413428Z",
+    "end_time": "2025-06-24T00:33:29.001918Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/teams/app.py:846",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "application",
+        "entity.1.activity.type": "message",
+        "entity.1.activity.channel_id": "msteams",
+        "entity.1.conversation.id": "personal-chat-id",
+        "entity.1.conversation.type": "personal",
+        "entity.1.user.id": "user-id-0",
+        "entity.1.user.name": "Alex Wilber",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T00:33:29.001869Z",
+            "attributes": {
+                "activity_text": "who is prasad https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md",
+                "activity_type": "message",
+                "channel_id": "msteams",
+                "conversation_id": "personal-chat-id",
+                "conversation_type": "personal",
+                "user_id": "user-id-0",
+                "user_name": "Alex Wilber",
+                "recipient_id": "00000000-0000-0000-0000-00000000000011"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T00:33:29.001891Z",
+            "attributes": {
+                "status": "success",
+                "ai_run_result": true,
+                "result_summary": "True"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T00:33:29.001905Z",
+            "attributes": {
+                "processing_type": "teams_bot_framework"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.app.application.process",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0xfde951cf502e42cc",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xe0db4191e9c0f018",
+    "start_time": "2025-06-24T00:33:24.380068Z",
+    "end_time": "2025-06-24T00:33:29.004606Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/src/app.py:20",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "application",
+        "entity.1.request.method": "POST",
+        "entity.1.request.path": "/api/messages",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T00:33:29.004492Z",
+            "attributes": {
+                "method": "POST",
+                "path": "/api/messages",
+                "content_type": "application/json"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T00:33:29.004553Z",
+            "attributes": {
+                "status": "success",
+                "http_status": 201,
+                "result_summary": "<Response Created not prepared>"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-06-24T00:33:29.004573Z",
+            "attributes": {
+                "processing_type": "teams_bot_framework"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "aiohttp.web_app.Application",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0xe0db4191e9c0f018",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x1551ae57ed4c777b",
+    "start_time": "2025-06-24T00:33:24.378856Z",
+    "end_time": "2025-06-24T00:33:29.004782Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/aiohttp/web_protocol.py:510",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "http.process",
+        "entity.1.method": "POST",
+        "entity.1.route": "/api/messages",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-06-24T00:33:29.004739Z",
+            "attributes": {}
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-06-24T00:33:29.004765Z",
+            "attributes": {
+                "status": "201"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "workflow",
+    "context": {
+        "trace_id": "0x88061236936de7417716f0a4f85440bb",
+        "span_id": "0x1551ae57ed4c777b",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2025-06-24T00:33:24.378469Z",
+    "end_time": "2025-06-24T00:33:29.004806Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a8",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/aiohttp/web_protocol.py:510",
+        "span.type": "workflow",
+        "entity.1.name": "teams-ai-bot",
+        "entity.1.type": "workflow.generic",
+        "entity.2.type": "app_hosting.generic",
+        "entity.2.name": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+]
