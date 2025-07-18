@@ -1,0 +1,1656 @@
+[{
+    "name": "teams.state.conversation_state.load",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x56c94a3b4b940ef9",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x9c459262a7561547",
+    "start_time": "2025-07-08T21:29:39.938386Z",
+    "end_time": "2025-07-08T21:29:39.939070Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/state/turn_state.py:71",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.state.class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:39.938853Z",
+            "attributes": {
+                "has_storage": false
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:39.938990Z",
+            "attributes": {
+                "status": "success",
+                "state_type": "ConversationState",
+                "loaded_key": "msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id",
+                "has_tasks": false,
+                "task_count": 0,
+                "state_attributes": [],
+                "state_response": "{'__key__': 'msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id', 'tasks': None}"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:39.939026Z",
+            "attributes": {
+                "state_class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+                "operation": "conversation_state_load",
+                "component": "teams_conversation_state",
+                "operation_type": "conversation_state_load",
+                "is_base_class": true
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.state.conversation_state.load",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x2092490591ee216b",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x65b62b529f934c3d",
+    "start_time": "2025-07-08T21:29:39.941386Z",
+    "end_time": "2025-07-08T21:29:39.942275Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/src/state.py:17",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.state.class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:39.941864Z",
+            "attributes": {
+                "has_storage": false
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:39.942212Z",
+            "attributes": {
+                "status": "success",
+                "state_type": "AppConversationState",
+                "loaded_key": "msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id",
+                "has_tasks": false,
+                "task_count": 0,
+                "state_attributes": [
+                    "tasks"
+                ],
+                "state_response": "{'tasks': None, '__key__': 'msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id'}"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:39.942247Z",
+            "attributes": {
+                "state_class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+                "operation": "conversation_state_load",
+                "component": "teams_conversation_state",
+                "operation_type": "conversation_state_load",
+                "is_base_class": true
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "app.state.conversation_state.load",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x65b62b529f934c3d",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x9c459262a7561547",
+    "start_time": "2025-07-08T21:29:39.940360Z",
+    "end_time": "2025-07-08T21:29:39.942691Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/src/state.py:27",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.state.class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:39.942525Z",
+            "attributes": {
+                "has_storage": false
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:39.942643Z",
+            "attributes": {
+                "status": "success",
+                "state_type": "AppConversationState",
+                "loaded_key": "msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id",
+                "has_tasks": false,
+                "task_count": 0,
+                "state_attributes": [
+                    "tasks"
+                ],
+                "state_response": "{'tasks': None, '__key__': 'msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id'}"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:39.942676Z",
+            "attributes": {
+                "state_class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+                "operation": "conversation_state_load",
+                "component": "teams_conversation_state",
+                "operation_type": "conversation_state_load",
+                "is_base_class": true
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.state.conversation_state.load",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x6b93adc48636c8f5",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x4d24c57b33bb5321",
+    "start_time": "2025-07-08T21:29:39.944632Z",
+    "end_time": "2025-07-08T21:29:39.945185Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/src/state.py:17",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.state.class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:39.944950Z",
+            "attributes": {
+                "has_storage": false
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:39.945082Z",
+            "attributes": {
+                "status": "success",
+                "state_type": "AppConversationState",
+                "loaded_key": "msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id",
+                "has_tasks": false,
+                "task_count": 0,
+                "state_attributes": [
+                    "tasks"
+                ],
+                "state_response": "{'tasks': None, '__key__': 'msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id'}"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:39.945157Z",
+            "attributes": {
+                "state_class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+                "operation": "conversation_state_load",
+                "component": "teams_conversation_state",
+                "operation_type": "conversation_state_load",
+                "is_base_class": true
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "app.state.conversation_state.load",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x4d24c57b33bb5321",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x9c459262a7561547",
+    "start_time": "2025-07-08T21:29:39.943851Z",
+    "end_time": "2025-07-08T21:29:39.945520Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/src/state.py:27",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.state.class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:39.945362Z",
+            "attributes": {
+                "has_storage": false
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:39.945477Z",
+            "attributes": {
+                "status": "success",
+                "state_type": "AppConversationState",
+                "loaded_key": "msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id",
+                "has_tasks": false,
+                "task_count": 0,
+                "state_attributes": [
+                    "tasks"
+                ],
+                "state_response": "{'tasks': None, '__key__': 'msteams/00000000-0000-0000-0000-00000000000011/conversations/personal-chat-id'}"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:39.945508Z",
+            "attributes": {
+                "state_class": "<class 'botbuilder.core.memory_storage.MemoryStorage'>",
+                "operation": "conversation_state_load",
+                "component": "teams_conversation_state",
+                "operation_type": "conversation_state_load",
+                "is_base_class": true
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.prompts.prompt_manager.get_prompt",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0xd1050dc6a5dfb017",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x808e2e5366cff030",
+    "start_time": "2025-07-08T21:29:39.949611Z",
+    "end_time": "2025-07-08T21:29:39.972238Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/planners/action_planner.py:199",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "prompt_manager",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:39.971603Z",
+            "attributes": {
+                "prompt_name": "planner"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:39.972201Z",
+            "attributes": {
+                "prompt_template": "{\"sections\": [{\"name\": \"GroupSection\", \"required\": \"True\", \"tokens\": \"-1\", \"separator\": \"\\n\\n\", \"text_prefix\": \"\", \"role\": \"system\", \"sections\": [{\"name\": \"TemplateSection\", \"required\": \"True\", \"tokens\": \"-1\", \"separator\": \"\\n\", \"text_prefix\": \"\", \"role\": \"system\", \"template\": \"You are an AI assistant that can\\n- chat with user\\n- manage tasks for user\\n\\ninstructions:\\n- only create task user has explicitly asked to create.\\n- always show the short description of the task after creating or deleting it.\\n\\nCurrent tasks:\\n{{$conversation.tasks}}\"}, {\"name\": \"ActionAugmentationSection\", \"required\": \"True\", \"tokens\": \"-1\", \"separator\": \"\\n\\n\", \"text_prefix\": \"\", \"_text\": \"{\\\"actions\\\": {\\\"createTask\\\": {\\\"description\\\": \\\"Create a new task with title and description\\\", \\\"parameters\\\": {\\\"title\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The title of the task to create\\\"}, \\\"description\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The detailed description of the task to create\\\"}}}, \\\"deleteTask\\\": {\\\"description\\\": \\\"Delete an existing task\\\", \\\"parameters\\\": {\\\"title\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The title of the task to delete\\\"}}}, \\\"extractRAGURL\\\": {\\\"description\\\": \\\"Extract and process URLs from the chat request when the user needs information or content from specific URLs to answer their question\\\", \\\"parameters\\\": {\\\"urls\\\": {\\\"type\\\": \\\"array\\\", \\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"description\\\": \\\"Array of URLs found in the chat request that contain information needed to answer the user's question\\\"}, \\\"purpose\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"Description of why these URLs are needed to answer the user's request\\\"}}}, \\\"SAY\\\": {\\\"description\\\": \\\"use to ask the user a question or say something\\\", \\\"parameters\\\": {\\\"text\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"text to say or question ask\\\"}}}}}\\n\\nReturn a JSON object with your thoughts and the next action to perform.\\nOnly respond with the JSON format below and base your plan on the actions above.\\nIf you're not sure what to do, you can always say something by returning a SAY action.\\nIf you're told your JSON response has errors, do your best to fix them.\\nResponse Format:\\n{\\\"thoughts\\\":{\\\"thought\\\":\\\"<your current thought>\\\",\\\"reasoning\\\":\\\"<self reflect on why you made this decision>\\\",\\\"plan\\\":\\\"- short bulleted\\\\n- list that conveys\\\\n- long-term plan\\\"},\\\"action\\\":{\\\"name\\\":\\\"<action name>\\\",\\\"parameters\\\":{\\\"<name>\\\":\\\"<value>\\\"}}}\", \"actions\": [{\"name\": \"createTask\", \"description\": \"Create a new task with title and description\", \"parameters\": {\"type\": \"object\", \"properties\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to create\"}, \"description\": {\"type\": \"string\", \"description\": \"The detailed description of the task to create\"}}, \"required\": [\"title\", \"description\"]}}, {\"name\": \"deleteTask\", \"description\": \"Delete an existing task\", \"parameters\": {\"type\": \"object\", \"properties\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to delete\"}}, \"required\": [\"title\"]}}, {\"name\": \"extractRAGURL\", \"description\": \"Extract and process URLs from the chat request when the user needs information or content from specific URLs to answer their question\", \"parameters\": {\"type\": \"object\", \"properties\": {\"urls\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}, \"description\": \"Array of URLs found in the chat request that contain information needed to answer the user's question\"}, \"purpose\": {\"type\": \"string\", \"description\": \"Description of why these URLs are needed to answer the user's request\"}}, \"required\": [\"urls\", \"purpose\"]}}, {\"name\": \"SAY\", \"description\": \"use to ask the user a question or say something\", \"parameters\": {\"type\": \"object\", \"properties\": {\"text\": {\"type\": \"string\", \"description\": \"text to say or question ask\"}}, \"required\": [\"text\"]}}]}]}, {\"name\": \"ConversationHistorySection\", \"required\": \"False\", \"tokens\": \"1.0\", \"variable\": \"conversation.planner_history\", \"separator\": \"\\n\", \"text_prefix\": \"\", \"assistant_prefix\": \"assistant: \"}, {\"name\": \"UserMessage\", \"required\": \"True\", \"tokens\": \"-1\", \"separator\": \"\\n\", \"text_prefix\": \"user: \", \"role\": \"user\", \"template\": \"{{$temp.input}}\"}]}",
+                "prompt_template_config": "{\n  \"schema\": 1.1,\n  \"completion\": {\n    \"completion_type\": \"chat\",\n    \"frequency_penalty\": 0.0,\n    \"include_history\": true,\n    \"include_input\": true,\n    \"include_images\": false,\n    \"max_tokens\": 1000,\n    \"max_input_tokens\": 2800,\n    \"model\": null,\n    \"presence_penalty\": 0.6,\n    \"stop_sequences\": [],\n    \"temperature\": 0.2,\n    \"top_p\": 0.0,\n    \"tool_choice\": \"auto\",\n    \"parallel_tool_calls\": true,\n    \"data_sources\": null\n  },\n  \"type\": \"completion\",\n  \"description\": \"An agent that can chat or manage tasks.\",\n  \"default_backends\": null,\n  \"augmentation\": {\n    \"augmentation_type\": \"monologue\",\n    \"data_sources\": null\n  }\n}",
+                "prompt_template_actions": "[{\"name\": \"createTask\", \"description\": \"Create a new task with title and description\", \"parameters\": {\"type\": \"object\", \"properties\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to create\"}, \"description\": {\"type\": \"string\", \"description\": \"The detailed description of the task to create\"}}, \"required\": [\"title\", \"description\"]}}, {\"name\": \"deleteTask\", \"description\": \"Delete an existing task\", \"parameters\": {\"type\": \"object\", \"properties\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to delete\"}}, \"required\": [\"title\"]}}, {\"name\": \"extractRAGURL\", \"description\": \"Extract and process URLs from the chat request when the user needs information or content from specific URLs to answer their question\", \"parameters\": {\"type\": \"object\", \"properties\": {\"urls\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}, \"description\": \"Array of URLs found in the chat request that contain information needed to answer the user's question\"}, \"purpose\": {\"type\": \"string\", \"description\": \"Description of why these URLs are needed to answer the user's request\"}}, \"required\": [\"urls\", \"purpose\"]}}]"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:39.972207Z",
+            "attributes": {}
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.prompts.prompt_manager.get_prompt",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0xdced3c09072e17ff",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x2e4ae7d2faf9fd09",
+    "start_time": "2025-07-08T21:29:39.973914Z",
+    "end_time": "2025-07-08T21:29:39.974756Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/planners/action_planner.py:147",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "prompt_manager",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:39.974226Z",
+            "attributes": {
+                "prompt_name": "planner"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:39.974732Z",
+            "attributes": {
+                "prompt_template": "{\"sections\": [{\"name\": \"GroupSection\", \"required\": \"True\", \"tokens\": \"-1\", \"separator\": \"\\n\\n\", \"text_prefix\": \"\", \"role\": \"system\", \"sections\": [{\"name\": \"TemplateSection\", \"required\": \"True\", \"tokens\": \"-1\", \"separator\": \"\\n\", \"text_prefix\": \"\", \"role\": \"system\", \"template\": \"You are an AI assistant that can\\n- chat with user\\n- manage tasks for user\\n\\ninstructions:\\n- only create task user has explicitly asked to create.\\n- always show the short description of the task after creating or deleting it.\\n\\nCurrent tasks:\\n{{$conversation.tasks}}\"}, {\"name\": \"ActionAugmentationSection\", \"required\": \"True\", \"tokens\": \"-1\", \"separator\": \"\\n\\n\", \"text_prefix\": \"\", \"_text\": \"{\\\"actions\\\": {\\\"createTask\\\": {\\\"description\\\": \\\"Create a new task with title and description\\\", \\\"parameters\\\": {\\\"title\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The title of the task to create\\\"}, \\\"description\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The detailed description of the task to create\\\"}}}, \\\"deleteTask\\\": {\\\"description\\\": \\\"Delete an existing task\\\", \\\"parameters\\\": {\\\"title\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The title of the task to delete\\\"}}}, \\\"extractRAGURL\\\": {\\\"description\\\": \\\"Extract and process URLs from the chat request when the user needs information or content from specific URLs to answer their question\\\", \\\"parameters\\\": {\\\"urls\\\": {\\\"type\\\": \\\"array\\\", \\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"description\\\": \\\"Array of URLs found in the chat request that contain information needed to answer the user's question\\\"}, \\\"purpose\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"Description of why these URLs are needed to answer the user's request\\\"}}}, \\\"SAY\\\": {\\\"description\\\": \\\"use to ask the user a question or say something\\\", \\\"parameters\\\": {\\\"text\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"text to say or question ask\\\"}}}}}\\n\\nReturn a JSON object with your thoughts and the next action to perform.\\nOnly respond with the JSON format below and base your plan on the actions above.\\nIf you're not sure what to do, you can always say something by returning a SAY action.\\nIf you're told your JSON response has errors, do your best to fix them.\\nResponse Format:\\n{\\\"thoughts\\\":{\\\"thought\\\":\\\"<your current thought>\\\",\\\"reasoning\\\":\\\"<self reflect on why you made this decision>\\\",\\\"plan\\\":\\\"- short bulleted\\\\n- list that conveys\\\\n- long-term plan\\\"},\\\"action\\\":{\\\"name\\\":\\\"<action name>\\\",\\\"parameters\\\":{\\\"<name>\\\":\\\"<value>\\\"}}}\", \"actions\": [{\"name\": \"createTask\", \"description\": \"Create a new task with title and description\", \"parameters\": {\"type\": \"object\", \"properties\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to create\"}, \"description\": {\"type\": \"string\", \"description\": \"The detailed description of the task to create\"}}, \"required\": [\"title\", \"description\"]}}, {\"name\": \"deleteTask\", \"description\": \"Delete an existing task\", \"parameters\": {\"type\": \"object\", \"properties\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to delete\"}}, \"required\": [\"title\"]}}, {\"name\": \"extractRAGURL\", \"description\": \"Extract and process URLs from the chat request when the user needs information or content from specific URLs to answer their question\", \"parameters\": {\"type\": \"object\", \"properties\": {\"urls\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}, \"description\": \"Array of URLs found in the chat request that contain information needed to answer the user's question\"}, \"purpose\": {\"type\": \"string\", \"description\": \"Description of why these URLs are needed to answer the user's request\"}}, \"required\": [\"urls\", \"purpose\"]}}, {\"name\": \"SAY\", \"description\": \"use to ask the user a question or say something\", \"parameters\": {\"type\": \"object\", \"properties\": {\"text\": {\"type\": \"string\", \"description\": \"text to say or question ask\"}}, \"required\": [\"text\"]}}]}]}, {\"name\": \"ConversationHistorySection\", \"required\": \"False\", \"tokens\": \"1.0\", \"variable\": \"conversation.planner_history\", \"separator\": \"\\n\", \"text_prefix\": \"\", \"assistant_prefix\": \"assistant: \"}, {\"name\": \"UserMessage\", \"required\": \"True\", \"tokens\": \"-1\", \"separator\": \"\\n\", \"text_prefix\": \"user: \", \"role\": \"user\", \"template\": \"{{$temp.input}}\"}]}",
+                "prompt_template_config": "{\n  \"schema\": 1.1,\n  \"completion\": {\n    \"completion_type\": \"chat\",\n    \"frequency_penalty\": 0.0,\n    \"include_history\": true,\n    \"include_input\": true,\n    \"include_images\": false,\n    \"max_tokens\": 1000,\n    \"max_input_tokens\": 2800,\n    \"model\": null,\n    \"presence_penalty\": 0.6,\n    \"stop_sequences\": [],\n    \"temperature\": 0.2,\n    \"top_p\": 0.0,\n    \"tool_choice\": \"auto\",\n    \"parallel_tool_calls\": true,\n    \"data_sources\": null\n  },\n  \"type\": \"completion\",\n  \"description\": \"An agent that can chat or manage tasks.\",\n  \"default_backends\": null,\n  \"augmentation\": {\n    \"augmentation_type\": \"monologue\",\n    \"data_sources\": null\n  }\n}",
+                "prompt_template_actions": "[{\"name\": \"createTask\", \"description\": \"Create a new task with title and description\", \"parameters\": {\"type\": \"object\", \"properties\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to create\"}, \"description\": {\"type\": \"string\", \"description\": \"The detailed description of the task to create\"}}, \"required\": [\"title\", \"description\"]}}, {\"name\": \"deleteTask\", \"description\": \"Delete an existing task\", \"parameters\": {\"type\": \"object\", \"properties\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to delete\"}}, \"required\": [\"title\"]}}, {\"name\": \"extractRAGURL\", \"description\": \"Extract and process URLs from the chat request when the user needs information or content from specific URLs to answer their question\", \"parameters\": {\"type\": \"object\", \"properties\": {\"urls\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}, \"description\": \"Array of URLs found in the chat request that contain information needed to answer the user's question\"}, \"purpose\": {\"type\": \"string\", \"description\": \"Description of why these URLs are needed to answer the user's request\"}}, \"required\": [\"urls\", \"purpose\"]}}]"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:39.974738Z",
+            "attributes": {}
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.prompts.sections.layout_engine_section",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x5059195f14986a82",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x16903e352ff5c489",
+    "start_time": "2025-07-08T21:29:39.978332Z",
+    "end_time": "2025-07-08T21:29:40.029368Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/models/openai_model.py:208",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:40.029222Z",
+            "attributes": {
+                "has_storage": false
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:40.029313Z",
+            "attributes": {
+                "status": "success",
+                "state_type": "RenderedPromptSection",
+                "state_attributes": [
+                    "length",
+                    "output",
+                    "too_long"
+                ]
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:40.029339Z",
+            "attributes": {
+                "operation": "conversation_state_load",
+                "component": "teams_conversation_state",
+                "operation_type": "conversation_state_load",
+                "is_base_class": true
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "openai.resources.chat.completions.completions.AsyncCompletions",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x5a66c88235e075ec",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x16903e352ff5c489",
+    "start_time": "2025-07-08T21:29:40.038098Z",
+    "end_time": "2025-07-08T21:29:43.820306Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/models/openai_model.py:237",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "inference.modelapi",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.models.openai_model.OpenAIModel",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x16903e352ff5c489",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x2e4ae7d2faf9fd09",
+    "start_time": "2025-07-08T21:29:39.976108Z",
+    "end_time": "2025-07-08T21:29:43.820667Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/clients/llm_client.py:217",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "inference.framework",
+        "entity.1.type": "inference.azure_openai",
+        "entity.1.provider_name": "okahu-openai-dev.openai.azure.com",
+        "entity.1.inference_endpoint": "https://okahu-openai-dev.openai.azure.com/openai/deployments/gpt-4o-mini/",
+        "entity.2.name": "gpt-4o-mini",
+        "entity.2.type": "model.llm.gpt-4o-mini",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 2
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:43.820222Z",
+            "attributes": {
+                "input": [
+                    "{\"system\": \"You are an AI assistant that can\\n- chat with user\\n- manage tasks for user\\n\\ninstructions:\\n- only create task user has explicitly asked to create.\\n- always show the short description of the task after creating or deleting it.\\n\\nCurrent tasks:\\n\\n\\n{\\\"actions\\\": {\\\"createTask\\\": {\\\"description\\\": \\\"Create a new task with title and description\\\", \\\"parameters\\\": {\\\"title\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The title of the task to create\\\"}, \\\"description\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The detailed description of the task to create\\\"}}}, \\\"deleteTask\\\": {\\\"description\\\": \\\"Delete an existing task\\\", \\\"parameters\\\": {\\\"title\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The title of the task to delete\\\"}}}, \\\"extractRAGURL\\\": {\\\"description\\\": \\\"Extract and process URLs from the chat request when the user needs information or content from specific URLs to answer their question\\\", \\\"parameters\\\": {\\\"urls\\\": {\\\"type\\\": \\\"array\\\", \\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"description\\\": \\\"Array of URLs found in the chat request that contain information needed to answer the user's question\\\"}, \\\"purpose\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"Description of why these URLs are needed to answer the user's request\\\"}}}, \\\"SAY\\\": {\\\"description\\\": \\\"use to ask the user a question or say something\\\", \\\"parameters\\\": {\\\"text\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"text to say or question ask\\\"}}}}}\\n\\nReturn a JSON object with your thoughts and the next action to perform.\\nOnly respond with the JSON format below and base your plan on the actions above.\\nIf you're not sure what to do, you can always say something by returning a SAY action.\\nIf you're told your JSON response has errors, do your best to fix them.\\nResponse Format:\\n{\\\"thoughts\\\":{\\\"thought\\\":\\\"<your current thought>\\\",\\\"reasoning\\\":\\\"<self reflect on why you made this decision>\\\",\\\"plan\\\":\\\"- short bulleted\\\\n- list that conveys\\\\n- long-term plan\\\"},\\\"action\\\":{\\\"name\\\":\\\"<action name>\\\",\\\"parameters\\\":{\\\"<name>\\\":\\\"<value>\\\"}}}\"}",
+                    "{\"user\": \"tell me who prasad is https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\"}"
+                ]
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:43.820276Z",
+            "attributes": {
+                "completion_tokens": 132,
+                "prompt_tokens": 476,
+                "total_tokens": 608
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:43.820649Z",
+            "attributes": {
+                "status": "success",
+                "status_code": "success",
+                "response": "{\"assistant\": \"{\\\"thoughts\\\":{\\\"thought\\\":\\\"The user has provided a URL and is asking for information about 'prasad'.\\\",\\\"reasoning\\\":\\\"I need to extract the relevant information from the provided URL to answer the user's question about 'prasad'.\\\",\\\"plan\\\":\\\"- Extract the URL provided by the user\\\\n- Process the content of the URL to find information about 'prasad'\\\"},\\\"action\\\":{\\\"name\\\":\\\"extractRAGURL\\\",\\\"parameters\\\":{\\\"urls\\\":[\\\"https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\\\"],\\\"purpose\\\":\\\"To find information about who 'prasad' is.\\\"}}}\"}"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.planners.action_planner.ActionPlanner",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x2e4ae7d2faf9fd09",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x808e2e5366cff030",
+    "start_time": "2025-07-08T21:29:39.973135Z",
+    "end_time": "2025-07-08T21:29:43.832706Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/planners/action_planner.py:106",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "generic",
+        "entity.1.type": "teams.planner",
+        "entity.1.planner_type": "ActionPlanner",
+        "entity.2.model": "OpenAIModel",
+        "entity.2.tokenizer": "GPTTokenizer",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 2
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:43.832652Z",
+            "attributes": {
+                "prompt_template_name": "planner",
+                "prompt_template": "You are an AI assistant that can\n- chat with user\n- manage tasks for user\n\ninstructions:\n- only create task user has explicitly asked to create.\n- always show the short description of the task after creating or deleting it.\n\nCurrent tasks:\n{{$conversation.tasks}}",
+                "prompt_template_description": "An agent that can chat or manage tasks.",
+                "prompt_template_type": "completion",
+                "validator": "MonologueAugmentation",
+                "memory_type": "AppTurnState"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:43.832674Z",
+            "attributes": {}
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:43.832691Z",
+            "attributes": {
+                "feedback_enabled": false
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.actions.action_entry.invoke",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x64b9b101b708f77e",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x808e2e5366cff030",
+    "start_time": "2025-07-08T21:29:43.834317Z",
+    "end_time": "2025-07-08T21:29:43.834893Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/ai.py:152",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.name": "ActionTypes.PLAN_READY",
+        "entity.1.state": "{\"conversation\": {\"tasks\": null, \"planner_history\": [{\"role\": \"user\", \"content\": \"tell me who prasad is https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\", \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}, {\"role\": \"...",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.actions.action_entry.invoke",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x609108d4df3a885a",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x8c5923f9273ed535",
+    "start_time": "2025-07-08T21:29:43.836788Z",
+    "end_time": "2025-07-08T21:29:44.073727Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/ai.py:267",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.name": "extractRAGURL",
+        "entity.1.state": "{\"conversation\": {\"tasks\": null, \"planner_history\": [{\"role\": \"user\", \"content\": \"tell me who prasad is https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\", \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}, {\"role\": \"...",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.actions.action_entry.invoke",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x8c5923f9273ed535",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x808e2e5366cff030",
+    "start_time": "2025-07-08T21:29:43.835643Z",
+    "end_time": "2025-07-08T21:29:44.073911Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/ai.py:167",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.name": "ActionTypes.DO_COMMAND",
+        "entity.1.state": "{\"conversation\": {\"tasks\": null, \"planner_history\": [{\"role\": \"user\", \"content\": \"tell me who prasad is https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\", \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}, {\"role\": \"...",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.prompts.prompt_manager.get_prompt",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x938eefaea478f6e4",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x2032e8d118d6a3e6",
+    "start_time": "2025-07-08T21:29:44.075772Z",
+    "end_time": "2025-07-08T21:29:44.076984Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/planners/action_planner.py:199",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "prompt_manager",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:44.076340Z",
+            "attributes": {
+                "prompt_name": "planner"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:44.076954Z",
+            "attributes": {
+                "prompt_template": "{\"sections\": [{\"name\": \"GroupSection\", \"required\": \"True\", \"tokens\": \"-1\", \"separator\": \"\\n\\n\", \"text_prefix\": \"\", \"role\": \"system\", \"sections\": [{\"name\": \"TemplateSection\", \"required\": \"True\", \"tokens\": \"-1\", \"separator\": \"\\n\", \"text_prefix\": \"\", \"role\": \"system\", \"template\": \"You are an AI assistant that can\\n- chat with user\\n- manage tasks for user\\n\\ninstructions:\\n- only create task user has explicitly asked to create.\\n- always show the short description of the task after creating or deleting it.\\n\\nCurrent tasks:\\n{{$conversation.tasks}}\"}, {\"name\": \"ActionAugmentationSection\", \"required\": \"True\", \"tokens\": \"-1\", \"separator\": \"\\n\\n\", \"text_prefix\": \"\", \"_text\": \"{\\\"actions\\\": {\\\"createTask\\\": {\\\"description\\\": \\\"Create a new task with title and description\\\", \\\"parameters\\\": {\\\"title\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The title of the task to create\\\"}, \\\"description\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The detailed description of the task to create\\\"}}}, \\\"deleteTask\\\": {\\\"description\\\": \\\"Delete an existing task\\\", \\\"parameters\\\": {\\\"title\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The title of the task to delete\\\"}}}, \\\"extractRAGURL\\\": {\\\"description\\\": \\\"Extract and process URLs from the chat request when the user needs information or content from specific URLs to answer their question\\\", \\\"parameters\\\": {\\\"urls\\\": {\\\"type\\\": \\\"array\\\", \\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"description\\\": \\\"Array of URLs found in the chat request that contain information needed to answer the user's question\\\"}, \\\"purpose\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"Description of why these URLs are needed to answer the user's request\\\"}}}, \\\"SAY\\\": {\\\"description\\\": \\\"use to ask the user a question or say something\\\", \\\"parameters\\\": {\\\"text\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"text to say or question ask\\\"}}}}}\\n\\nReturn a JSON object with your thoughts and the next action to perform.\\nOnly respond with the JSON format below and base your plan on the actions above.\\nIf you're not sure what to do, you can always say something by returning a SAY action.\\nIf you're told your JSON response has errors, do your best to fix them.\\nResponse Format:\\n{\\\"thoughts\\\":{\\\"thought\\\":\\\"<your current thought>\\\",\\\"reasoning\\\":\\\"<self reflect on why you made this decision>\\\",\\\"plan\\\":\\\"- short bulleted\\\\n- list that conveys\\\\n- long-term plan\\\"},\\\"action\\\":{\\\"name\\\":\\\"<action name>\\\",\\\"parameters\\\":{\\\"<name>\\\":\\\"<value>\\\"}}}\", \"actions\": [{\"name\": \"createTask\", \"description\": \"Create a new task with title and description\", \"parameters\": {\"type\": \"object\", \"properties\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to create\"}, \"description\": {\"type\": \"string\", \"description\": \"The detailed description of the task to create\"}}, \"required\": [\"title\", \"description\"]}}, {\"name\": \"deleteTask\", \"description\": \"Delete an existing task\", \"parameters\": {\"type\": \"object\", \"properties\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to delete\"}}, \"required\": [\"title\"]}}, {\"name\": \"extractRAGURL\", \"description\": \"Extract and process URLs from the chat request when the user needs information or content from specific URLs to answer their question\", \"parameters\": {\"type\": \"object\", \"properties\": {\"urls\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}, \"description\": \"Array of URLs found in the chat request that contain information needed to answer the user's question\"}, \"purpose\": {\"type\": \"string\", \"description\": \"Description of why these URLs are needed to answer the user's request\"}}, \"required\": [\"urls\", \"purpose\"]}}, {\"name\": \"SAY\", \"description\": \"use to ask the user a question or say something\", \"parameters\": {\"type\": \"object\", \"properties\": {\"text\": {\"type\": \"string\", \"description\": \"text to say or question ask\"}}, \"required\": [\"text\"]}}]}]}, {\"name\": \"ConversationHistorySection\", \"required\": \"False\", \"tokens\": \"1.0\", \"variable\": \"conversation.planner_history\", \"separator\": \"\\n\", \"text_prefix\": \"\", \"assistant_prefix\": \"assistant: \"}, {\"name\": \"UserMessage\", \"required\": \"True\", \"tokens\": \"-1\", \"separator\": \"\\n\", \"text_prefix\": \"user: \", \"role\": \"user\", \"template\": \"{{$temp.input}}\"}]}",
+                "prompt_template_config": "{\n  \"schema\": 1.1,\n  \"completion\": {\n    \"completion_type\": \"chat\",\n    \"frequency_penalty\": 0.0,\n    \"include_history\": true,\n    \"include_input\": true,\n    \"include_images\": false,\n    \"max_tokens\": 1000,\n    \"max_input_tokens\": 2800,\n    \"model\": null,\n    \"presence_penalty\": 0.6,\n    \"stop_sequences\": [],\n    \"temperature\": 0.2,\n    \"top_p\": 0.0,\n    \"tool_choice\": \"auto\",\n    \"parallel_tool_calls\": true,\n    \"data_sources\": null\n  },\n  \"type\": \"completion\",\n  \"description\": \"An agent that can chat or manage tasks.\",\n  \"default_backends\": null,\n  \"augmentation\": {\n    \"augmentation_type\": \"monologue\",\n    \"data_sources\": null\n  }\n}",
+                "prompt_template_actions": "[{\"name\": \"createTask\", \"description\": \"Create a new task with title and description\", \"parameters\": {\"type\": \"object\", \"properties\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to create\"}, \"description\": {\"type\": \"string\", \"description\": \"The detailed description of the task to create\"}}, \"required\": [\"title\", \"description\"]}}, {\"name\": \"deleteTask\", \"description\": \"Delete an existing task\", \"parameters\": {\"type\": \"object\", \"properties\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to delete\"}}, \"required\": [\"title\"]}}, {\"name\": \"extractRAGURL\", \"description\": \"Extract and process URLs from the chat request when the user needs information or content from specific URLs to answer their question\", \"parameters\": {\"type\": \"object\", \"properties\": {\"urls\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}, \"description\": \"Array of URLs found in the chat request that contain information needed to answer the user's question\"}, \"purpose\": {\"type\": \"string\", \"description\": \"Description of why these URLs are needed to answer the user's request\"}}, \"required\": [\"urls\", \"purpose\"]}}]"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:44.076962Z",
+            "attributes": {}
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.prompts.prompt_manager.get_prompt",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x8c1cc6ccfd6c7d16",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xc4d4ab601f4f27c1",
+    "start_time": "2025-07-08T21:29:44.078881Z",
+    "end_time": "2025-07-08T21:29:44.080118Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/planners/action_planner.py:147",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "prompt_manager",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:44.079319Z",
+            "attributes": {
+                "prompt_name": "planner"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:44.080083Z",
+            "attributes": {
+                "prompt_template": "{\"sections\": [{\"name\": \"GroupSection\", \"required\": \"True\", \"tokens\": \"-1\", \"separator\": \"\\n\\n\", \"text_prefix\": \"\", \"role\": \"system\", \"sections\": [{\"name\": \"TemplateSection\", \"required\": \"True\", \"tokens\": \"-1\", \"separator\": \"\\n\", \"text_prefix\": \"\", \"role\": \"system\", \"template\": \"You are an AI assistant that can\\n- chat with user\\n- manage tasks for user\\n\\ninstructions:\\n- only create task user has explicitly asked to create.\\n- always show the short description of the task after creating or deleting it.\\n\\nCurrent tasks:\\n{{$conversation.tasks}}\"}, {\"name\": \"ActionAugmentationSection\", \"required\": \"True\", \"tokens\": \"-1\", \"separator\": \"\\n\\n\", \"text_prefix\": \"\", \"_text\": \"{\\\"actions\\\": {\\\"createTask\\\": {\\\"description\\\": \\\"Create a new task with title and description\\\", \\\"parameters\\\": {\\\"title\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The title of the task to create\\\"}, \\\"description\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The detailed description of the task to create\\\"}}}, \\\"deleteTask\\\": {\\\"description\\\": \\\"Delete an existing task\\\", \\\"parameters\\\": {\\\"title\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The title of the task to delete\\\"}}}, \\\"extractRAGURL\\\": {\\\"description\\\": \\\"Extract and process URLs from the chat request when the user needs information or content from specific URLs to answer their question\\\", \\\"parameters\\\": {\\\"urls\\\": {\\\"type\\\": \\\"array\\\", \\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"description\\\": \\\"Array of URLs found in the chat request that contain information needed to answer the user's question\\\"}, \\\"purpose\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"Description of why these URLs are needed to answer the user's request\\\"}}}, \\\"SAY\\\": {\\\"description\\\": \\\"use to ask the user a question or say something\\\", \\\"parameters\\\": {\\\"text\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"text to say or question ask\\\"}}}}}\\n\\nReturn a JSON object with your thoughts and the next action to perform.\\nOnly respond with the JSON format below and base your plan on the actions above.\\nIf you're not sure what to do, you can always say something by returning a SAY action.\\nIf you're told your JSON response has errors, do your best to fix them.\\nResponse Format:\\n{\\\"thoughts\\\":{\\\"thought\\\":\\\"<your current thought>\\\",\\\"reasoning\\\":\\\"<self reflect on why you made this decision>\\\",\\\"plan\\\":\\\"- short bulleted\\\\n- list that conveys\\\\n- long-term plan\\\"},\\\"action\\\":{\\\"name\\\":\\\"<action name>\\\",\\\"parameters\\\":{\\\"<name>\\\":\\\"<value>\\\"}}}\", \"actions\": [{\"name\": \"createTask\", \"description\": \"Create a new task with title and description\", \"parameters\": {\"type\": \"object\", \"properties\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to create\"}, \"description\": {\"type\": \"string\", \"description\": \"The detailed description of the task to create\"}}, \"required\": [\"title\", \"description\"]}}, {\"name\": \"deleteTask\", \"description\": \"Delete an existing task\", \"parameters\": {\"type\": \"object\", \"properties\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to delete\"}}, \"required\": [\"title\"]}}, {\"name\": \"extractRAGURL\", \"description\": \"Extract and process URLs from the chat request when the user needs information or content from specific URLs to answer their question\", \"parameters\": {\"type\": \"object\", \"properties\": {\"urls\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}, \"description\": \"Array of URLs found in the chat request that contain information needed to answer the user's question\"}, \"purpose\": {\"type\": \"string\", \"description\": \"Description of why these URLs are needed to answer the user's request\"}}, \"required\": [\"urls\", \"purpose\"]}}, {\"name\": \"SAY\", \"description\": \"use to ask the user a question or say something\", \"parameters\": {\"type\": \"object\", \"properties\": {\"text\": {\"type\": \"string\", \"description\": \"text to say or question ask\"}}, \"required\": [\"text\"]}}]}]}, {\"name\": \"ConversationHistorySection\", \"required\": \"False\", \"tokens\": \"1.0\", \"variable\": \"conversation.planner_history\", \"separator\": \"\\n\", \"text_prefix\": \"\", \"assistant_prefix\": \"assistant: \"}, {\"name\": \"UserMessage\", \"required\": \"True\", \"tokens\": \"-1\", \"separator\": \"\\n\", \"text_prefix\": \"user: \", \"role\": \"user\", \"template\": \"{{$temp.input}}\"}]}",
+                "prompt_template_config": "{\n  \"schema\": 1.1,\n  \"completion\": {\n    \"completion_type\": \"chat\",\n    \"frequency_penalty\": 0.0,\n    \"include_history\": true,\n    \"include_input\": true,\n    \"include_images\": false,\n    \"max_tokens\": 1000,\n    \"max_input_tokens\": 2800,\n    \"model\": null,\n    \"presence_penalty\": 0.6,\n    \"stop_sequences\": [],\n    \"temperature\": 0.2,\n    \"top_p\": 0.0,\n    \"tool_choice\": \"auto\",\n    \"parallel_tool_calls\": true,\n    \"data_sources\": null\n  },\n  \"type\": \"completion\",\n  \"description\": \"An agent that can chat or manage tasks.\",\n  \"default_backends\": null,\n  \"augmentation\": {\n    \"augmentation_type\": \"monologue\",\n    \"data_sources\": null\n  }\n}",
+                "prompt_template_actions": "[{\"name\": \"createTask\", \"description\": \"Create a new task with title and description\", \"parameters\": {\"type\": \"object\", \"properties\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to create\"}, \"description\": {\"type\": \"string\", \"description\": \"The detailed description of the task to create\"}}, \"required\": [\"title\", \"description\"]}}, {\"name\": \"deleteTask\", \"description\": \"Delete an existing task\", \"parameters\": {\"type\": \"object\", \"properties\": {\"title\": {\"type\": \"string\", \"description\": \"The title of the task to delete\"}}, \"required\": [\"title\"]}}, {\"name\": \"extractRAGURL\", \"description\": \"Extract and process URLs from the chat request when the user needs information or content from specific URLs to answer their question\", \"parameters\": {\"type\": \"object\", \"properties\": {\"urls\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}, \"description\": \"Array of URLs found in the chat request that contain information needed to answer the user's question\"}, \"purpose\": {\"type\": \"string\", \"description\": \"Description of why these URLs are needed to answer the user's request\"}}, \"required\": [\"urls\", \"purpose\"]}}]"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:44.080094Z",
+            "attributes": {}
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.prompts.sections.layout_engine_section",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x162ee8e8068d5c6a",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x03bf68ae7a407b79",
+    "start_time": "2025-07-08T21:29:44.083396Z",
+    "end_time": "2025-07-08T21:29:44.092854Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/models/openai_model.py:208",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:44.092686Z",
+            "attributes": {
+                "has_storage": false
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:44.092791Z",
+            "attributes": {
+                "status": "success",
+                "state_type": "RenderedPromptSection",
+                "state_attributes": [
+                    "length",
+                    "output",
+                    "too_long"
+                ]
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:44.092822Z",
+            "attributes": {
+                "operation": "conversation_state_load",
+                "component": "teams_conversation_state",
+                "operation_type": "conversation_state_load",
+                "is_base_class": true
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "openai.resources.chat.completions.completions.AsyncCompletions",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x1bd41c8d198f1d36",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x03bf68ae7a407b79",
+    "start_time": "2025-07-08T21:29:44.094090Z",
+    "end_time": "2025-07-08T21:29:46.464007Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/models/openai_model.py:237",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "inference.modelapi",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.models.openai_model.OpenAIModel",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x03bf68ae7a407b79",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0xc4d4ab601f4f27c1",
+    "start_time": "2025-07-08T21:29:44.081305Z",
+    "end_time": "2025-07-08T21:29:46.464966Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/clients/llm_client.py:217",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "inference.framework",
+        "entity.1.type": "inference.azure_openai",
+        "entity.1.provider_name": "okahu-openai-dev.openai.azure.com",
+        "entity.1.inference_endpoint": "https://okahu-openai-dev.openai.azure.com/openai/deployments/gpt-4o-mini/",
+        "entity.2.name": "gpt-4o-mini",
+        "entity.2.type": "model.llm.gpt-4o-mini",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 2
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:46.463783Z",
+            "attributes": {
+                "input": [
+                    "{\"system\": \"You are an AI assistant that can\\n- chat with user\\n- manage tasks for user\\n\\ninstructions:\\n- only create task user has explicitly asked to create.\\n- always show the short description of the task after creating or deleting it.\\n\\nCurrent tasks:\\n\\n\\n{\\\"actions\\\": {\\\"createTask\\\": {\\\"description\\\": \\\"Create a new task with title and description\\\", \\\"parameters\\\": {\\\"title\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The title of the task to create\\\"}, \\\"description\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The detailed description of the task to create\\\"}}}, \\\"deleteTask\\\": {\\\"description\\\": \\\"Delete an existing task\\\", \\\"parameters\\\": {\\\"title\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"The title of the task to delete\\\"}}}, \\\"extractRAGURL\\\": {\\\"description\\\": \\\"Extract and process URLs from the chat request when the user needs information or content from specific URLs to answer their question\\\", \\\"parameters\\\": {\\\"urls\\\": {\\\"type\\\": \\\"array\\\", \\\"items\\\": {\\\"type\\\": \\\"string\\\"}, \\\"description\\\": \\\"Array of URLs found in the chat request that contain information needed to answer the user's question\\\"}, \\\"purpose\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"Description of why these URLs are needed to answer the user's request\\\"}}}, \\\"SAY\\\": {\\\"description\\\": \\\"use to ask the user a question or say something\\\", \\\"parameters\\\": {\\\"text\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"text to say or question ask\\\"}}}}}\\n\\nReturn a JSON object with your thoughts and the next action to perform.\\nOnly respond with the JSON format below and base your plan on the actions above.\\nIf you're not sure what to do, you can always say something by returning a SAY action.\\nIf you're told your JSON response has errors, do your best to fix them.\\nResponse Format:\\n{\\\"thoughts\\\":{\\\"thought\\\":\\\"<your current thought>\\\",\\\"reasoning\\\":\\\"<self reflect on why you made this decision>\\\",\\\"plan\\\":\\\"- short bulleted\\\\n- list that conveys\\\\n- long-term plan\\\"},\\\"action\\\":{\\\"name\\\":\\\"<action name>\\\",\\\"parameters\\\":{\\\"<name>\\\":\\\"<value>\\\"}}}\"}",
+                    "{\"user\": \"tell me who prasad is https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\"}",
+                    "{\"assistant\": \"action:\\n  name: extractRAGURL\\n  parameters:\\n    purpose: To find information about who 'prasad' is.\\n    urls:\\n    - https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\\nthoughts:\\n  plan: '- Extract the URL provided by the user\\n\\n    - Process the content of the URL to find information about ''prasad'''\\n  reasoning: I need to extract the relevant information from the provided URL to answer\\n    the user's question about 'prasad'.\\n  thought: The user has provided a URL and is asking for information about 'prasad'.\\n\"}",
+                    "{\"user\": \"Successfully extracted content from URLs for: To find information about who 'prasad' is.\\n\\nText content from https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md: #MAINTAINERS\\nFollowing is the current list of maintainers on this project\\n\\nThe maintainers are listed in alphabetical order.\\n\\n- [@prasad-okahu] (https://github.com/prasad-okahu) (Prasad Mujumdar)\\n- [@oi-raanne] (https://github.com/oi-raanne) (Ravi Anne)\\n- [@akshay-okahu](https://github.com/akshay-okahu) (Akshay Yadav)\\n- [@anshul7665] (https://github.com/anshul7665) (Anshul Sharma)\\n- [@kshitiz-okahu] (https://github.com/kshitiz-okahu) (Kshitiz Vijayvargiya)\\n\"}"
+                ]
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:46.463885Z",
+            "attributes": {
+                "completion_tokens": 135,
+                "prompt_tokens": 817,
+                "total_tokens": 952
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:46.464912Z",
+            "attributes": {
+                "status": "success",
+                "status_code": "success",
+                "response": "{\"assistant\": \"{\\\"thoughts\\\":{\\\"thought\\\":\\\"I have successfully extracted the information about 'prasad'.\\\",\\\"reasoning\\\":\\\"The content from the URL provided details that 'prasad' refers to Prasad Mujumdar, who is listed as a maintainer of the project.\\\",\\\"plan\\\":\\\"- Inform the user about who 'prasad' is based on the extracted content.\\\"},\\\"action\\\":{\\\"name\\\":\\\"SAY\\\",\\\"parameters\\\":{\\\"text\\\":\\\"Prasad refers to Prasad Mujumdar, who is listed as a maintainer of the project. You can find more about him on his GitHub profile: [@prasad-okahu](https://github.com/prasad-okahu).\\\"}}}\"}"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.planners.action_planner.ActionPlanner",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0xc4d4ab601f4f27c1",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x2032e8d118d6a3e6",
+    "start_time": "2025-07-08T21:29:44.077835Z",
+    "end_time": "2025-07-08T21:29:46.482333Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/planners/action_planner.py:106",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "generic",
+        "entity.1.type": "teams.planner",
+        "entity.1.planner_type": "ActionPlanner",
+        "entity.2.model": "OpenAIModel",
+        "entity.2.tokenizer": "GPTTokenizer",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 2
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:46.482244Z",
+            "attributes": {
+                "prompt_template_name": "planner",
+                "prompt_template": "You are an AI assistant that can\n- chat with user\n- manage tasks for user\n\ninstructions:\n- only create task user has explicitly asked to create.\n- always show the short description of the task after creating or deleting it.\n\nCurrent tasks:\n{{$conversation.tasks}}",
+                "prompt_template_description": "An agent that can chat or manage tasks.",
+                "prompt_template_type": "completion",
+                "validator": "MonologueAugmentation",
+                "memory_type": "AppTurnState"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:46.482269Z",
+            "attributes": {}
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:46.482294Z",
+            "attributes": {
+                "feedback_enabled": false
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.actions.action_entry.invoke",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x59dd4e595d62784c",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x2032e8d118d6a3e6",
+    "start_time": "2025-07-08T21:29:46.486770Z",
+    "end_time": "2025-07-08T21:29:46.487438Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/ai.py:152",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.name": "ActionTypes.PLAN_READY",
+        "entity.1.state": "{\"conversation\": {\"tasks\": null, \"planner_history\": [{\"role\": \"user\", \"content\": \"tell me who prasad is https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\", \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}, {\"role\": \"...",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.actions.action_entry.invoke",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x1aaac49e7b2db54c",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x2032e8d118d6a3e6",
+    "start_time": "2025-07-08T21:29:46.488566Z",
+    "end_time": "2025-07-08T21:29:46.506423Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/ai.py:184",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "state_management",
+        "entity.1.name": "ActionTypes.SAY_COMMAND",
+        "entity.1.state": "{\"conversation\": {\"tasks\": null, \"planner_history\": [{\"role\": \"user\", \"content\": \"tell me who prasad is https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md\", \"context\": null, \"function_call\": null, \"name\": null, \"action_calls\": null, \"action_call_id\": null}, {\"role\": \"...",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.ai.AI.run",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x2032e8d118d6a3e6",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x808e2e5366cff030",
+    "start_time": "2025-07-08T21:29:44.074891Z",
+    "end_time": "2025-07-08T21:29:46.506768Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/ai/ai.py:203",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "application",
+        "entity.1.activity.type": "message",
+        "entity.1.activity.channel_id": "msteams",
+        "entity.1.conversation.id": "personal-chat-id",
+        "entity.1.conversation.type": "personal",
+        "entity.1.user.id": "user-id-0",
+        "entity.1.user.name": "Alex Wilber",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:46.506691Z",
+            "attributes": {
+                "activity_text": "tell me who prasad is https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md",
+                "activity_type": "message",
+                "channel_id": "msteams",
+                "conversation_id": "personal-chat-id",
+                "conversation_type": "personal",
+                "user_id": "user-id-0",
+                "user_name": "Alex Wilber",
+                "recipient_id": "00000000-0000-0000-0000-00000000000011"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:46.506729Z",
+            "attributes": {
+                "status": "success",
+                "ai_run_result": true,
+                "result_summary": "True"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:46.506752Z",
+            "attributes": {
+                "processing_type": "teams_bot_framework"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.ai.ai.AI.run",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x808e2e5366cff030",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x9c459262a7561547",
+    "start_time": "2025-07-08T21:29:39.946523Z",
+    "end_time": "2025-07-08T21:29:46.507027Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/monocle/teams-ai/python/packages/ai/teams/app.py:846",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "application",
+        "entity.1.activity.type": "message",
+        "entity.1.activity.channel_id": "msteams",
+        "entity.1.conversation.id": "personal-chat-id",
+        "entity.1.conversation.type": "personal",
+        "entity.1.user.id": "user-id-0",
+        "entity.1.user.name": "Alex Wilber",
+        "scope.teams.channel.channel_id": "msteams",
+        "scope.msteams.activity.type": "message",
+        "scope.msteams.conversation.id": "personal-chat-id",
+        "scope.msteams.conversation.type": "personal",
+        "scope.msteams.conversation.name": "",
+        "scope.msteams.user.from_property.id": "user-id-0",
+        "scope.msteams.user.from_property.name": "Alex Wilber",
+        "scope.msteams.user.from_property.role": "",
+        "scope.msteams.recipient.id": "00000000-0000-0000-0000-00000000000011",
+        "scope.msteams.channel_data.tenant.id": "00000000-0000-0000-0000-0000000000001",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:46.506967Z",
+            "attributes": {
+                "activity_text": "tell me who prasad is https://raw.githubusercontent.com/monocle2ai/monocle/refs/heads/main/CODEOWNERS.md",
+                "activity_type": "message",
+                "channel_id": "msteams",
+                "conversation_id": "personal-chat-id",
+                "conversation_type": "personal",
+                "user_id": "user-id-0",
+                "user_name": "Alex Wilber",
+                "recipient_id": "00000000-0000-0000-0000-00000000000011"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:46.506994Z",
+            "attributes": {
+                "status": "success",
+                "ai_run_result": true,
+                "result_summary": "True"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:46.507011Z",
+            "attributes": {
+                "processing_type": "teams_bot_framework"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "teams.app.application.process",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x9c459262a7561547",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x40e384f62fd31af5",
+    "start_time": "2025-07-08T21:29:39.911352Z",
+    "end_time": "2025-07-08T21:29:46.510496Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/src/app.py:20",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "application",
+        "entity.1.request.method": "POST",
+        "entity.1.request.path": "/api/messages",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:46.510391Z",
+            "attributes": {
+                "method": "POST",
+                "path": "/api/messages",
+                "content_type": "application/json"
+            }
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:46.510449Z",
+            "attributes": {
+                "status": "success",
+                "http_status": 201,
+                "result_summary": "<Response Created not prepared>"
+            }
+        },
+        {
+            "name": "metadata",
+            "timestamp": "2025-07-08T21:29:46.510468Z",
+            "attributes": {
+                "processing_type": "teams_bot_framework"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "aiohttp.web_app.Application",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x40e384f62fd31af5",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x635d272008ef46af",
+    "start_time": "2025-07-08T21:29:39.909708Z",
+    "end_time": "2025-07-08T21:29:46.510736Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/aiohttp/web_protocol.py:510",
+        "workflow.name": "teams-ai-bot",
+        "span.type": "http.process",
+        "entity.1.method": "POST",
+        "entity.1.route": "/api/messages",
+        "entity.count": 1
+    },
+    "events": [
+        {
+            "name": "data.input",
+            "timestamp": "2025-07-08T21:29:46.510687Z",
+            "attributes": {}
+        },
+        {
+            "name": "data.output",
+            "timestamp": "2025-07-08T21:29:46.510720Z",
+            "attributes": {
+                "status": "201"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+,{
+    "name": "workflow",
+    "context": {
+        "trace_id": "0x7783c6577226d18f95f9343148393d61",
+        "span_id": "0x635d272008ef46af",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2025-07-08T21:29:39.907525Z",
+    "end_time": "2025-07-08T21:29:46.510761Z",
+    "status": {
+        "status_code": "OK"
+    },
+    "attributes": {
+        "monocle_apptrace.version": "0.4.1a9",
+        "monocle_apptrace.language": "python",
+        "span_source": "/Users/quanghoc/Documents/GitHub/teams-ai-bots/teams-ai-basic-rag-bot/.venv/lib/python3.11/site-packages/aiohttp/web_protocol.py:510",
+        "span.type": "workflow",
+        "entity.1.name": "teams-ai-bot",
+        "entity.1.type": "workflow.generic",
+        "entity.2.type": "app_hosting.generic",
+        "entity.2.name": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "service.name": "teams-ai-bot"
+        },
+        "schema_url": ""
+    }
+}
+]

@@ -204,13 +204,14 @@ To gain deeper insights into the application's behavior, performance, and potent
 | `teams.ai.moderators.moderator.Moderator.review_output`<br/>To monitor output content moderation and understand if/why the bot's generated response/plan is being flagged. | ❌ **Not Implemented** | - | `context: TurnContext`, `state: TurnState`, `plan: Plan`. | The (potentially modified) `Plan` object. |
 | `src.state.AppTurnState.load`<br/>To monitor the performance of loading application state from storage, helping identify state-related performance bottlenecks. | ✅ **Implemented** | Span name: `app.state.conversation_state.load`<br/>Span type: `state_management` | `context: TurnContext`, `storage: Storage`. | The loaded `AppTurnState` object. Its size could be captured. |
 | `teams.state.conversation_state.ConversationState.load`<br/>To monitor base conversation state loading from storage. | ✅ **Implemented** | Span name: `teams.state.conversation_state.load`<br/>Span type: `state_management` | `context: TurnContext`, `storage: Storage`. | The loaded `ConversationState` object. Its size could be captured. |
+| `teams.ai.prompts.prompt_manager.PromptManager.get_prompt`<br/>To inspect prompt templates and configurations being retrieved from the prompt manager. | ✅ **Implemented** | Span name: `teams.ai.prompts.prompt_manager.get_prompt`<br/>Span type: `prompt_manager` | `prompt_name` (e.g., "planner"). | `prompt_template`, `prompt_template_config`, `prompt_template_actions`. |
 | `teams.ai.prompts.prompt_manager.PromptManager.render_prompt`<br/>To inspect the exact prompt being sent to the LLM. This is invaluable for debugging prompt engineering and improving model responses. | ❌ **Not Implemented** | - | `context: TurnContext`, `state: TurnState`, `prompt` name or template. | The rendered prompt string or list of messages. |
 
 #### Pending Implementation & Flow
 
 ##### 1-Chat Conversation
 
-**Sample Trace**: [Teams-ai-basic-rag-bot-1-chat.json](../resources/Teams-ai-basic-rag-bot-1-chat.json)
+**Sample Trace**: [Teams-ai-basic-rag-bot-prompt-manager1.json](../resources/Teams-ai-basic-rag-bot-prompt-manager1.json)
 
 **Flow explained in plain English:**
 
@@ -311,9 +312,13 @@ sequenceDiagram
 
 ##### 3-Chat Conversation
 
-**Sample Trace**: [Teams-ai-basic-rag-bot-3-chat.json](../resources/Teams-ai-basic-rag-bot-3-chat.json)
+**Sample Trace**: 
 
-**Key Differences from 1-Chat:**
+- [Teams-ai-basic-rag-bot-3-chat.json](../resources/Teams-ai-basic-rag-bot-3-chat.json)
+
+- [Teams-ai-basic-rag-bot-prompt-manager2.json](../resources/Teams-ai-basic-rag-bot-prompt-manager2.json)
+
+**Key Points:**
 
 1. **First Message ("hi")**: No function calls needed - direct `SAY` response
 2. **Second Message**: Calls `extractRAGURL` to fetch content, then `SAY` response  
@@ -391,9 +396,6 @@ sequenceDiagram
     %% 4. Error handling (invalid LLM output)
     Note over AI,Planner: If LLM returns invalid JSON\nPlanner/AI returns error:\n'No valid JSON objects were found in the response. Return a valid JSON object with your thoughts and the next action to perform.'
 ```
-
-#### Summary
-[table with Class/Method/Status/Sample data collected]
 
 ### 4. AI Bot with Azure AI Search
 
@@ -566,3 +568,4 @@ sequenceDiagram
     Note right of ActionEntry: Handles SAY_COMMAND (send answer with citations)
     ActionEntry-->>AI: "Executive vacation days are typically part of a broader benefits package..."
     AI-->>User: Executive vacation days are typically part of a broader benefits package that includes paid time off (PTO) for senior management. These days allow executives to recharge and maintain work-life balance, often exceeding standard vacation policies. Companies may offer flexible scheduling or additional days based on tenure or performance.
+```
