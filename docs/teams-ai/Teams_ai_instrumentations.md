@@ -148,7 +148,7 @@ At the minimum, this needs to be on-pair with Python version:
 
 **Traces (without new instrumentation)**: [Agent-with-API-Build-from-Scratch.json](../resources/Agent-with-API-Build-from-Scratch.json)
 
-#### Requirements (UPDATED 6/23 for 0.4.1a8)
+#### Requirements (UPDATED 7/8 for 0.4.1a9)
 
 The goal of this instrumentation:
 1.  **[Optional]** Trace the complete lifecycle of a user request, from the initial HTTP call to the final action execution. The caveat is that this might apply to lots of aiohttp requests as well (which will cause a large number of traces).
@@ -415,7 +415,7 @@ sequenceDiagram
 **Traces**: [AI-Bot-with-Azure-AI-Search.json](../resources/AI-Bot-with-Azure-AI-Search.
 json)
 
-#### Requirements (UPDATED 6/23 for 0.4.1a8)
+#### Requirements (UPDATED 7/8 for 0.4.1a9)
 
 The goal of this instrumentation:
 1.  Search performance metrics (latency, result counts)
