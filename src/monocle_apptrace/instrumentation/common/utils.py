@@ -330,6 +330,12 @@ def add_monocle_trace_state(headers:dict[str:str]) -> None:
     else:
         headers['tracestate'] = monocle_trace_state
 
+def get_json_dumps(obj) -> str:
+    try:
+        return json.dumps(obj)
+    except TypeError as e:
+        return str(obj)
+
 class Option(Generic[T]):
     def __init__(self, value: Optional[T]):
         self.value = value
@@ -391,6 +397,13 @@ def get_exception_message(arguments):
             return arguments['exception'].__str__()
     else:
         return ''
+
+def get_error_message(arguments):
+    status_code = get_status_code(arguments)
+    if status_code == 'success':
+        return ''
+    else:
+        return status_code
 
 def get_status_code(arguments):
     if arguments["exception"] is not None:
