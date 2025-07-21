@@ -9,6 +9,7 @@
    - [Basic Bot](#2-basic-bot)
    - [Agent with API Build from Scratch](#3-agent-with-api-build-from-scratch)
    - [AI Bot with Azure AI Search](#4-ai-bot-with-azure-ai-search)
+3. [Categorization of Inference Span](#categorization-of-inference-span)
 
 ## Overview
 
@@ -407,165 +408,63 @@ sequenceDiagram
 - `teams.ai.planners.action_planner.ActionPlanner`
 - `teams.ai.models.openai_model.OpenAIModel`
 - `openai.resources.chat.completions.completions.AsyncCompletions`
-- `openai.resources.embeddings.AsyncEmbeddings`
-
-![](../resources/AI-Bot-with-Azure-AI-Search.png)
 
 
-**Traces**: [AI-Bot-with-Azure-AI-Search.json](../resources/AI-Bot-with-Azure-AI-Search.
-json)
+## Categorization of Inference Span
 
-#### Requirements (UPDATED 7/8 for 0.4.1a9)
+### Assumptions
+Every AI action that involves prompting has a root inference. Our goal is to identify the task that each inference is performing, so we can provide clear, meaningful categories for users to focus on specific types of inference.
 
-The goal of this instrumentation:
-1.  Search performance metrics (latency, result counts)
-2.  Search quality indicators (scores, reranking)
-3.  Prompt construction with search results
-4.  Citation handling and formatting
+- **Search and Filtering:**  
+  Instead of searching by span ID (which is not meaningful), users should be able to search and filter by span type or category.  
+  Visualizations (e.g., Gantt charts) should group by inference type or relevant entities, not just function names.
 
-The Azure AI Search bot extends the basic Teams AI bot with search capabilities. Here's how the flow works:
+- **Useful Categories:**  
+  - What categories of inference are most useful?
+  - What information is most valuable to know for each category?
 
-1.  **Initial Request Flow**: Same as basic bot until reaching the planner.
-2.  **Search Integration Points**:
-    *   When user asks a question, the bot first converts it to embeddings using `openai.resources.embeddings.AsyncEmbeddings`.
-    *   These embeddings are used to perform vector search in Azure AI Search.
-    *   Search results are incorporated into the prompt before calling the LLM.
-    *   The LLM then generates a response based on both the search results and the conversation context.
+- **Assignment of Categories:**  
+  - Some inferences can be deterministically categorized (e.g., refusal, blocked).
+  - Others may be suggested but not definitive (input for future model-based categorization).
+  - Some may remain unknown.
 
-> **Note**: Azure Search instrumentation requires both client and post-processing due to data availability (*This assumption needs validation*):
-> *   `azure.search.documents.search`: Captures the initial search request but may lack complete result details.
-> *   `azure.search.documents.search_post`: Captures full search results including scores and reranking.
->
-> ```python
-> # Example of what client vs post capture:
-> # Client capture - Basic request info
-> {
->     "vector_queries": [{"fields": "vector", "k": 3}],
->     "select": "docTitle,content"
-> }
-> 
-> # Post capture - Detailed results
-> {
->     "results": [
->         {
->             "docTitle": "Document 1",
->             "description": "Content...",
->             "@search.score": 0.89,
->             "@search.reranker_score": 0.92
->         }
->     ]
-> }
-> ```
+- **User Interaction and Insights:**  
+  - How can users interact with insights, architecture, traces, and prompts to easily access these categories?
+  - Use tests (e.g., blocked or not, deterministic refusals).
+  - Use evaluations (e.g., is this a jailbreak? Some uncertainty is inevitable).
+  - Allow users to edit or refine the categorization after the fact.
 
-#### Classes and Methods to Instrument
+### Methodology for Deterministic Approach
 
-| Class/Method & Reason | Status | Details | Inputs to Capture | Outputs to Capture |
-|---|---|---|---|---|
-| `azure.search.documents.`<br/>`SearchClient.search`<br/>Monitor raw search requests and performance. Captures the query sent to Azure Search before post-processing. | ✅ **Implemented** | Span name: `azure.search.documents.`<br/>`_search_client.SearchClient`<br/>Span type: `search` | `kwargs`: `search_text`, `vector_queries` (without vector data), `filter`, `select`, `top`, `skip` | `pager`: `get_count()`, `get_coverage()`, `get_facets()` |
-| `azure.search.documents.`<br/>`SearchClient.search_post`<br/>Capture detailed search results with scores after post-processing. Essential for visibility into reranking and final document scores. | ✅ **Implemented** | Span name: `azure.search.documents._generated.operations.`<br/>`_documents_operations.DocumentsOperations`<br/>Span type: `search` | `search_request`: `search_text` and other options like `scoring_profile`, `semantic_query`. | `results`: List of documents with `docTitle`, `description`, `@search.score`, `@search.reranker_score`. |
-| `teams.ai.prompts.prompt_manager.`<br/>`PromptManager.render_prompt`<br/>Debug how search results are incorporated into the final prompt sent to the LLM. | ❌ **Not Implemented** | - | `state`: `temp.data_sources` which contains the search results. `prompt`: The prompt template object. | The fully rendered `PromptTemplate` object, including the text with citations from search results. |
-| `teams.ai.citations.citations.`<br/>`format_citations_response`<br/>Monitor citation formatting. Useful for debugging cases where citations are missing or incorrect in the final response. | ❌ **Not Implemented** | - | `content`: The raw response string from the LLM. `citations`: List of `ClientCitation` objects. | The formatted response string with citation markers (e.g., `[doc1]`). |
+1. **Instrument the ActionPlanner’s `continue_task`:**
+   ```python
+   async def continue_task(self, context: TurnContext, state: TurnState) -> Plan:
+   ```
+2. **Plan Analysis:**  
+   The `continue_task` method provides the commands in the plan (not necessarily the output of the command):
+   ```python
+   PredictedCommand = Union[PredictedDoCommand, PredictedSayCommand]
+   ```
 
-**Sample Instrumented Traces**: [AI-Bot-with-Azure-AI-Search-Instrumented.json](../resources/AI-Bot-with-Azure-AI-Search-Instrumented.json) (Sample with full search instrumentation)
+3. **Inference Type:**  Inteference span will inherit the category from the parent. From the plan, determine if the inference is orchestrating the next task or communicating via a final `SAY` command. We will start with three scenarios:
 
-![](../resources/AI-Bot-with-Azure-AI-Search-Instrumented.png)
+   - `DO`: inteference span category = "`routing`"
+   - `SAY`: inteference span category = "`communication`"
+   - `DO` & `Data Source`: inteference span category = "`retrieval`"
 
-#### Pending Implementation & Flow
+4. **Trace UX:**  
+   In the traces UI, the ActionPlanner will have a new parent span called `continue_task` with attributes describing the `Plan`.
 
-**Flow explained in plain English:**
+### Methodology for Non-deterministic Approach
 
-1. **User Input**: "tell me about executive vacation days"
+There are some options:
 
-2. **Conversation State Loading**: The bot loads the current conversation state from storage to maintain context across interactions
+1. **String Match:** `grep` the exact string or perform `regex` in the prompt and response to do a best guess that the interence is performing a specific function. For example: Check if the prompt input has `skprompt.txt` and ends with `actions.json` content.
 
-3. **Embedding Generation**: The user's query "tell me about executive vacation days" is converted to vector embeddings using Azure OpenAI's embedding model
+   - **Pros**: If done right, this could be very accurate on categorization.
+   - **Cons**: It will take some effort to "index" all possible strings to check against per framework (LlamaIndex, Langchain, Teams AI ASK, Azure AI SDK, etc...).
 
-4. **Azure AI Search - SearchClient.search**: The embeddings are used to perform vector search against the "contoso-electronics" index, with the search request captured by the instrumented `azure.search.documents._search_client.SearchClient` span
+2. **Categorization eval:** Submit the entire prompt and response (plus optional of the Teams AI SDK and App Codebase) to an LLM to evaluate or classify the interence into specific list of categories.
 
-5. **Azure AI Search - DocumentsOperations**: The search results are processed and returned with detailed document information, scores, and content, captured by the instrumented `azure.search.documents._generated.operations._documents_operations.DocumentsOperations` span:
-   - **Contoso_Electronics_PerkPlus_Program** (score: 0.033)
-   - **Contoso_Electronics_Company_Overview** (score: 0.033) 
-   - **Contoso_Electronics_Plan_Benefits** (score: 0.016)
-
-6. **Context Integration**: The search results are incorporated into the prompt template (Note: PromptManager.render_prompt is not yet instrumented)
-
-7. **LLM Processing**: The OpenAIModel receives the enhanced prompt with search context and generates a structured response with citations
-
-8. **Response Generation**: The ActionPlanner processes the LLM output and creates a response (Note: Citations formatting is not yet instrumented)
-
-9. **Bot Output**: The final response is sent to the user: "Executive vacation days are typically part of a broader benefits package that includes paid time off (PTO) for senior management. These days allow executives to recharge and maintain work-life balance, often exceeding standard vacation policies. Companies may offer flexible scheduling or additional days based on tenure or performance."
-
-**Key Insight**: The Azure AI Search integration enables the bot to provide accurate, contextually relevant responses by retrieving and incorporating specific document content. The current instrumentation captures both the search request (`SearchClient.search`) and detailed results (`DocumentsOperations`), providing visibility into search performance and quality.
-
-**Technical Flow:**
-
-1. **User**: Asks "tell me about executive vacation days"
-
-2. **WebApp**: Receives the HTTP request and routes it to the Teams AI application
-
-3. **ConversationState**: Loads the current conversation state from storage, including any previous context
-
-4. **AI.run**: Starts the AI processing pipeline for this user turn
-
-5. **ActionPlanner**: Analyzes the user's request and determines that search is needed
-
-6. **Embeddings**: Converts the user query to vector embeddings using Azure OpenAI
-
-7. **SearchClient.search**: Performs vector search against the contoso-electronics index with k=2 nearest neighbors (instrumented span: `azure.search.documents._search_client.SearchClient`)
-
-8. **DocumentsOperations**: Returns relevant documents with scores and content about vacation policies (instrumented span: `azure.search.documents._generated.operations._documents_operations.DocumentsOperations`)
-
-9. **Prompt Enhancement**: The search results are integrated into the prompt template with context tags (Note: PromptManager.render_prompt not instrumented)
-
-10. **OpenAIModel**: Receives the enhanced prompt and generates a structured response with citations
-
-11. **ActionPlanner**: Processes the LLM output and creates the final response
-
-12. **AI.run**: Executes the plan, starting with `PLAN_READY` to indicate the plan is ready for execution
-
-13. **ActionEntry**: Handles the `PLAN_READY` command
-
-14. **ActionEntry**: Handles the `SAY_COMMAND` by formatting the response (Note: Citations formatting not instrumented)
-
-15. **AI.run**: Returns the final response to the user
-
-16. **User**: Receives the answer with proper citations about executive vacation policies
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant WebApp as "aiohttp App (app.py)"
-    participant ConversationState
-    participant AI as "AI.run"
-    participant Planner as "ActionPlanner"
-    participant Embeddings as "Azure OpenAI Embeddings"
-    participant SearchClient as "azure.search.documents._search_client.SearchClient"
-    participant DocumentsOps as "azure.search.documents._generated.operations._documents_operations.DocumentsOperations"
-    participant OpenAI as "OpenAIModel"
-    participant ActionEntry as "action_entry (bot.py)"
-
-    %% Azure AI Search flow: User asks about executive vacation days
-    User->>WebApp: tell me about executive vacation days
-    WebApp->>ConversationState: load()
-    ConversationState-->>WebApp: state loaded
-    WebApp->>AI: AI.run(context, state)
-    AI->>Planner: planner.begin_task(context, state)
-    Planner->>Embeddings: convert query to embeddings
-    Embeddings-->>Planner: vector embeddings
-    Planner->>SearchClient: vector search (k=2, contoso-electronics index)
-    Note right of SearchClient: Search query: "tell me about executive vacation days"<br/>Index: contoso-electronics<br/>Vector fields: descriptionVector<br/>Span type: search
-    SearchClient->>DocumentsOps: process search results
-    DocumentsOps-->>Planner: Search results with scores
-    Note right of DocumentsOps: Results:<br/>• Contoso_Electronics_PerkPlus_Program (0.033)<br/>• Contoso_Electronics_Company_Overview (0.033)<br/>• Contoso_Electronics_Plan_Benefits (0.016)<br/>Span type: search
-    Planner->>OpenAI: OpenAIModel.complete_prompt(...)
-    Note right of OpenAI: Enhanced prompt with search context<br/>System: "Use context in <context></context> tags"<br/>User: "tell me about executive vacation days"<br/>Context: [Search results with vacation policies]
-    OpenAI-->>Planner: LLM returns structured response with citations
-    Planner-->>AI: Response with citations
-    AI->>ActionEntry: action_entry.invoke(context, state, parameters) ++ PLAN_READY
-    Note right of ActionEntry: Handles PLAN_READY (plan is ready to execute)
-    ActionEntry-->>AI: "Plan ready, proceeding to next command"
-    AI->>ActionEntry: action_entry.invoke(context, state, parameters) ++ SAY_COMMAND
-    Note right of ActionEntry: Handles SAY_COMMAND (send answer with citations)
-    ActionEntry-->>AI: "Executive vacation days are typically part of a broader benefits package..."
-    AI-->>User: Executive vacation days are typically part of a broader benefits package that includes paid time off (PTO) for senior management. These days allow executives to recharge and maintain work-life balance, often exceeding standard vacation policies. Companies may offer flexible scheduling or additional days based on tenure or performance.
-```
+   - **Pros**: Relatively easy to build a generic process for all frameworks.
+   - **Cons**: The results could be random so for the most part, we have to do a very good job at prompt engineering.
