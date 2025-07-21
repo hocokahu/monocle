@@ -412,7 +412,7 @@ sequenceDiagram
 
 ## Categorization of Inference Span
 
-### Assumptions
+### 1. Assumptions
 Every AI action that involves prompting has a root inference. Our goal is to identify the task that each inference is performing, so we can provide clear, meaningful categories for users to focus on specific types of inference.
 
 - **Search and Filtering:**  
@@ -434,7 +434,18 @@ Every AI action that involves prompting has a root inference. Our goal is to ide
   - Use evaluations (e.g., is this a jailbreak? Some uncertainty is inevitable).
   - Allow users to edit or refine the categorization after the fact.
 
-### Methodology for Deterministic Approach
+### 2. Proposed Categories
+
+- `planning`
+- `routing and selection`
+- `content processing`
+- `content generation`
+- `communication`
+- `transformations`
+- `domain specific`
+- `generic`
+
+### 3. Methodology for Deterministic Approach
 
 1. **Instrument the ActionPlanner’s `continue_task`:**
    ```python
@@ -448,14 +459,14 @@ Every AI action that involves prompting has a root inference. Our goal is to ide
 
 3. **Inference Type:**  Inteference span will inherit the category from the parent. From the plan, determine if the inference is orchestrating the next task or communicating via a final `SAY` command. We will start with three scenarios:
 
-   - `DO`: inteference span category = "`routing`"
+   - `DO`: inteference span category = "`routing and selection`"
    - `SAY`: inteference span category = "`communication`"
    - `DO` & `Data Source`: inteference span category = "`retrieval`"
 
 4. **Trace UX:**  
    In the traces UI, the ActionPlanner will have a new parent span called `continue_task` with attributes describing the `Plan`.
 
-### Methodology for Non-deterministic Approach
+### 3. Methodology for Non-deterministic Approach
 
 There are some options:
 
@@ -464,7 +475,7 @@ There are some options:
    - **Pros**: If done right, this could be very accurate on categorization.
    - **Cons**: It will take some effort to "index" all possible strings to check against per framework (LlamaIndex, Langchain, Teams AI ASK, Azure AI SDK, etc...).
 
-2. **Categorization eval:** Submit the entire prompt and response (plus optional of the Teams AI SDK and App Codebase) to an LLM to evaluate or classify the interence into specific list of categories.
+2. **Categorization eval:** Treat categorization just like an `eval()` job. Submit the entire prompt and response (plus optional of the Teams AI SDK and App Codebase) to an LLM to evaluate or classify the interence into specific list of categories.
 
    - **Pros**: Relatively easy to build a generic process for all frameworks.
    - **Cons**: The results could be random so for the most part, we have to do a very good job at prompt engineering.
