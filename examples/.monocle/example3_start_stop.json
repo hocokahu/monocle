@@ -1,0 +1,108 @@
+[
+  {
+    "name": "workflow",
+    "context": {
+      "trace_id": "8f9fd814e2218d0e2931cd8ab223020c",
+      "span_id": "ad14aeef3d922dbc",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2026-03-10T19:17:00.801678Z",
+    "end_time": "2026-03-10T19:17:00.814950Z",
+    "status": {
+      "status_code": "UNSET"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "",
+      "workflow.name": "example3_start_stop",
+      "span.type": "workflow",
+      "entity.1.name": "example3_start_stop",
+      "entity.1.type": "workflow.generic",
+      "entity.2.type": "app_hosting.generic",
+      "entity.2.name": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example3_start_stop"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "workflow",
+    "context": {
+      "trace_id": "12db552d2405a6b3ea174305aea05ed9",
+      "span_id": "20039f62491c3681",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2026-03-10T19:17:00.817564Z",
+    "end_time": "2026-03-10T19:17:00.831527Z",
+    "status": {
+      "status_code": "UNSET"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "",
+      "workflow.name": "example3_start_stop",
+      "span.type": "workflow",
+      "entity.1.name": "example3_start_stop",
+      "entity.1.type": "workflow.generic",
+      "entity.2.type": "app_hosting.generic",
+      "entity.2.name": "generic",
+      "operation": "multiply",
+      "result": 28
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example3_start_stop"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "workflow",
+    "context": {
+      "trace_id": "40aa99723071fac6dc855846af2c5b1d",
+      "span_id": "01a3047013741557",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2026-03-10T19:17:00.832913Z",
+    "end_time": "2026-03-10T19:17:00.855940Z",
+    "status": {
+      "status_code": "UNSET"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "",
+      "workflow.name": "example3_start_stop",
+      "span.type": "workflow",
+      "entity.1.name": "example3_start_stop",
+      "entity.1.type": "workflow.generic",
+      "entity.2.type": "app_hosting.generic",
+      "entity.2.name": "generic",
+      "calculator": "Calculator",
+      "operations": 2
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example3_start_stop"
+      },
+      "schema_url": ""
+    }
+  }
+]

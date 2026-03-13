@@ -1,0 +1,258 @@
+[
+  {
+    "name": "my_func_sum",
+    "context": {
+      "trace_id": "0778323ef7ed38fe9a78082bcf973c86",
+      "span_id": "ad976cd516657d9c",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "40902ab0456cd4f3",
+    "start_time": "2026-03-10T19:17:01.612745Z",
+    "end_time": "2026-03-10T19:17:01.625302Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "",
+      "workflow.name": "example4_wrapper_method",
+      "span.type": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example4_wrapper_method"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "workflow",
+    "context": {
+      "trace_id": "0778323ef7ed38fe9a78082bcf973c86",
+      "span_id": "40902ab0456cd4f3",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2026-03-10T19:17:01.612693Z",
+    "end_time": "2026-03-10T19:17:01.625318Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "",
+      "workflow.name": "example4_wrapper_method",
+      "span.type": "workflow",
+      "entity.1.name": "example4_wrapper_method",
+      "entity.1.type": "workflow.generic",
+      "entity.2.type": "app_hosting.generic",
+      "entity.2.name": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example4_wrapper_method"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "my_func_product",
+    "context": {
+      "trace_id": "c1f8ba460add675c6cf7c952439e4b0f",
+      "span_id": "058c6e72d5f68335",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "340478d69a0332b5",
+    "start_time": "2026-03-10T19:17:01.625463Z",
+    "end_time": "2026-03-10T19:17:01.638002Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "",
+      "workflow.name": "example4_wrapper_method",
+      "span.type": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example4_wrapper_method"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "workflow",
+    "context": {
+      "trace_id": "c1f8ba460add675c6cf7c952439e4b0f",
+      "span_id": "340478d69a0332b5",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2026-03-10T19:17:01.625371Z",
+    "end_time": "2026-03-10T19:17:01.638009Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "",
+      "workflow.name": "example4_wrapper_method",
+      "span.type": "workflow",
+      "entity.1.name": "example4_wrapper_method",
+      "entity.1.type": "workflow.generic",
+      "entity.2.type": "app_hosting.generic",
+      "entity.2.name": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example4_wrapper_method"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "my_class_calc_add",
+    "context": {
+      "trace_id": "7314912ff429499f3773a0851c5ce7aa",
+      "span_id": "d50f63aa3def11c8",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "099e227d8e076667",
+    "start_time": "2026-03-10T19:17:01.638084Z",
+    "end_time": "2026-03-10T19:17:01.650669Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "",
+      "workflow.name": "example4_wrapper_method",
+      "span.type": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example4_wrapper_method"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "workflow",
+    "context": {
+      "trace_id": "7314912ff429499f3773a0851c5ce7aa",
+      "span_id": "099e227d8e076667",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2026-03-10T19:17:01.638055Z",
+    "end_time": "2026-03-10T19:17:01.650694Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "",
+      "workflow.name": "example4_wrapper_method",
+      "span.type": "workflow",
+      "entity.1.name": "example4_wrapper_method",
+      "entity.1.type": "workflow.generic",
+      "entity.2.type": "app_hosting.generic",
+      "entity.2.name": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example4_wrapper_method"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "my_class_calc_multiply",
+    "context": {
+      "trace_id": "a6af5358ba554c8b0e5abda57a1d3a02",
+      "span_id": "a09c37c348d98872",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "b7cbf087468ae35b",
+    "start_time": "2026-03-10T19:17:01.650757Z",
+    "end_time": "2026-03-10T19:17:01.663340Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "",
+      "workflow.name": "example4_wrapper_method",
+      "span.type": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example4_wrapper_method"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "workflow",
+    "context": {
+      "trace_id": "a6af5358ba554c8b0e5abda57a1d3a02",
+      "span_id": "b7cbf087468ae35b",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2026-03-10T19:17:01.650729Z",
+    "end_time": "2026-03-10T19:17:01.663350Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "",
+      "workflow.name": "example4_wrapper_method",
+      "span.type": "workflow",
+      "entity.1.name": "example4_wrapper_method",
+      "entity.1.type": "workflow.generic",
+      "entity.2.type": "app_hosting.generic",
+      "entity.2.name": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example4_wrapper_method"
+      },
+      "schema_url": ""
+    }
+  }
+]

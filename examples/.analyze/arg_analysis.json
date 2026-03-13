@@ -1,0 +1,3000 @@
+{
+  "root": "/Users/quanghoc/Documents/GitHub/monocle/examples",
+  "methods": {
+    "run_example1:calculate_sum": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_example1:calculate_product": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_example1:Calculator.add": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_example1:Calculator.multiply": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "trace_minify:parse_timestamp": {
+      "args": {
+        "ts_str": {
+          "name": "ts_str",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "datetime",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "ts_str"
+        ],
+        "sensitive": []
+      }
+    },
+    "trace_minify:get_trace_files": {
+      "args": {
+        "monocle_dir": {
+          "name": "monocle_dir",
+          "type": "Path",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "last_minutes": {
+          "name": "last_minutes",
+          "type": "Optional[int]",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "trace_id": {
+          "name": "trace_id",
+          "type": "Optional[str]",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: Optional[str]"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "list[Path]",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list[Path]"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "monocle_dir",
+          "last_minutes"
+        ],
+        "exclude": [],
+        "truncate": [
+          "trace_id"
+        ],
+        "sensitive": []
+      }
+    },
+    "trace_minify:extract_span_info": {
+      "args": {
+        "span": {
+          "name": "span",
+          "type": "dict",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: dict"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "span"
+        ],
+        "sensitive": []
+      }
+    },
+    "trace_minify:build_call_tree": {
+      "args": {
+        "spans": {
+          "name": "spans",
+          "type": "list[dict]",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: list[dict]"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "list[dict]",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list[dict]"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "spans"
+        ],
+        "sensitive": []
+      }
+    },
+    "trace_minify:format_value": {
+      "args": {
+        "value": {
+          "name": "value",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "max_len": {
+          "name": "max_len",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "str",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: str"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "value",
+          "max_len"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "trace_minify:print_span": {
+      "args": {
+        "span": {
+          "name": "span",
+          "type": "dict",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: dict"
+          ],
+          "recommendation": "truncate"
+        },
+        "indent": {
+          "name": "indent",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "show_tree": {
+          "name": "show_tree",
+          "type": "bool",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "indent",
+          "show_tree"
+        ],
+        "exclude": [],
+        "truncate": [
+          "span"
+        ],
+        "sensitive": []
+      }
+    },
+    "trace_minify:process_trace_file": {
+      "args": {
+        "file_path": {
+          "name": "file_path",
+          "type": "Path",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "show_tree": {
+          "name": "show_tree",
+          "type": "bool",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "file_path",
+          "show_tree"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "trace_minify:main": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "span_exporter:InMemorySpanExporter.__init__": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "span_exporter:InMemorySpanExporter.export": {
+      "args": {
+        "spans": {
+          "name": "spans",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "spans"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "span_exporter:InMemorySpanExporter.get_captured_spans": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "span_exporter:InMemorySpanExporter.clear": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "span_exporter:InMemorySpanExporter.shutdown": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "span_exporter:InMemorySpanExporter.force_flush": {
+      "args": {
+        "timeout_millis": {
+          "name": "timeout_millis",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "timeout_millis"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:standalone_sum": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:standalone_product": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:async_standalone_fetch": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:print_spans": {
+      "args": {
+        "title": {
+          "name": "title",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "title"
+        ],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:main": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:MyCalculator.__init__": {
+      "args": {
+        "name": {
+          "name": "name",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "name"
+        ],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:MyCalculator.add": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:MyCalculator.multiply": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:MyCalculator.chain_operation": {
+      "args": {
+        "x": {
+          "name": "x",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "x"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:MyAsyncService.fetch_item": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:MyAsyncService.fetch_batch": {
+      "args": {
+        "ids": {
+          "name": "ids",
+          "type": "list",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: list"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "list",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "ids"
+        ],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:calculate_sum": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:calculate_product": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:complex_calculation": {
+      "args": {
+        "x": {
+          "name": "x",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "x"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:async_fetch_data": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:async_process_items": {
+      "args": {
+        "item_ids": {
+          "name": "item_ids",
+          "type": "list",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: list"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "list",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "item_ids"
+        ],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:print_spans": {
+      "args": {
+        "title": {
+          "name": "title",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "title"
+        ],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:main": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:Calculator.__init__": {
+      "args": {
+        "name": {
+          "name": "name",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "name"
+        ],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:Calculator.add": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:Calculator.multiply": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:Calculator.complex_operation": {
+      "args": {
+        "x": {
+          "name": "x",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "x"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:AsyncService.fetch_item": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:AsyncService.fetch_all": {
+      "args": {
+        "ids": {
+          "name": "ids",
+          "type": "list",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: list"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "list",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "ids"
+        ],
+        "sensitive": []
+      }
+    },
+    "my_functions:calculate_sum": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_functions:calculate_product": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_functions:complex_calculation": {
+      "args": {
+        "x": {
+          "name": "x",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "x"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_functions:async_fetch_data": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_functions:async_process_items": {
+      "args": {
+        "item_ids": {
+          "name": "item_ids",
+          "type": "list",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: list"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "list",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "item_ids"
+        ],
+        "sensitive": []
+      }
+    },
+    "run_all_examples:save_spans": {
+      "args": {
+        "exporter": {
+          "name": "exporter",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "filename": {
+          "name": "filename",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "exporter",
+          "filename"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_all_examples:run_example1": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_all_examples:run_example2": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_all_examples:run_example3": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_all_examples:run_example4": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_all_examples:main": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:main": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:CallVisitor.__init__": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:CallVisitor.visit_Call": {
+      "args": {
+        "node": {
+          "name": "node",
+          "type": "ast.Call",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "node"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:CallVisitor._get_call_name": {
+      "args": {
+        "node": {
+          "name": "node",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "str | None",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: str | None"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "node"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:ASTParser.__init__": {
+      "args": {
+        "root_path": {
+          "name": "root_path",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        },
+        "include_init": {
+          "name": "include_init",
+          "type": "bool",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "include_init"
+        ],
+        "exclude": [],
+        "truncate": [
+          "root_path"
+        ],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:ASTParser.parse": {
+      "args": {},
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:ASTParser._parse_directory": {
+      "args": {
+        "path": {
+          "name": "path",
+          "type": "Path",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "path"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:ASTParser._parse_file": {
+      "args": {
+        "file_path": {
+          "name": "file_path",
+          "type": "Path",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "file_path"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:ASTParser._extract_imports": {
+      "args": {
+        "tree": {
+          "name": "tree",
+          "type": "ast.Module",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "list[dict]",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list[dict]"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "tree"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:ASTParser._parse_class": {
+      "args": {
+        "node": {
+          "name": "node",
+          "type": "ast.ClassDef",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "node"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:ASTParser._parse_function": {
+      "args": {
+        "node": {
+          "name": "node",
+          "type": "ast.FunctionDef | ast.AsyncFunctionDef",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "is_method": {
+          "name": "is_method",
+          "type": "bool",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "node",
+          "is_method"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:ASTParser._parse_arguments": {
+      "args": {
+        "args": {
+          "name": "args",
+          "type": "ast.arguments",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "is_method": {
+          "name": "is_method",
+          "type": "bool",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "list[dict]",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list[dict]"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "args",
+          "is_method"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:ASTParser._extract_calls": {
+      "args": {
+        "node": {
+          "name": "node",
+          "type": "ast.FunctionDef | ast.AsyncFunctionDef",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "list[str]",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list[str]"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "node"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:ASTParser._get_annotation": {
+      "args": {
+        "node": {
+          "name": "node",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "str | None",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: str | None"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "node"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:ASTParser._get_name": {
+      "args": {
+        "node": {
+          "name": "node",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "str",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: str"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "node"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:ASTParser._get_default_value": {
+      "args": {
+        "node": {
+          "name": "node",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "Any",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: Any"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "node"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:ASTParser._get_decorator": {
+      "args": {
+        "node": {
+          "name": "node",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "str",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: str"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "node"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "scripts.ast_parser:ASTParser._get_summary": {
+      "args": {},
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_app:main": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_class:Calculator.__init__": {
+      "args": {
+        "name": {
+          "name": "name",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "name"
+        ],
+        "sensitive": []
+      }
+    },
+    "my_class:Calculator.add": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_class:Calculator.multiply": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_class:Calculator.complex_operation": {
+      "args": {
+        "x": {
+          "name": "x",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "x"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_class:AsyncDataService.__init__": {
+      "args": {
+        "service_name": {
+          "name": "service_name",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "service_name"
+        ],
+        "sensitive": []
+      }
+    },
+    "my_class:AsyncDataService.fetch_item": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_class:AsyncDataService.fetch_multiple": {
+      "args": {
+        "item_ids": {
+          "name": "item_ids",
+          "type": "list",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: list"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "list",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "item_ids"
+        ],
+        "sensitive": []
+      }
+    },
+    "run_example2:calculate_sum": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_example2:calculate_product": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_example2:Calculator.add": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "instrument:mask_key": {
+      "args": {
+        "key": {
+          "name": "key",
+          "type": "str",
+          "risk": "sensitive",
+          "reasons": [
+            "Potentially large type: str",
+            "Sensitive data pattern: key"
+          ],
+          "recommendation": "mask"
+        }
+      },
+      "output": {
+        "type": "str",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: str"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": [
+          "key"
+        ]
+      }
+    },
+    "instrument:print_config": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "instrument:create_input_output_processor": {
+      "args": {
+        "span_name": {
+          "name": "span_name",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        },
+        "package": {
+          "name": "package",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        },
+        "class_name": {
+          "name": "class_name",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        },
+        "method": {
+          "name": "method",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "span_name",
+          "package",
+          "class_name",
+          "method"
+        ],
+        "sensitive": []
+      }
+    },
+    "instrument:load_config": {
+      "args": {
+        "config_path": {
+          "name": "config_path",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "config_path"
+        ],
+        "sensitive": []
+      }
+    },
+    "instrument:build_wrapper_methods": {
+      "args": {
+        "config": {
+          "name": "config",
+          "type": "dict",
+          "risk": "skip",
+          "reasons": [
+            "Standard skip name: config"
+          ],
+          "recommendation": "exclude"
+        }
+      },
+      "output": {
+        "type": "list",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [
+          "config"
+        ],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "instrument:setup_instrumentation": {
+      "args": {
+        "config_path": {
+          "name": "config_path",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "tuple",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "config_path"
+        ],
+        "sensitive": []
+      }
+    },
+    "instrument:run_app": {
+      "args": {
+        "script": {
+          "name": "script",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        },
+        "args": {
+          "name": "args",
+          "type": "list",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: list"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "script",
+          "args"
+        ],
+        "sensitive": []
+      }
+    },
+    "instrument:main": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example2_context_manager:calculate_sum": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example2_context_manager:calculate_product": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example2_context_manager:async_fetch_data": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example2_context_manager:print_spans": {
+      "args": {
+        "title": {
+          "name": "title",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "title"
+        ],
+        "sensitive": []
+      }
+    },
+    "example2_context_manager:main": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example2_context_manager:Calculator.add": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example2_context_manager:Calculator.multiply": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example2_context_manager:AsyncService.fetch_item": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example3_start_stop:calculate_sum": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example3_start_stop:calculate_product": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example3_start_stop:process_data": {
+      "args": {
+        "data": {
+          "name": "data",
+          "type": "list",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: list"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "list",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "data"
+        ],
+        "sensitive": []
+      }
+    },
+    "example3_start_stop:async_fetch_data": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example3_start_stop:print_spans": {
+      "args": {
+        "title": {
+          "name": "title",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "title"
+        ],
+        "sensitive": []
+      }
+    },
+    "example3_start_stop:main": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example3_start_stop:Calculator.add": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example3_start_stop:Calculator.multiply": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_example3:calculate_sum": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_example3:calculate_product": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_example3:Calculator.add": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    }
+  },
+  "summary": {
+    "total_methods": 109,
+    "total_args": 132,
+    "high_risk_args": 28,
+    "sensitive_args": 1,
+    "high_risk_methods": [
+      "trace_minify:parse_timestamp",
+      "trace_minify:get_trace_files",
+      "trace_minify:extract_span_info",
+      "trace_minify:build_call_tree",
+      "trace_minify:print_span",
+      "example4_wrapper_method:print_spans",
+      "example4_wrapper_method:MyCalculator.__init__",
+      "example4_wrapper_method:MyAsyncService.fetch_batch",
+      "example1_decorator:async_process_items",
+      "example1_decorator:print_spans",
+      "example1_decorator:Calculator.__init__",
+      "example1_decorator:AsyncService.fetch_all",
+      "my_functions:async_process_items",
+      "scripts.ast_parser:ASTParser.__init__",
+      "my_class:Calculator.__init__",
+      "my_class:AsyncDataService.__init__",
+      "my_class:AsyncDataService.fetch_multiple",
+      "instrument:create_input_output_processor",
+      "instrument:load_config",
+      "instrument:setup_instrumentation"
+    ],
+    "sensitive_methods": [
+      "instrument:mask_key"
+    ]
+  }
+}

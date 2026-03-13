@@ -1,0 +1,258 @@
+[
+  {
+    "name": "calculate_sum",
+    "context": {
+      "trace_id": "3164d3eae00429a79792f6372c0c50a9",
+      "span_id": "e37414dff9078900",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "9787c0b675e8050c",
+    "start_time": "2026-03-10T19:16:54.064811Z",
+    "end_time": "2026-03-10T19:16:54.077626Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "/Users/quanghoc/Documents/GitHub/monocle/examples/run_example1.py:26",
+      "workflow.name": "example1_decorator",
+      "span.type": "custom"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example1_decorator"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "workflow",
+    "context": {
+      "trace_id": "3164d3eae00429a79792f6372c0c50a9",
+      "span_id": "9787c0b675e8050c",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2026-03-10T19:16:54.064751Z",
+    "end_time": "2026-03-10T19:16:54.077643Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "/Users/quanghoc/Documents/GitHub/monocle/examples/run_example1.py:26",
+      "workflow.name": "example1_decorator",
+      "span.type": "workflow",
+      "entity.1.name": "example1_decorator",
+      "entity.1.type": "workflow.generic",
+      "entity.2.type": "app_hosting.generic",
+      "entity.2.name": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example1_decorator"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "custom_multiply",
+    "context": {
+      "trace_id": "0a0c87bf6737a06a2a1a48b415fcfc3e",
+      "span_id": "0fe07631dbb5f0d7",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "7eeb960186a95e67",
+    "start_time": "2026-03-10T19:16:54.077704Z",
+    "end_time": "2026-03-10T19:16:54.090292Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "/Users/quanghoc/Documents/GitHub/monocle/examples/run_example1.py:31",
+      "workflow.name": "example1_decorator",
+      "span.type": "custom"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example1_decorator"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "workflow",
+    "context": {
+      "trace_id": "0a0c87bf6737a06a2a1a48b415fcfc3e",
+      "span_id": "7eeb960186a95e67",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2026-03-10T19:16:54.077674Z",
+    "end_time": "2026-03-10T19:16:54.090302Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "/Users/quanghoc/Documents/GitHub/monocle/examples/run_example1.py:31",
+      "workflow.name": "example1_decorator",
+      "span.type": "workflow",
+      "entity.1.name": "example1_decorator",
+      "entity.1.type": "workflow.generic",
+      "entity.2.type": "app_hosting.generic",
+      "entity.2.name": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example1_decorator"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "add",
+    "context": {
+      "trace_id": "f9a9c5094dade90a9a60a80735078b74",
+      "span_id": "7932e69845dd34a2",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "e194c51de236bcb6",
+    "start_time": "2026-03-10T19:16:54.090368Z",
+    "end_time": "2026-03-10T19:16:54.102931Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "/Users/quanghoc/Documents/GitHub/monocle/examples/run_example1.py:38",
+      "workflow.name": "example1_decorator",
+      "span.type": "custom"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example1_decorator"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "workflow",
+    "context": {
+      "trace_id": "f9a9c5094dade90a9a60a80735078b74",
+      "span_id": "e194c51de236bcb6",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2026-03-10T19:16:54.090336Z",
+    "end_time": "2026-03-10T19:16:54.102939Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "/Users/quanghoc/Documents/GitHub/monocle/examples/run_example1.py:38",
+      "workflow.name": "example1_decorator",
+      "span.type": "workflow",
+      "entity.1.name": "example1_decorator",
+      "entity.1.type": "workflow.generic",
+      "entity.2.type": "app_hosting.generic",
+      "entity.2.name": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example1_decorator"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "calc_multiply",
+    "context": {
+      "trace_id": "c0a44573c82b8d41dab4661b53a802a2",
+      "span_id": "d94e440e0ddfe6d2",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0a1369bf53072920",
+    "start_time": "2026-03-10T19:16:54.103011Z",
+    "end_time": "2026-03-10T19:16:54.115611Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "/Users/quanghoc/Documents/GitHub/monocle/examples/run_example1.py:43",
+      "workflow.name": "example1_decorator",
+      "span.type": "custom"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example1_decorator"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "workflow",
+    "context": {
+      "trace_id": "c0a44573c82b8d41dab4661b53a802a2",
+      "span_id": "0a1369bf53072920",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2026-03-10T19:16:54.102979Z",
+    "end_time": "2026-03-10T19:16:54.115619Z",
+    "status": {
+      "status_code": "OK"
+    },
+    "attributes": {
+      "monocle_apptrace.version": "0.7.0",
+      "monocle_apptrace.language": "python",
+      "span_source": "/Users/quanghoc/Documents/GitHub/monocle/examples/run_example1.py:43",
+      "workflow.name": "example1_decorator",
+      "span.type": "workflow",
+      "entity.1.name": "example1_decorator",
+      "entity.1.type": "workflow.generic",
+      "entity.2.type": "app_hosting.generic",
+      "entity.2.name": "generic"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "service.name": "example1_decorator"
+      },
+      "schema_url": ""
+    }
+  }
+]

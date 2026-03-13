@@ -1,0 +1,92 @@
+{
+  "root": "/Users/quanghoc/Documents/GitHub/monocle/examples",
+  "entry_points": [
+    {
+      "type": "cli",
+      "location": "trace_minify:main",
+      "file": "trace_minify.py",
+      "lineno": 225,
+      "detection": "__main__ pattern",
+      "description": "CLI entry point (main function)",
+      "reachable_methods": 8
+    },
+    {
+      "type": "cli",
+      "location": "example4_wrapper_method:main",
+      "file": "example4_wrapper_method.py",
+      "lineno": 197,
+      "detection": "__main__ pattern",
+      "description": "CLI entry point (main function)",
+      "reachable_methods": 7
+    },
+    {
+      "type": "cli",
+      "location": "example1_decorator:main",
+      "file": "example1_decorator.py",
+      "lineno": 145,
+      "detection": "__main__ pattern",
+      "description": "CLI entry point (main function)",
+      "reachable_methods": 62
+    },
+    {
+      "type": "cli",
+      "location": "run_all_examples:main",
+      "file": "run_all_examples.py",
+      "lineno": 290,
+      "detection": "__main__ pattern",
+      "description": "CLI entry point (main function)",
+      "reachable_methods": 52
+    },
+    {
+      "type": "cli",
+      "location": "scripts.ast_parser:main",
+      "file": "scripts/ast_parser.py",
+      "lineno": 372,
+      "detection": "__main__ pattern",
+      "description": "CLI entry point (main function)",
+      "reachable_methods": 0
+    },
+    {
+      "type": "cli",
+      "location": "my_app:main",
+      "file": "my_app.py",
+      "lineno": 15,
+      "detection": "__main__ pattern",
+      "description": "CLI entry point (main function)",
+      "reachable_methods": 44
+    },
+    {
+      "type": "cli",
+      "location": "instrument:main",
+      "file": "instrument.py",
+      "lineno": 232,
+      "detection": "__main__ pattern",
+      "description": "CLI entry point (main function)",
+      "reachable_methods": 7
+    },
+    {
+      "type": "cli",
+      "location": "example2_context_manager:main",
+      "file": "example2_context_manager.py",
+      "lineno": 102,
+      "detection": "__main__ pattern",
+      "description": "CLI entry point (main function)",
+      "reachable_methods": 22
+    },
+    {
+      "type": "cli",
+      "location": "example3_start_stop:main",
+      "file": "example3_start_stop.py",
+      "lineno": 100,
+      "detection": "__main__ pattern",
+      "description": "CLI entry point (main function)",
+      "reachable_methods": 23
+    }
+  ],
+  "summary": {
+    "total": 9,
+    "by_type": {
+      "cli": 9
+    }
+  }
+}

@@ -1,0 +1,31 @@
+workflow_name: my_app_example
+
+instrument:
+  # Standalone functions (no class)
+  - package: my_functions
+    method: calculate_sum
+    span_name: func_calculate_sum
+
+  - package: my_functions
+    method: calculate_product
+    span_name: func_calculate_product
+
+  - package: my_functions
+    method: complex_calculation
+    span_name: func_complex_calculation
+
+  # Class methods
+  - package: my_class
+    class: Calculator
+    method: add
+    span_name: Calculator.add
+
+  - package: my_class
+    class: Calculator
+    method: multiply
+    span_name: Calculator.multiply
+
+  - package: my_class
+    class: Calculator
+    method: complex_operation
+    span_name: Calculator.complex_operation
