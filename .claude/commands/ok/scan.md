@@ -44,21 +44,26 @@ If ALL code uses supported frameworks → just use `setup_monocle_telemetry()`, 
 
 1. Ask user for the app folder path (use AskUserQuestion if not provided in arguments)
 2. **FIRST: Run framework detection** - `python .claude/scripts/monocle_detector.py <path>`
-3. If supported frameworks found:
+3. **Check for existing instrumentation** - Search for `setup_monocle_telemetry` in the codebase:
+   - Run: `grep -r "setup_monocle_telemetry" <path> --include="*.py" -l`
+   - If found, note which files already have monocle setup
+4. If supported frameworks found:
    - Show what's auto-instrumented vs needs decorators
-   - **USE AskUserQuestion**: "Supported frameworks detected. Use auto-instrumentation or continue with custom scan?"
-   - If user chooses auto-instrumentation → suggest setup code and skip to step 11
-4. Run `python .claude/scripts/ast_parser.py <path> -o <path>/.analyze/ast_data.json --pretty`
-5. Run `python .claude/scripts/entry_detector.py <path>/.analyze/ast_data.json`
-6. **USE AskUserQuestion** to ask which entry points to analyze (see example below)
-7. Run `python .claude/scripts/call_graph.py <path>/.analyze/ast_data.json`
-8. Run `python .claude/scripts/relevance_scorer.py .analyze/call_graph.json --entry <selected>`
-9. **USE AskUserQuestion** to ask about medium-relevance modules (multiSelect: true)
-10. Run `python .claude/scripts/arg_analyzer.py <path>/.analyze/ast_data.json`
-11. **USE AskUserQuestion** to ask how to handle large args for each flagged method
-12. Save choices to `<path>/.analyze/choices.json`
-13. **Write/update `<path>/.analyze/SESSION.md`** with human-readable summary (see format below)
-14. Suggest running `/ok:instrument` to generate YAML
+   - **If existing instrumentation found**: Show which files already have setup and what's covered
+   - **USE AskUserQuestion** with appropriate options (see "Existing Instrumentation" section below)
+   - If user chooses "keep as-is" → show next steps and exit
+   - If user chooses auto-instrumentation → suggest setup code and skip to step 12
+5. Run `python .claude/scripts/ast_parser.py <path> -o <path>/.analyze/ast_data.json --pretty`
+6. Run `python .claude/scripts/entry_detector.py <path>/.analyze/ast_data.json`
+7. **USE AskUserQuestion** to ask which entry points to analyze (see example below)
+8. Run `python .claude/scripts/call_graph.py <path>/.analyze/ast_data.json`
+9. Run `python .claude/scripts/relevance_scorer.py .analyze/call_graph.json --entry <selected>`
+10. **USE AskUserQuestion** to ask about medium-relevance modules (multiSelect: true)
+11. Run `python .claude/scripts/arg_analyzer.py <path>/.analyze/ast_data.json`
+12. **USE AskUserQuestion** to ask how to handle large args for each flagged method
+13. Save choices to `<path>/.analyze/choices.json`
+14. **Write/update `<path>/.analyze/SESSION.md`** with human-readable summary (see format below)
+15. Suggest running `/ok:instrument` to generate YAML
 
 ## SESSION.md Format - ALWAYS UPDATE
 
@@ -72,8 +77,9 @@ YYYY-MM-DD HH:MM
 
 ## Scan Results (/ok:scan)
 - **App folder**: examples/
+- **Existing instrumentation**: serve.py (or "None")
 - **Entry point selected**: my_app:main
-- **Frameworks detected**: None (custom code)
+- **Frameworks detected**: Flask, OpenAI (auto-instrumented)
 - **High-relevance modules**: my_app, my_functions, my_class
 - **Medium modules included**: [list or "skipped"]
 - **Large args handling**:
@@ -81,6 +87,13 @@ YYYY-MM-DD HH:MM
   - UserService.create.user_data → truncate 100
 
 ## Next Steps
+
+### If existing instrumentation retained:
+- [x] Setup already in place (serve.py)
+- [ ] Run `/ok:run <command>` to execute with tracing
+- [ ] Run `/ok:local-trace` to check traces
+
+### If new instrumentation needed:
 - [ ] Run `/ok:instrument` to add tracing (zero-code or code-based)
 - [ ] Run `/ok:run <command>` to execute with tracing
 - [ ] Run `/ok:local-trace` to check traces
@@ -90,7 +103,35 @@ This file persists across `/clear` and session exits.
 
 ## Interactive Questions - USE AskUserQuestion TOOL
 
-### Framework detection (if supported frameworks found):
+### Existing instrumentation found:
+When `setup_monocle_telemetry` is already in the codebase, use this question:
+```json
+{
+  "questions": [{
+    "question": "Monocle instrumentation already exists. How would you like to proceed?",
+    "header": "Existing",
+    "multiSelect": false,
+    "options": [
+      {"label": "Keep as-is (Recommended)", "description": "Current setup covers frameworks - just run your app"},
+      {"label": "Scan for gaps", "description": "Check if custom code paths need additional tracing"},
+      {"label": "Show current coverage", "description": "Display what's currently instrumented vs what's not"}
+    ]
+  }]
+}
+```
+
+When user selects "Keep as-is":
+- Show which files have `setup_monocle_telemetry`
+- List what frameworks are auto-traced
+- Suggest next steps: `/ok:run` and `/ok:local-trace`
+- Update SESSION.md with "Existing instrumentation retained"
+
+When user selects "Scan for gaps":
+- Continue with full scan (step 5+)
+- Focus on custom code not covered by auto-instrumentation
+- In SESSION.md, note which entry points already have setup
+
+### Framework detection (no existing instrumentation):
 ```json
 {
   "questions": [{
