@@ -20,3 +20,7 @@ monocle_trace**.json
 apptrace/LICENSE
 mcp/LICENSE
 test_tools/LICENSE.analyze/
+.mcp.json
+.env
+.env.*
+*.env
