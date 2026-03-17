@@ -14,21 +14,97 @@ allowed-tools:
 
 Full codebase analysis to recommend what to trace.
 
+## IMPORTANT: Framework Detection First
+
+**ALWAYS run framework detection FIRST.** If monocle-supported frameworks are found, prioritize using monocle's built-in auto-instrumentation. Do NOT reinvent the wheel.
+
+### Monocle Built-in Support
+
+| Category | Frameworks | Instrumentation |
+|----------|------------|-----------------|
+| LLM Inference | OpenAI, Anthropic, Azure AI, Bedrock, Gemini, LiteLLM, Mistral, HuggingFace | Auto |
+| Agent Frameworks | LangChain, LlamaIndex, LangGraph, CrewAI, Haystack, OpenAI Agents, AutoGen | Auto |
+| HTTP Frameworks | Flask, FastAPI, AIOHTTP | Auto + decorators |
+| Cloud Functions | Azure Functions, AWS Lambda | Decorators required |
+| MCP | FastMCP, MCP SDK | Auto |
+
+If ALL code uses supported frameworks → just use `setup_monocle_telemetry()`, no custom YAML needed.
+
+## SKIP PATTERNS - DO NOT INSTRUMENT
+
+**NEVER instrument these:**
+- `__init__.py` files - These are package initializers, not business logic
+- `__init__` methods - Constructor setup, not traceable operations
+- `__str__`, `__repr__`, `__eq__`, etc. - Dunder/magic methods
+- Files in `tests/`, `test_*.py`, `*_test.py` - Test files
+- Files in `migrations/`, `alembic/` - Database migrations
+- Files in `.venv/`, `venv/`, `site-packages/` - Virtual environments
+
 ## Steps
 
 1. Ask user for the app folder path (use AskUserQuestion if not provided in arguments)
-2. Run `python .claude/scripts/ast_parser.py <path> -o <path>/.analyze/ast_data.json --pretty`
-3. Run `python .claude/scripts/entry_detector.py <path>/.analyze/ast_data.json`
-4. **USE AskUserQuestion** to ask which entry points to analyze (see example below)
-5. Run `python .claude/scripts/call_graph.py <path>/.analyze/ast_data.json`
-6. Run `python .claude/scripts/relevance_scorer.py .analyze/call_graph.json --entry <selected>`
-7. **USE AskUserQuestion** to ask about medium-relevance modules (multiSelect: true)
-8. Run `python .claude/scripts/arg_analyzer.py <path>/.analyze/ast_data.json`
-9. **USE AskUserQuestion** to ask how to handle large args for each flagged method
-10. Save choices to `<path>/.analyze/choices.json`
-11. Suggest running `/ok:plan` to generate YAML
+2. **FIRST: Run framework detection** - `python .claude/scripts/monocle_detector.py <path>`
+3. If supported frameworks found:
+   - Show what's auto-instrumented vs needs decorators
+   - **USE AskUserQuestion**: "Supported frameworks detected. Use auto-instrumentation or continue with custom scan?"
+   - If user chooses auto-instrumentation → suggest setup code and skip to step 11
+4. Run `python .claude/scripts/ast_parser.py <path> -o <path>/.analyze/ast_data.json --pretty`
+5. Run `python .claude/scripts/entry_detector.py <path>/.analyze/ast_data.json`
+6. **USE AskUserQuestion** to ask which entry points to analyze (see example below)
+7. Run `python .claude/scripts/call_graph.py <path>/.analyze/ast_data.json`
+8. Run `python .claude/scripts/relevance_scorer.py .analyze/call_graph.json --entry <selected>`
+9. **USE AskUserQuestion** to ask about medium-relevance modules (multiSelect: true)
+10. Run `python .claude/scripts/arg_analyzer.py <path>/.analyze/ast_data.json`
+11. **USE AskUserQuestion** to ask how to handle large args for each flagged method
+12. Save choices to `<path>/.analyze/choices.json`
+13. **Write/update `<path>/.analyze/SESSION.md`** with human-readable summary (see format below)
+14. Suggest running `/ok:instrument` to generate YAML
+
+## SESSION.md Format - ALWAYS UPDATE
+
+After each /ok: command, write/append to `.analyze/SESSION.md`:
+
+```markdown
+# Okahu Instrumentation Session
+
+## Last Updated
+YYYY-MM-DD HH:MM
+
+## Scan Results (/ok:scan)
+- **App folder**: examples/
+- **Entry point selected**: my_app:main
+- **Frameworks detected**: None (custom code)
+- **High-relevance modules**: my_app, my_functions, my_class
+- **Medium modules included**: [list or "skipped"]
+- **Large args handling**:
+  - PaymentProcessor.charge.metadata → excluded
+  - UserService.create.user_data → truncate 100
+
+## Next Steps
+- [ ] Run `/ok:instrument` to add tracing (zero-code or code-based)
+- [ ] Run `/ok:run <command>` to execute with tracing
+- [ ] Run `/ok:local-trace` to check traces
+```
+
+This file persists across `/clear` and session exits.
 
 ## Interactive Questions - USE AskUserQuestion TOOL
+
+### Framework detection (if supported frameworks found):
+```json
+{
+  "questions": [{
+    "question": "Supported frameworks detected. How would you like to proceed?",
+    "header": "Frameworks",
+    "multiSelect": false,
+    "options": [
+      {"label": "Use auto-instrumentation (Recommended)", "description": "Just add setup_monocle_telemetry() - no custom YAML needed"},
+      {"label": "Continue with full scan", "description": "Also trace custom code alongside frameworks"},
+      {"label": "Show setup code", "description": "Display the setup code to add to your app"}
+    ]
+  }]
+}
+```
 
 ### Entry point selection:
 ```json
@@ -92,4 +168,4 @@ Analysis output goes to `.analyze/` folder in the target directory.
 
 ## Related Commands
 
-- `/ok:plan` - Generate monocle.yaml from scan results
+- `/ok:instrument` - Generate okahu.yaml from scan results
