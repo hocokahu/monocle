@@ -2,7 +2,7 @@
 CLI-style instrumentation using YAML config with fail-open behavior.
 
 Usage:
-    python -m instrument --config monocle.yaml my_app.py
+    python -m instrument --config okahu.yaml my_app.py
 
 Environment Variables:
     MONOCLE_STRICT=true    - Fail if instrumentation breaks (for dev/testing)
@@ -233,7 +233,7 @@ def main():
     parser = argparse.ArgumentParser(
         description='Instrument Python app with Monocle using YAML config (fail-open by default)'
     )
-    parser.add_argument('--config', '-c', required=True, help='Path to monocle.yaml config file')
+    parser.add_argument('--config', '-c', required=True, help='Path to okahu.yaml config file')
     parser.add_argument('script', help='Python script to run')
     parser.add_argument('args', nargs='*', help='Arguments for the script')
 

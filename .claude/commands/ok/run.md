@@ -33,7 +33,82 @@ Smart runner for instrumented apps. Automatically determines how to run based on
    - Entry points detected during scan
 2. If no SESSION.md → tell user: "Run `/ok:instrument` first."
 
-### Step 2: Determine Run Command
+### Step 2: Check Okahu Credentials
+
+**Check if credentials are configured:**
+
+1. First check if `.env` exists in app folder and source it:
+   ```bash
+   if [ -f .env ]; then source .env; fi
+   ```
+
+2. Check current env vars:
+   ```bash
+   echo "OKAHU_INGESTION_ENDPOINT: ${OKAHU_INGESTION_ENDPOINT:-not set}"
+   echo "OKAHU_API_KEY: ${OKAHU_API_KEY:+[configured]}"
+   ```
+
+**If EITHER is missing, USE AskUserQuestion:**
+
+```json
+{
+  "questions": [{
+    "question": "Okahu credentials needed for cloud tracing. How would you like to configure them?",
+    "header": "Okahu Credentials",
+    "multiSelect": false,
+    "options": [
+      {"label": "Enter credentials now", "description": "Save to .env and use for this session"},
+      {"label": "Local-only tracing", "description": "Skip cloud - traces saved to .monocle/ folder only"},
+      {"label": "Already set in environment", "description": "I've exported them in my shell"}
+    ]
+  }]
+}
+```
+
+**If user selects "Enter credentials now":**
+
+1. Ask for endpoint:
+   ```
+   Enter OKAHU_INGESTION_ENDPOINT (e.g., https://ingest.okahu.co):
+   ```
+
+2. Ask for API key:
+   ```
+   Enter OKAHU_API_KEY:
+   ```
+
+3. Save to `.env` file (create or append):
+   ```bash
+   # Check if .env exists
+   touch .env
+
+   # Remove old values if present
+   grep -v "^OKAHU_INGESTION_ENDPOINT=" .env > .env.tmp && mv .env.tmp .env
+   grep -v "^OKAHU_API_KEY=" .env > .env.tmp && mv .env.tmp .env
+
+   # Append new values
+   echo "OKAHU_INGESTION_ENDPOINT=<user-provided>" >> .env
+   echo "OKAHU_API_KEY=<user-provided>" >> .env
+   ```
+
+4. Source and run:
+   ```bash
+   source .env
+   # Then proceed to Step 4: Execute
+   ```
+
+5. Tell user: "Credentials saved to `.env`. They will be used automatically next time."
+
+**If user selects "Local-only tracing":**
+- Continue without setting credentials
+- Traces will be saved to `.monocle/` folder only
+- Tell user: "Traces will be saved locally to `.monocle/`. Use `/ok:local-trace` to view them."
+
+**If user selects "Already set in environment":**
+- Verify by checking env vars again
+- If still not set, warn and ask again
+
+### Step 3: Determine Run Command
 
 **If command provided in arguments:**
 - Use it directly
@@ -74,7 +149,7 @@ Note: Build options dynamically from:
 **If user selects "Enter custom command":**
 - Ask: "Enter your run command (e.g., `flask run -p 8080`):"
 
-### Step 3: Execute
+### Step 4: Execute
 
 **If Zero-code approach (okahu.yaml exists):**
 ```bash
@@ -87,7 +162,7 @@ python .claude/scripts/okahu_instrument.py <command>
 ```
 Run the command directly - tracing is already enabled via injected code.
 
-### Step 4: Handle Long-Running Processes
+### Step 5: Handle Long-Running Processes
 
 For servers/workers that listen on ports:
 - Run the command normally (it will block and listen)
@@ -96,7 +171,7 @@ For servers/workers that listen on ports:
 
 **Important:** Do NOT use `run_in_background` for servers - they need to run in foreground so user can see output and Ctrl+C to stop.
 
-### Step 5: Update SESSION.md
+### Step 6: Update SESSION.md
 
 After running (or if user exits), append to `.analyze/SESSION.md`:
 

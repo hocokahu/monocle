@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-YAML Generator - Generate monocle.yaml from analysis data.
+YAML Generator - Generate okahu.yaml from analysis data.
 
-Takes analysis JSON files and user choices to generate monocle.yaml config.
+Takes analysis JSON files and user choices to generate okahu.yaml config.
 
 Usage:
     python yaml_generator.py .analyze/
-    python yaml_generator.py .analyze/ --output monocle.yaml
+    python yaml_generator.py .analyze/ --output okahu.yaml
     python yaml_generator.py .analyze/ --choices .analyze/choices.json
 
-Output: monocle.yaml configuration file
+Output: okahu.yaml configuration file
 """
 
 import argparse
@@ -26,7 +26,7 @@ except ImportError:
 
 
 class YamlGenerator:
-    """Generate monocle.yaml from analysis data."""
+    """Generate okahu.yaml from analysis data."""
 
     def __init__(self, analyze_dir: str, choices: dict = None):
         self.analyze_dir = Path(analyze_dir)
@@ -59,7 +59,7 @@ class YamlGenerator:
                 self.arg_analysis = json.load(f)
 
     def generate(self, workflow_name: str = "my_app") -> dict:
-        """Generate monocle.yaml config."""
+        """Generate okahu.yaml config."""
         self.load_data()
 
         config = {
@@ -258,12 +258,12 @@ class YamlGenerator:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Generate monocle.yaml from analysis data"
+        description="Generate okahu.yaml from analysis data"
     )
     parser.add_argument("analyze_dir", help="Path to .analyze/ directory")
     parser.add_argument(
         "--output", "-o",
-        default="monocle.yaml",
+        default="okahu.yaml",
         help="Output YAML file path"
     )
     parser.add_argument(
@@ -299,7 +299,7 @@ def main():
     # Preview or write
     if args.preview:
         print("=" * 60)
-        print("GENERATED monocle.yaml (preview)")
+        print("GENERATED okahu.yaml (preview)")
         print("=" * 60)
         print()
         print(yaml_content)

@@ -382,7 +382,7 @@ def print_report(result: dict):
 
     # Custom code
     if result["custom_code"]:
-        print("CUSTOM CODE (needs monocle.yaml):")
+        print("CUSTOM CODE (needs okahu.yaml):")
         print()
         for f in result["custom_code"][:10]:
             print(f"  ⚠️  {f}")
