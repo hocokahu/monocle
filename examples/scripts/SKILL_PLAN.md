@@ -4,6 +4,20 @@
 
 A set of scripts and Claude CLI skills to analyze Python codebases and add monocle tracing.
 
+## Table of Contents
+
+- [SKILL Commands](#skill-commands)
+- [Workflow](#workflow)
+- [Workflow Examples](#workflow-examples)
+- [Folder Structure](#folder-structure)
+- [Instrumentation Approaches](#instrumentation-approaches)
+- [Monocle Built-in Support](#monocle-built-in-support)
+- [okahu.yaml Format](#okahuyaml-format)
+- [Scripts](#scripts)
+- [Interactive Questions](#interactive-questions)
+- [Environment Variables](#environment-variables)
+- [KEY RULES (MUST FOLLOW)](#key-rules-must-follow)
+
 ---
 
 ## SKILL Commands
