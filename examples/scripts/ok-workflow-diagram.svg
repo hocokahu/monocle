@@ -1,0 +1,266 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" viewBox="0 0 680 820">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5"
+      markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke"
+        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <style>
+    .t { font-family: system-ui, -apple-system, sans-serif; font-size: 14px; fill: #1a1a1a; }
+    .ts { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; fill: #666; }
+    .th { font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 500; fill: #1a1a1a; }
+    .tm { font-family: ui-monospace, monospace; font-size: 11px; fill: #666; }
+    .arr { stroke: #888; stroke-width: 1.5; fill: none; }
+    .arr-dash { stroke: #aaa; stroke-width: 1; stroke-dasharray: 4 3; fill: none; }
+
+    .c-purple rect { fill: #EEEDFE; stroke: #534AB7; }
+    .c-purple text.th { fill: #3C3489; }
+    .c-purple text.ts { fill: #534AB7; }
+
+    .c-teal rect { fill: #E1F5EE; stroke: #0F6E56; }
+    .c-teal text.th { fill: #085041; }
+    .c-teal text.ts, .c-teal text.tm { fill: #0F6E56; }
+
+    .c-coral rect { fill: #FAECE7; stroke: #993C1D; }
+    .c-coral text.th { fill: #712B13; }
+    .c-coral text.ts { fill: #993C1D; }
+
+    .c-gray rect { fill: #F1EFE8; stroke: #5F5E5A; }
+    .c-gray text.th { fill: #444441; }
+    .c-gray text.ts, .c-gray text.tm { fill: #5F5E5A; }
+
+    .c-blue rect { fill: #E6F1FB; stroke: #185FA5; }
+    .c-blue text.th { fill: #0C447C; }
+    .c-blue text.ts { fill: #185FA5; }
+
+    .c-green rect { fill: #EAF3DE; stroke: #3B6D11; }
+    .c-green text.th { fill: #27500A; }
+    .c-green text.ts { fill: #3B6D11; }
+
+    .c-amber rect { fill: #FAEEDA; stroke: #854F0B; }
+    .c-amber text.th { fill: #633806; }
+    .c-amber text.ts, .c-amber text.tm { fill: #854F0B; }
+
+    .section-label { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 500; fill: #999; letter-spacing: 0.5px; }
+  </style>
+
+  <!-- Background -->
+  <rect width="680" height="820" fill="#fff"/>
+
+  <!-- Section: Entry Points -->
+  <text x="40" y="24" class="section-label">ENTRY POINTS</text>
+
+  <!-- ok:scan -->
+  <g class="c-purple">
+    <rect x="40" y="40" width="140" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="110" y="60" text-anchor="middle" dominant-baseline="central">/ok:scan</text>
+    <text class="ts" x="110" y="78" text-anchor="middle" dominant-baseline="central">Full codebase scan</text>
+  </g>
+
+  <!-- ok:find -->
+  <g class="c-purple">
+    <rect x="200" y="40" width="140" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="270" y="60" text-anchor="middle" dominant-baseline="central">/ok:find</text>
+    <text class="ts" x="270" y="78" text-anchor="middle" dominant-baseline="central">Search methods</text>
+  </g>
+
+  <!-- ok:status -->
+  <g class="c-gray">
+    <rect x="500" y="40" width="140" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="570" y="60" text-anchor="middle" dominant-baseline="central">/ok:status</text>
+    <text class="ts" x="570" y="78" text-anchor="middle" dominant-baseline="central">Resume session</text>
+  </g>
+
+  <!-- Section: Analysis Scripts -->
+  <text x="40" y="134" class="section-label">ANALYSIS SCRIPTS (.claude/scripts/)</text>
+
+  <!-- monocle_detector -->
+  <g class="c-teal">
+    <rect x="40" y="150" width="135" height="44" rx="4" stroke-width="0.5"/>
+    <text class="tm" x="107" y="172" text-anchor="middle" dominant-baseline="central">monocle_detector.py</text>
+  </g>
+
+  <!-- ast_parser -->
+  <g class="c-teal">
+    <rect x="185" y="150" width="100" height="44" rx="4" stroke-width="0.5"/>
+    <text class="tm" x="235" y="172" text-anchor="middle" dominant-baseline="central">ast_parser.py</text>
+  </g>
+
+  <!-- entry_detector -->
+  <g class="c-teal">
+    <rect x="295" y="150" width="110" height="44" rx="4" stroke-width="0.5"/>
+    <text class="tm" x="350" y="172" text-anchor="middle" dominant-baseline="central">entry_detector.py</text>
+  </g>
+
+  <!-- call_graph -->
+  <g class="c-teal">
+    <rect x="415" y="150" width="100" height="44" rx="4" stroke-width="0.5"/>
+    <text class="tm" x="465" y="172" text-anchor="middle" dominant-baseline="central">call_graph.py</text>
+  </g>
+
+  <!-- relevance_scorer -->
+  <g class="c-teal">
+    <rect x="525" y="150" width="115" height="44" rx="4" stroke-width="0.5"/>
+    <text class="tm" x="582" y="172" text-anchor="middle" dominant-baseline="central">relevance_scorer.py</text>
+  </g>
+
+  <!-- arg_analyzer -->
+  <g class="c-teal">
+    <rect x="40" y="204" width="100" height="44" rx="4" stroke-width="0.5"/>
+    <text class="tm" x="90" y="226" text-anchor="middle" dominant-baseline="central">arg_analyzer.py</text>
+  </g>
+
+  <!-- Arrows from scan to scripts -->
+  <path d="M110 96 L110 120 L107 120 L107 150" class="arr" marker-end="url(#arrow)"/>
+  <path d="M110 120 L235 120 L235 150" class="arr" marker-end="url(#arrow)"/>
+  <path d="M110 120 L350 120 L350 150" class="arr" marker-end="url(#arrow)"/>
+  <path d="M110 120 L465 120 L465 150" class="arr" marker-end="url(#arrow)"/>
+  <path d="M110 120 L582 120 L582 150" class="arr" marker-end="url(#arrow)"/>
+  <path d="M90 248 L90 270" class="arr" marker-end="url(#arrow)"/>
+
+  <!-- Arrow from find to ast_parser and call_graph -->
+  <path d="M270 96 L270 120 L235 120" class="arr-dash"/>
+  <path d="M270 120 L465 120" class="arr-dash"/>
+
+  <!-- Section: Outputs -->
+  <text x="40" y="284" class="section-label">ANALYSIS OUTPUT (.analyze/)</text>
+
+  <!-- Output files -->
+  <g class="c-gray">
+    <rect x="40" y="300" width="130" height="44" rx="4" stroke-width="0.5"/>
+    <text class="tm" x="105" y="322" text-anchor="middle" dominant-baseline="central">ast_data.json</text>
+  </g>
+
+  <g class="c-gray">
+    <rect x="180" y="300" width="130" height="44" rx="4" stroke-width="0.5"/>
+    <text class="tm" x="245" y="322" text-anchor="middle" dominant-baseline="central">call_graph.json</text>
+  </g>
+
+  <g class="c-gray">
+    <rect x="320" y="300" width="130" height="44" rx="4" stroke-width="0.5"/>
+    <text class="tm" x="385" y="322" text-anchor="middle" dominant-baseline="central">choices.json</text>
+  </g>
+
+  <g class="c-amber">
+    <rect x="460" y="300" width="130" height="44" rx="4" stroke-width="0.5"/>
+    <text class="tm" x="525" y="322" text-anchor="middle" dominant-baseline="central">SESSION.md</text>
+  </g>
+
+  <!-- Arrow from status to SESSION.md -->
+  <path d="M570 96 L570 280 L525 280 L525 300" class="arr-dash" marker-end="url(#arrow)"/>
+
+  <!-- Section: Instrumentation -->
+  <text x="40" y="384" class="section-label">INSTRUMENTATION</text>
+
+  <!-- ok:instrument -->
+  <g class="c-coral">
+    <rect x="200" y="400" width="160" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="280" y="420" text-anchor="middle" dominant-baseline="central">/ok:instrument</text>
+    <text class="ts" x="280" y="438" text-anchor="middle" dominant-baseline="central">Add tracing to app</text>
+  </g>
+
+  <!-- Arrow from outputs to instrument -->
+  <path d="M245 344 L245 370 L280 370 L280 400" class="arr" marker-end="url(#arrow)"/>
+  <path d="M385 344 L385 370 L280 370" class="arr"/>
+
+  <!-- Two paths from instrument -->
+  <!-- Zero-code path -->
+  <g class="c-blue">
+    <rect x="80" y="490" width="140" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="150" y="510" text-anchor="middle" dominant-baseline="central">Zero-code</text>
+    <text class="ts" x="150" y="528" text-anchor="middle" dominant-baseline="central">okahu.yaml config</text>
+  </g>
+
+  <!-- Code-based path -->
+  <g class="c-blue">
+    <rect x="340" y="490" width="160" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="420" y="510" text-anchor="middle" dominant-baseline="central">Code-based</text>
+    <text class="ts" x="420" y="528" text-anchor="middle" dominant-baseline="central">setup_monocle_telemetry()</text>
+  </g>
+
+  <!-- Arrows from instrument to paths -->
+  <path d="M220 456 L150 470 L150 490" class="arr" marker-end="url(#arrow)"/>
+  <path d="M340 456 L420 470 L420 490" class="arr" marker-end="url(#arrow)"/>
+
+  <!-- yaml_generator -->
+  <g class="c-teal">
+    <rect x="80" y="560" width="140" height="36" rx="4" stroke-width="0.5"/>
+    <text class="tm" x="150" y="578" text-anchor="middle" dominant-baseline="central">yaml_generator.py</text>
+  </g>
+
+  <!-- instrument.py -->
+  <g class="c-teal">
+    <rect x="340" y="560" width="160" height="36" rx="4" stroke-width="0.5"/>
+    <text class="tm" x="420" y="578" text-anchor="middle" dominant-baseline="central">instrument.py (code inject)</text>
+  </g>
+
+  <path d="M150 546 L150 560" class="arr" marker-end="url(#arrow)"/>
+  <path d="M420 546 L420 560" class="arr" marker-end="url(#arrow)"/>
+
+  <!-- Section: Execution -->
+  <text x="40" y="624" class="section-label">EXECUTION</text>
+
+  <!-- ok:run -->
+  <g class="c-green">
+    <rect x="200" y="640" width="160" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="280" y="660" text-anchor="middle" dominant-baseline="central">/ok:run</text>
+    <text class="ts" x="280" y="678" text-anchor="middle" dominant-baseline="central">Execute with tracing</text>
+  </g>
+
+  <!-- okahu_instrument.py -->
+  <g class="c-teal">
+    <rect x="80" y="640" width="100" height="36" rx="4" stroke-width="0.5"/>
+    <text class="tm" x="130" y="658" text-anchor="middle" dominant-baseline="central">okahu_instrument.py</text>
+  </g>
+
+  <!-- Arrow from yaml_generator to run -->
+  <path d="M150 596 L150 620 L210 620 L210 658 L200 658" class="arr" marker-end="url(#arrow)"/>
+  <path d="M150 620 L130 620 L130 640" class="arr" marker-end="url(#arrow)"/>
+
+  <!-- Arrow from code inject to run -->
+  <path d="M420 596 L420 620 L350 620 L350 658 L360 658" class="arr" marker-end="url(#arrow)"/>
+
+  <!-- .monocle/ output -->
+  <g class="c-gray">
+    <rect x="400" y="640" width="100" height="36" rx="4" stroke-width="0.5"/>
+    <text class="tm" x="450" y="658" text-anchor="middle" dominant-baseline="central">.monocle/</text>
+  </g>
+
+  <path d="M360 658 L400 658" class="arr" marker-end="url(#arrow)"/>
+
+  <!-- Section: Trace Viewing -->
+  <text x="40" y="724" class="section-label">TRACE VIEWING</text>
+
+  <!-- ok:local-trace -->
+  <g class="c-purple">
+    <rect x="200" y="740" width="160" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="280" y="760" text-anchor="middle" dominant-baseline="central">/ok:local-trace</text>
+    <text class="ts" x="280" y="778" text-anchor="middle" dominant-baseline="central">View local traces</text>
+  </g>
+
+  <!-- trace_minify.py -->
+  <g class="c-teal">
+    <rect x="400" y="740" width="110" height="36" rx="4" stroke-width="0.5"/>
+    <text class="tm" x="455" y="758" text-anchor="middle" dominant-baseline="central">trace_minify.py</text>
+  </g>
+
+  <!-- Arrow from .monocle to local-trace -->
+  <path d="M450 676 L450 710 L340 710 L340 740" class="arr" marker-end="url(#arrow)"/>
+
+  <!-- Arrow from local-trace to trace_minify -->
+  <path d="M360 768 L400 768" class="arr" marker-end="url(#arrow)"/>
+
+  <!-- Legend -->
+  <g transform="translate(520, 490)">
+    <rect x="0" y="0" width="120" height="100" rx="4" fill="#fafafa" stroke="#ddd" stroke-width="0.5"/>
+    <text x="10" y="18" class="section-label">LEGEND</text>
+    <rect x="10" y="28" width="24" height="14" rx="2" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+    <text x="40" y="39" class="tm">Skill</text>
+    <rect x="10" y="48" width="24" height="14" rx="2" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+    <text x="40" y="59" class="tm">Script</text>
+    <rect x="10" y="68" width="24" height="14" rx="2" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+    <text x="40" y="79" class="tm">Output</text>
+  </g>
+</svg>
