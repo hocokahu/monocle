@@ -61,9 +61,22 @@ If ALL code uses supported frameworks → just use `setup_monocle_telemetry()`, 
 10. **USE AskUserQuestion** to ask about medium-relevance modules (multiSelect: true)
 11. Run `python .claude/scripts/arg_analyzer.py <path>/.analyze/ast_data.json`
 12. **USE AskUserQuestion** to ask how to handle large args for each flagged method
-13. Save choices to `<path>/.analyze/choices.json`
-14. **Write/update `<path>/.analyze/SESSION.md`** with human-readable summary (see format below)
-15. Suggest running `/ok:instrument` to generate YAML
+13. **Compute minimal instrumentation set** - Avoid overlap by only instrumenting entry points:
+    - Run: `python .claude/scripts/call_graph.py <path>/.analyze/call_graph.json --minimize <path>/.analyze/choices.json -o <path>/.analyze/minimal.json`
+    - This removes methods that are already covered by parent calls
+    - Example: if `A.method1() -> B.method2()` and both selected, only instrument A
+14. Save choices to `<path>/.analyze/choices.json` with format:
+    ```json
+    {
+      "selected": ["module:Class.method", ...],
+      "instrument": ["entry points only"],
+      "covered": ["reachable from entry points"],
+      "removed": ["methods covered by parents"],
+      "arg_handling": { ... }
+    }
+    ```
+15. **Write/update `<path>/.analyze/SESSION.md`** with human-readable summary (see format below)
+16. Suggest running `/ok:instrument` to generate YAML
 
 ## SESSION.md Format - ALWAYS UPDATE
 
@@ -82,6 +95,8 @@ YYYY-MM-DD HH:MM
 - **Frameworks detected**: Flask, OpenAI (auto-instrumented)
 - **High-relevance modules**: my_app, my_functions, my_class
 - **Medium modules included**: [list or "skipped"]
+- **Methods selected**: 12
+- **Methods to instrument**: 5 (7 covered by parent calls)
 - **Large args handling**:
   - PaymentProcessor.charge.metadata → excluded
   - UserService.create.user_data → truncate 100

@@ -192,7 +192,7 @@ def setup_instrumentation(config_path: str) -> tuple:
     Returns (success: bool, workflow_name: str, error_message: str)
     """
     try:
-        from monocle_apptrace.instrumentation.common.instrumentor import setup_monocle_telemetry
+        from monocle_apptrace import setup_monocle_telemetry
 
         config = load_config(config_path)
         workflow_name = config.get('workflow_name', 'unknown')

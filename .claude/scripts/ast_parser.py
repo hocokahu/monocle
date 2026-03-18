@@ -72,6 +72,27 @@ class ASTParser:
         'setup.py', 'conftest.py', '__init__.py'
     }
 
+    # Methods to skip (dunder/magic methods)
+    SKIP_METHODS = {
+        '__init__', '__new__', '__del__',
+        '__str__', '__repr__', '__format__',
+        '__eq__', '__ne__', '__lt__', '__le__', '__gt__', '__ge__',
+        '__hash__', '__bool__',
+        '__getattr__', '__setattr__', '__delattr__', '__getattribute__',
+        '__get__', '__set__', '__delete__',
+        '__call__', '__len__', '__iter__', '__next__', '__contains__',
+        '__getitem__', '__setitem__', '__delitem__',
+        '__enter__', '__exit__', '__aenter__', '__aexit__',
+        '__await__', '__aiter__', '__anext__',
+        '__add__', '__sub__', '__mul__', '__truediv__', '__floordiv__',
+        '__mod__', '__pow__', '__and__', '__or__', '__xor__',
+        '__radd__', '__rsub__', '__rmul__', '__rtruediv__',
+        '__iadd__', '__isub__', '__imul__', '__itruediv__',
+        '__neg__', '__pos__', '__abs__', '__invert__',
+        '__copy__', '__deepcopy__', '__reduce__', '__reduce_ex__',
+        '__sizeof__', '__class_getitem__',
+    }
+
     # Safe constant name mapping
     CONSTANT_VALUES = {
         'None': None,
@@ -79,9 +100,10 @@ class ASTParser:
         'False': False
     }
 
-    def __init__(self, root_path: str, include_init: bool = False):
+    def __init__(self, root_path: str, include_init: bool = False, include_dunder: bool = False):
         self.root_path = Path(root_path).resolve()
         self.include_init = include_init
+        self.include_dunder = include_dunder
         self.modules = {}
 
     def parse(self) -> dict:
@@ -170,6 +192,9 @@ class ASTParser:
 
         for item in node.body:
             if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                # Skip dunder methods unless explicitly included
+                if not self.include_dunder and item.name in self.SKIP_METHODS:
+                    continue
                 methods[item.name] = self._parse_function(item, is_method=True)
             elif isinstance(item, ast.AnnAssign) and isinstance(item.target, ast.Name):
                 class_vars.append({
@@ -385,6 +410,11 @@ def main():
         help="Include __init__.py files"
     )
     parser.add_argument(
+        "--include-dunder",
+        action="store_true",
+        help="Include dunder methods (__init__, __str__, etc.)"
+    )
+    parser.add_argument(
         "--pretty",
         action="store_true",
         help="Pretty-print JSON output"
@@ -393,7 +423,7 @@ def main():
     args = parser.parse_args()
 
     # Parse
-    ast_parser = ASTParser(args.path, include_init=args.include_init)
+    ast_parser = ASTParser(args.path, include_init=args.include_init, include_dunder=args.include_dunder)
     result = ast_parser.parse()
 
     # Ensure output directory exists

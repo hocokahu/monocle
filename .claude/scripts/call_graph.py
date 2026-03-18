@@ -217,6 +217,64 @@ class CallGraphBuilder:
         }
 
 
+def compute_minimal_instrumentation(call_graph: dict, selected_methods: list) -> dict:
+    """
+    Given a set of selected methods, return only the entry points.
+
+    If A calls B and both are selected, only instrument A (the entry point).
+    B will still be traced as a child span of A.
+
+    Args:
+        call_graph: The call graph data with 'forward' and 'reverse' keys
+        selected_methods: List of method FQNs to consider
+
+    Returns:
+        dict with 'instrument' (entry points) and 'covered' (reachable from entry points)
+    """
+    selected_set = set(selected_methods)
+    forward = call_graph.get("forward", {})
+
+    # Find which selected methods are called by other selected methods
+    called_by_selected = set()
+    for method in selected_methods:
+        for callee in forward.get(method, []):
+            if callee in selected_set:
+                called_by_selected.add(callee)
+
+    # Entry points are selected methods NOT called by other selected methods
+    entry_points = [m for m in selected_methods if m not in called_by_selected]
+
+    # Compute what's reachable from entry points (covered by instrumentation)
+    covered = set()
+    def walk(method, visited):
+        if method in visited:
+            return
+        visited.add(method)
+        covered.add(method)
+        for callee in forward.get(method, []):
+            if callee in selected_set:
+                walk(callee, visited)
+
+    for ep in entry_points:
+        walk(ep, set())
+
+    # Methods that won't be covered (not reachable from any entry point)
+    uncovered = selected_set - covered
+
+    return {
+        "instrument": entry_points,
+        "covered": list(covered),
+        "removed": list(called_by_selected),
+        "uncovered": list(uncovered),
+        "summary": {
+            "selected": len(selected_methods),
+            "instrument": len(entry_points),
+            "removed": len(called_by_selected),
+            "reduction": f"{(1 - len(entry_points)/len(selected_methods))*100:.0f}%" if selected_methods else "0%"
+        }
+    }
+
+
 def print_summary(result: dict):
     """Print human-readable summary."""
     summary = result["summary"]
@@ -248,7 +306,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Build call graph from AST data"
     )
-    parser.add_argument("ast_file", help="Path to ast_data.json")
+    parser.add_argument("ast_file", help="Path to ast_data.json or call_graph.json (for --minimize)")
     parser.add_argument(
         "--output", "-o",
         default=".analyze/call_graph.json",
@@ -259,10 +317,63 @@ def main():
         action="store_true",
         help="Suppress summary output"
     )
+    parser.add_argument(
+        "--minimize",
+        metavar="METHODS_FILE",
+        help="Compute minimal instrumentation set from selected methods (JSON list or choices.json)"
+    )
 
     args = parser.parse_args()
 
-    # Load AST data
+    # Minimize mode: compute minimal instrumentation set
+    if args.minimize:
+        with open(args.ast_file, 'r', encoding='utf-8') as f:
+            call_graph = json.load(f)
+
+        with open(args.minimize, 'r', encoding='utf-8') as f:
+            methods_data = json.load(f)
+
+        # Support both plain list and choices.json format
+        if isinstance(methods_data, list):
+            selected = methods_data
+        elif isinstance(methods_data, dict) and "selected" in methods_data:
+            selected = methods_data["selected"]
+        else:
+            print("Error: methods file must be a JSON list or have 'selected' key")
+            return
+
+        result = compute_minimal_instrumentation(call_graph, selected)
+
+        if not args.quiet:
+            print("=" * 60)
+            print("MINIMAL INSTRUMENTATION SET")
+            print("=" * 60)
+            print(f"Selected methods: {result['summary']['selected']}")
+            print(f"Methods to instrument: {result['summary']['instrument']}")
+            print(f"Removed (covered by parents): {result['summary']['removed']}")
+            print(f"Reduction: {result['summary']['reduction']}")
+            print()
+            print("Instrument these methods:")
+            for m in result["instrument"]:
+                print(f"  {m}")
+            if result["removed"]:
+                print()
+                print("Skipped (already covered):")
+                for m in result["removed"]:
+                    print(f"  {m}")
+
+        # Write output if specified
+        if args.output != ".analyze/call_graph.json":
+            output_path = Path(args.output)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(output_path, 'w', encoding='utf-8') as f:
+                json.dump(result, f, indent=2)
+            if not args.quiet:
+                print(f"\nOutput: {output_path}")
+
+        return
+
+    # Normal mode: build call graph from AST
     with open(args.ast_file, 'r', encoding='utf-8') as f:
         ast_data = json.load(f)
 

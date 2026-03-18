@@ -45,8 +45,11 @@ Add monocle tracing to your application. Supports two approaches.
 If user selects **Zero-code**:
 
 1. Read `.analyze/choices.json` and analysis files
-2. Generate `okahu.yaml` with:
-   - Selected methods from scan/find
+2. **Use the `instrument` field, NOT `selected`** - This contains only entry points to avoid overlap
+   - If A calls B, and both were selected, only A is in `instrument`
+   - B is still traced as a child span when A runs
+3. Generate `okahu.yaml` with:
+   - Methods from `instrument` field (minimal set)
    - Arg filters (include/exclude/truncate)
    - Output extractors
 3. Show preview of generated YAML
@@ -66,7 +69,7 @@ If user selects **Zero-code**:
 
 If user selects **Code-based**:
 
-1. Read `.analyze/choices.json` to get selected methods
+1. Read `.analyze/choices.json` - use `instrument` field (minimal set, no overlap)
 2. Detect entry point file from `.analyze/entry_points.json`
 3. **USE AskUserQuestion** to confirm which file to modify:
    ```json
@@ -86,7 +89,7 @@ If user selects **Code-based**:
 4. Generate and inject setup code at top of file:
    ```python
    # Monocle instrumentation setup
-   from monocle_apptrace.instrumentation import setup_monocle_telemetry
+   from monocle_apptrace import setup_monocle_telemetry
    setup_monocle_telemetry(
        workflow_name="my_app",
        # wrapper_methods configured for selected methods
@@ -124,12 +127,24 @@ instrument:
       extract: [transaction_id, status]
 ```
 
+## Overlap Avoidance
+
+The `instrument` field in choices.json contains only **entry points** - methods that aren't called by other selected methods. This avoids redundant instrumentation:
+
+```
+Selected: A.run(), B.process(), C.save()
+Call graph: A.run() → B.process() → C.save()
+Instrument: A.run() only (B and C are covered as child spans)
+```
+
+If you need to override this, use the `selected` field instead, but expect duplicate spans.
+
 ## SKIP PATTERNS - DO NOT INCLUDE
 
 **NEVER include these in instrumentation:**
 - `__init__.py` files - Package initializers
-- `__init__` methods - Constructors
-- `__str__`, `__repr__`, `__eq__`, etc. - Dunder methods
+- `__init__` methods - Constructors (filtered at AST parse stage)
+- `__str__`, `__repr__`, `__eq__`, etc. - Dunder methods (filtered at AST parse stage)
 - Methods from test files
 
 ## Related Commands
