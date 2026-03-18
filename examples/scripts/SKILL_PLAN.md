@@ -6,31 +6,6 @@ A set of scripts and Claude CLI skills to analyze Python codebases and add monoc
 
 ---
 
-## KEY RULES (MUST FOLLOW)
-
-### 1. Framework Priority
-**If `/ok:scan` detects monocle-supported frameworks (OpenAI, LangChain, Flask, etc.), PRIORITIZE using monocle's built-in auto-instrumentation.** Do NOT reinvent the wheel with custom tracing when monocle already supports it.
-
-### 2. Dependencies - requirements.txt
-When instrumenting code or generating okahu.yaml that requires `monocle_apptrace`, **ALWAYS update requirements.txt**:
-```
-monocle_apptrace
-```
-
-### 3. Prefer monocle_apptrace over OpenTelemetry
-**NEVER use opentelemetry directly** unless the feature is not available in monocle_apptrace. Monocle wraps OpenTelemetry - always use monocle's API.
-
-### 4. Skip Patterns - DO NOT INSTRUMENT
-**NEVER instrument these:**
-- `__init__.py` files - Package initializers, not business logic
-- `__init__` methods - Constructor setup, not traceable operations
-- `__str__`, `__repr__`, `__eq__`, etc. - Dunder/magic methods
-- Files in `tests/`, `test_*.py`, `*_test.py` - Test files
-- Files in `migrations/`, `alembic/` - Database migrations
-- Files in `.venv/`, `venv/`, `site-packages/` - Virtual environments
-
----
-
 ## SKILL Commands
 
 | Skill | Arguments | Description |
@@ -209,17 +184,18 @@ instrument:
 
 ## Scripts
 
-| Script | Purpose | Status |
-|--------|---------|--------|
-| `ast_parser.py` | Extract code structure | ✅ |
-| `call_graph.py` | Build call relationships | ✅ |
-| `entry_detector.py` | Find entry points | ✅ |
-| `relevance_scorer.py` | Score module importance | ✅ |
-| `arg_analyzer.py` | Flag large/skip args | ✅ |
-| `okahu_instrument.py` | Zero-code CLI wrapper | ✅ |
-| `trace_minify.py` | View/format traces | ✅ |
-| `monocle_detector.py` | Find supported frameworks | ⏳ TODO |
-| `yaml_generator.py` | Create okahu.yaml | ⏳ TODO |
+| Script | Purpose |
+|--------|---------|
+| `ast_parser.py` | Extract classes, methods, args from Python files |
+| `call_graph.py` | Build caller→callee relationships between methods |
+| `entry_detector.py` | Find main functions, routes, workers, CLI entry points |
+| `relevance_scorer.py` | Score module importance for instrumentation priority |
+| `arg_analyzer.py` | Flag large/sensitive args to exclude or truncate |
+| `monocle_detector.py` | Detect monocle-supported frameworks (OpenAI, LangChain, etc.) |
+| `yaml_generator.py` | Generate okahu.yaml from analysis data and user choices |
+| `okahu_instrument.py` | Zero-code CLI wrapper (like opentelemetry-instrument) |
+| `trace_minify.py` | Parse and display .monocle/ trace files with call trees |
+| `instrument.py` | Run instrumented app with okahu.yaml config |
 
 ---
 
@@ -251,3 +227,28 @@ MONOCLE_SILENT=true       # Suppress warnings (default: false)
 OKAHU_INGESTION_ENDPOINT  # Okahu cloud endpoint
 OKAHU_API_KEY             # Okahu API key
 ```
+
+---
+
+## KEY RULES (MUST FOLLOW)
+
+### 1. Framework Priority
+**If `/ok:scan` detects monocle-supported frameworks (OpenAI, LangChain, Flask, etc.), PRIORITIZE using monocle's built-in auto-instrumentation.** Do NOT reinvent the wheel with custom tracing when monocle already supports it.
+
+### 2. Dependencies - requirements.txt
+When instrumenting code or generating okahu.yaml that requires `monocle_apptrace`, **ALWAYS update requirements.txt**:
+```
+monocle_apptrace
+```
+
+### 3. Prefer monocle_apptrace over OpenTelemetry
+**NEVER use opentelemetry directly** unless the feature is not available in monocle_apptrace. Monocle wraps OpenTelemetry - always use monocle's API.
+
+### 4. Skip Patterns - DO NOT INSTRUMENT
+**NEVER instrument these:**
+- `__init__.py` files - Package initializers, not business logic
+- `__init__` methods - Constructor setup, not traceable operations
+- `__str__`, `__repr__`, `__eq__`, etc. - Dunder/magic methods
+- Files in `tests/`, `test_*.py`, `*_test.py` - Test files
+- Files in `migrations/`, `alembic/` - Database migrations
+- Files in `.venv/`, `venv/`, `site-packages/` - Virtual environments
