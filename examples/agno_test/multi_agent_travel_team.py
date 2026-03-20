@@ -1,11 +1,16 @@
 """
-Multi-Agent Travel Booking: Travel Coordinator -> Flight Agent -> Hotel Agent -> Summary
-Using Agent with delegation tools. Creates single unified trace.
+Multi-Agent Travel Booking using Agno Team (Sequential Mode)
+Matches ADK SequentialAgent pattern for cleaner traces.
+
+NOTE: Requires Team instrumentation for single unified trace.
+Currently creates multiple traces (one per member agent).
 """
 
 import time
 from agno.agent import Agent
 from agno.models.google import Gemini
+from agno.team import Team
+from agno.team.mode import TeamMode
 from agno.tools import tool
 
 # Monocle Setup
@@ -42,6 +47,7 @@ flight_agent = Agent(
     name="Flight Agent",
     model=Gemini(id="gemini-2.0-flash"),
     tools=[book_flight],
+    role="Book flights based on user queries",
     instructions=[
         "You are a helpful agent who assists users in booking flights.",
         "Extract flight details and book using book_flight tool.",
@@ -52,6 +58,7 @@ hotel_agent = Agent(
     name="Hotel Agent",
     model=Gemini(id="gemini-2.0-flash"),
     tools=[book_hotel],
+    role="Book hotels based on user queries",
     instructions=[
         "You are a helpful agent who assists users in booking hotels.",
         "Default to Marriott if no hotel specified.",
@@ -62,58 +69,36 @@ hotel_agent = Agent(
 trip_summary_agent = Agent(
     name="Trip Summary Agent",
     model=Gemini(id="gemini-2.0-flash"),
+    role="Summarize travel bookings",
     instructions=[
         "Summarize the travel details from flight and hotel bookings.",
         "Be concise and provide a single sentence summary."
     ],
 )
 
-
-# Coordinator Tools (delegation)
-@tool
-def delegate_to_flight_agent(task: str) -> str:
-    """Delegate flight booking to the Flight Agent."""
-    result = flight_agent.run(task)
-    return result.content if hasattr(result, 'content') else str(result)
-
-
-@tool
-def delegate_to_hotel_agent(task: str) -> str:
-    """Delegate hotel booking to the Hotel Agent."""
-    result = hotel_agent.run(task)
-    return result.content if hasattr(result, 'content') else str(result)
-
-
-@tool
-def delegate_to_summary_agent(task: str) -> str:
-    """Delegate trip summary to the Trip Summary Agent."""
-    result = trip_summary_agent.run(task)
-    return result.content if hasattr(result, 'content') else str(result)
-
-
-# Main Travel Coordinator
-travel_coordinator = Agent(
-    name="Travel Coordinator",
+# Team with coordinate mode
+travel_team = Team(
+    name="Travel Team",
+    mode=TeamMode.coordinate,
     model=Gemini(id="gemini-2.0-flash"),
-    tools=[delegate_to_flight_agent, delegate_to_hotel_agent, delegate_to_summary_agent],
+    members=[flight_agent, hotel_agent, trip_summary_agent],
     instructions=[
-        "You coordinate travel bookings in sequence.",
-        "Step 1: Use Flight Agent to book the flight.",
-        "Step 2: Use Hotel Agent to book the hotel.",
-        "Step 3: Use Trip Summary Agent to summarize both bookings.",
-        "Execute all three steps and return the summary."
+        "Execute agents in sequence: flight booking, then hotel booking, then summary.",
+        "Pass the user request to each agent in order.",
     ],
+    share_member_interactions=True,
+    markdown=True,
 )
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("Multi-Agent Travel (Agno + Gemini + Monocle)")
+    print("Multi-Agent Travel (Agno Team + Gemini + Monocle)")
     print("=" * 60)
 
     query = "Book a flight from SJC to SEA and a hotel in Seattle."
     print(f"Query: {query}\n")
 
-    result = travel_coordinator.run(query, stream=False)
+    result = travel_team.run(query, stream=False)
     print(f"\nResult: {result.content if hasattr(result, 'content') else result}")
 
     print("\nWaiting for traces...")
