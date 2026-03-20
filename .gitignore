@@ -109,3 +109,4 @@ test_tools/LICENSE.analyze/
 .env
 .env.*
 *.env
+examples/agno_test/venv/

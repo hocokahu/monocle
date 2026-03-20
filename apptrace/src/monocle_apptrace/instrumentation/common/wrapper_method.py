@@ -49,6 +49,7 @@ from monocle_apptrace.instrumentation.metamodel.strands.methods import STRAND_ME
 from monocle_apptrace.instrumentation.metamodel.strands.strands_processor import StrandsSpanHandler
 from monocle_apptrace.instrumentation.metamodel.agentcore.methods import AGENTCORE_METHODS
 from monocle_apptrace.instrumentation.metamodel.agno.methods import AGNO_METHODS
+from monocle_apptrace.instrumentation.metamodel.agno.agno_handler import AgnoSpanHandler
 
 class WrapperMethod:
     def __init__(
@@ -158,5 +159,6 @@ MONOCLE_SPAN_HANDLERS: Dict[str, SpanHandler] = {
     "llamaindex_single_agent_tool_handler": LlamaIndexSingleAgenttToolHandlerWrapper(),
     "lambda_func_handler": lambdaSpanHandler(),
     "adk_handler": AdkSpanHandler(),
-    "strands_handler": StrandsSpanHandler()
+    "strands_handler": StrandsSpanHandler(),
+    "agno_handler": AgnoSpanHandler()
 }

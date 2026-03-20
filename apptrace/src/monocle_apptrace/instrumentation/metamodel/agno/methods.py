@@ -19,6 +19,7 @@ AGNO_METHODS = [
         "method": "run",
         "span_name": "agno.agent.run",
         "wrapper_method": task_wrapper,
+        "span_handler": "agno_handler",
         "output_processor": AGENT,
     },
     # Agent.arun - main agent execution (async)
@@ -28,6 +29,7 @@ AGNO_METHODS = [
         "method": "arun",
         "span_name": "agno.agent.arun",
         "wrapper_method": atask_iter_wrapper,
+        "span_handler": "agno_handler",
         "output_processor": AGENT,
     },
     # Model.invoke - LLM inference (sync)
