@@ -14,6 +14,7 @@ from monocle_apptrace.instrumentation.metamodel.finish_types import (
 logger = logging.getLogger(__name__)
 
 AGNO_AGENT_TYPE_KEY = "agent.agno"
+AGNO_TEAM_TYPE_KEY = "team.agno"
 AGNO_TOOL_TYPE_KEY = "tool.agno"
 
 
@@ -420,4 +421,107 @@ def get_source_agent(arguments: Dict[str, Any]) -> Optional[str]:
         return None
     except Exception as e:
         logger.debug(f"Error getting source agent: {e}")
+        return None
+
+
+# Team helpers
+def get_team_name(instance) -> Optional[str]:
+    """Extract team name from Team instance."""
+    try:
+        if hasattr(instance, 'name') and instance.name:
+            return instance.name
+        if hasattr(instance, 'id') and instance.id:
+            return instance.id
+        return type(instance).__name__
+    except Exception as e:
+        logger.debug(f"Error extracting team name: {e}")
+        return None
+
+
+def get_team_description(instance) -> Optional[str]:
+    """Extract team description from Team instance."""
+    try:
+        if hasattr(instance, 'description') and instance.description:
+            return instance.description
+        return None
+    except Exception as e:
+        logger.debug(f"Error extracting team description: {e}")
+        return None
+
+
+def get_team_instructions(instance) -> Optional[str]:
+    """Extract team instructions from Team instance."""
+    try:
+        if hasattr(instance, 'instructions') and instance.instructions:
+            instructions = instance.instructions
+            if isinstance(instructions, list):
+                return " | ".join(str(i) for i in instructions[:3])
+            return str(instructions)[:500]
+        return None
+    except Exception as e:
+        logger.debug(f"Error extracting team instructions: {e}")
+        return None
+
+
+def get_team_mode(instance) -> Optional[str]:
+    """Extract team mode from Team instance."""
+    try:
+        if hasattr(instance, 'mode') and instance.mode:
+            return str(instance.mode.value) if hasattr(instance.mode, 'value') else str(instance.mode)
+        return None
+    except Exception as e:
+        logger.debug(f"Error extracting team mode: {e}")
+        return None
+
+
+def get_team_members(instance) -> Optional[List[str]]:
+    """Extract team member names from Team instance."""
+    try:
+        if hasattr(instance, 'members') and instance.members:
+            members = instance.members
+            if callable(members):
+                return None  # Can't resolve callable
+            member_names = []
+            for member in members[:10]:  # Limit to first 10
+                name = getattr(member, 'name', None) or getattr(member, 'id', None)
+                if name:
+                    member_names.append(str(name))
+            return member_names if member_names else None
+        return None
+    except Exception as e:
+        logger.debug(f"Error extracting team members: {e}")
+        return None
+
+
+def extract_team_input(arguments: Dict[str, Any]) -> Optional[str]:
+    """Extract input from team run arguments."""
+    return extract_agent_input(arguments)  # Same logic as agent
+
+
+def extract_team_response(result) -> Optional[str]:
+    """Extract response from team run result."""
+    try:
+        if result is None:
+            return None
+
+        # TeamRunOutput object
+        if hasattr(result, 'content'):
+            content = result.content
+            if isinstance(content, str):
+                return content
+            if hasattr(content, 'model_dump'):
+                return str(content.model_dump())
+            return str(content)[:2000]
+
+        # Direct string
+        if isinstance(result, str):
+            return result
+
+        # Iterator/generator - can't easily extract
+        if hasattr(result, '__iter__') and hasattr(result, '__next__'):
+            return "[streaming response]"
+
+        return str(result)[:2000]
+    except Exception as e:
+        logger.debug(f"Error extracting team response: {e}")
         return None

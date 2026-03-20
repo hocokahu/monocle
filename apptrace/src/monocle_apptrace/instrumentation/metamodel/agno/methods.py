@@ -9,9 +9,28 @@ from monocle_apptrace.instrumentation.common.wrapper import (
 )
 from monocle_apptrace.instrumentation.metamodel.agno.entities.agent import AGENT
 from monocle_apptrace.instrumentation.metamodel.agno.entities.inference import INFERENCE
+from monocle_apptrace.instrumentation.metamodel.agno.entities.team import TEAM
 from monocle_apptrace.instrumentation.metamodel.agno.entities.tool import TOOL
 
 AGNO_METHODS = [
+    # Team.run - team orchestration (sync)
+    {
+        "package": "agno.team.team",
+        "object": "Team",
+        "method": "run",
+        "wrapper_method": task_wrapper,
+        "span_handler": "agno_handler",
+        "output_processor": TEAM,
+    },
+    # Team.arun - team orchestration (async)
+    {
+        "package": "agno.team.team",
+        "object": "Team",
+        "method": "arun",
+        "wrapper_method": atask_iter_wrapper,
+        "span_handler": "agno_handler",
+        "output_processor": TEAM,
+    },
     # Agent.run - main agent execution (sync)
     {
         "package": "agno.agent",
@@ -47,21 +66,5 @@ AGNO_METHODS = [
         "wrapper_method": atask_wrapper,
         "span_handler": "non_framework_handler",
         "output_processor": INFERENCE,
-    },
-    # Model.run_function_call - tool execution (sync)
-    {
-        "package": "agno.models.base",
-        "object": "Model",
-        "method": "run_function_call",
-        "wrapper_method": task_wrapper,
-        "output_processor": TOOL,
-    },
-    # Model.arun_function_call - tool execution (async)
-    {
-        "package": "agno.models.base",
-        "object": "Model",
-        "method": "arun_function_call",
-        "wrapper_method": atask_iter_wrapper,
-        "output_processor": TOOL,
     },
 ]
