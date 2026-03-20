@@ -3,7 +3,7 @@
 import logging
 from opentelemetry.context import attach, set_value, detach, get_value
 from monocle_apptrace.instrumentation.common.span_handler import SpanHandler
-from monocle_apptrace.instrumentation.common.constants import AGENT_INVOCATION_SPAN_NAME, AGENT_NAME_KEY, AGENT_SESSION, INFERENCE_AGENT_DELEGATION, INFERENCE_TURN_END, LAST_AGENT_INVOCATION_ID, LAST_AGENT_NAME, SPAN_TYPES, INFERENCE_TOOL_CALL
+from monocle_apptrace.instrumentation.common.constants import AGENT_INVOCATION_SPAN_NAME, AGENT_NAME_KEY, AGENT_SESSION, LAST_AGENT_INVOCATION_ID, LAST_AGENT_NAME
 from monocle_apptrace.instrumentation.common.utils import set_scope, remove_scope
 from opentelemetry.trace import Span
 
@@ -42,10 +42,9 @@ class MSAgentRequestHandler(SpanHandler):
     
     def pre_tracing(self, to_wrap, wrapped, instance, args, kwargs):
         """Called before turn execution to extract and store agent information in context."""
-        from monocle_apptrace.instrumentation.metamodel.msagent._helper import uses_chat_client, is_inside_workflow
+        from monocle_apptrace.instrumentation.metamodel.msagent._helper import uses_chat_client
         from monocle_apptrace.instrumentation.metamodel.msagent.entities.inference import AGENT, AGENT_REQUEST
         from monocle_apptrace.instrumentation.common.utils import is_scope_set, set_scopes
-        from monocle_apptrace.instrumentation.common.scope_wrapper import start_scope
         
         # Store agent information in context for child spans to access
         agent_info = {}
@@ -111,10 +110,13 @@ class MSAgentRequestHandler(SpanHandler):
             # AssistantsClient: ChatAgent.run creates turn only, AssistantsClient methods create invocation
             if not is_scope_set(scope_name):
                 # Create turn scope, AssistantsClient will create invocation later
-                logger.debug(f"AssistantsClient: setting output_processor=AGENT_REQUEST")
                 alternate_to_wrap = to_wrap.copy()
-                alternate_to_wrap["output_processor"] = AGENT_REQUEST
-        
+                # For streaming variants (e.g. run_stream), the original output_processor is
+                # AGENT_REQUEST_STREAM which has response_processor and is_auto_close=False.
+                # Preserve it so the stream processor runs and populates data.output.response.
+                original_processor = to_wrap.get("output_processor")
+                if not (original_processor and original_processor.get("response_processor")):
+                    alternate_to_wrap["output_processor"] = AGENT_REQUEST        
         return context_token, alternate_to_wrap
     
     def post_tracing(self, to_wrap, wrapped, instance, args, kwargs, result, token):
@@ -245,21 +247,7 @@ class MSAgentAgentHandler(SpanHandler):
         return False
     
     def pre_tracing(self, to_wrap, wrapped, instance, args, kwargs):
-        """Set agent name in context."""
-        # Set agent name in context for propagation
-        agent_name = None
-        if hasattr(instance, "name"):
-            agent_name = instance.name
-        elif hasattr(instance, "_name"):
-            agent_name = instance._name
-        if agent_name:
-            context = set_value(AGENT_NAME_KEY, agent_name)
-            token = attach(context)
-            return token, None
-        return None, None
-
-    def pre_tracing(self, to_wrap, wrapped, instance, args, kwargs):
-        """Set agent name and skip if appropriate."""
+        """Set agent name in context with duplicate-invocation guard for ChatClient."""
         from monocle_apptrace.instrumentation.common.utils import is_scope_set
         
         # For ChatClient: only create span if we're in recursive output_processor_list flow
@@ -282,11 +270,6 @@ class MSAgentAgentHandler(SpanHandler):
             token = attach(context)
             return token, None
         return None, None
-
-    def skip_span(self, to_wrap, wrapped, instance, args, kwargs):
-        """Check if span should be skipped based on pre_tracing result."""
-        # If pre_tracing returned (None, None), skip the span
-        return False  # Let pre_tracing handle the skip logic
 
     def post_tracing(self, to_wrap, wrapped, instance, args, kwargs, result, token):
         """Called after agent execution to clean up context."""
@@ -322,4 +305,3 @@ class MSAgentToolHandler(SpanHandler):
     def hydrate_span(self, to_wrap, wrapped, instance, args, kwargs, result, span, parent_span=None, ex: Exception = None, is_post_exec: bool = False) -> bool:
         """Hydrate span with tool-specific attributes."""
         return super().hydrate_span(to_wrap, wrapped, instance, args, kwargs, result, span, parent_span, ex, is_post_exec)
-

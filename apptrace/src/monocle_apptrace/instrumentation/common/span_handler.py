@@ -135,8 +135,11 @@ class SpanHandler:
             if detected_error_in_attribute or detected_error_in_event:
                 span.set_attribute(MONOCLE_DETECTED_SPAN_ERROR, True)
         finally:
-            if is_post_exec and span.status.status_code == StatusCode.UNSET and ex is None:
-                span.set_status(StatusCode.OK)
+            if is_post_exec and span.status.status_code == StatusCode.UNSET:
+                if ex is None:
+                    span.set_status(StatusCode.OK)
+                else:
+                    span.set_status(StatusCode.ERROR, str(ex))
 
     def hydrate_attributes(self, to_wrap, wrapped, instance, args, kwargs, result, span:Span, parent_span:Span, is_post_exec:bool) -> bool:
         detected_error:bool = False
@@ -307,6 +310,7 @@ class SpanHandler:
                 span.set_attribute(f"entity.{span_index}.type", f"app_hosting.{type_name}")
                 entity_name_env = service_name_map.get(type_name, "unknown")
                 span.set_attribute(f"entity.{span_index}.name", os.environ.get(entity_name_env, "generic"))
+                break
 
     @staticmethod
     def get_workflow_name(span: Span) -> str:
