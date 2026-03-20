@@ -1,11 +1,13 @@
 """
-Multi-Agent Travel Booking: Travel Agent -> Flight Agent -> Hotel Agent
-With Monocle instrumentation for observability.
+Multi-Agent Travel Booking using Agno Team (Sequential Mode)
+Matches ADK SequentialAgent pattern for cleaner traces.
 """
 
 import time
 from agno.agent import Agent
 from agno.models.google import Gemini
+from agno.team import Team
+from agno.team.mode import TeamMode
 from agno.tools import tool
 
 # Monocle Setup
@@ -17,76 +19,83 @@ setup_monocle_telemetry(
 )
 print("Monocle telemetry initialized")
 
-# Mock Tools
+
+# Simple Tools (matching ADK pattern)
 @tool
-def search_flights(origin: str, destination: str, date: str) -> str:
-    """Search flights between cities."""
-    return f"Flights from {origin} to {destination} on {date}: UA123 ($350), DL789 ($280)"
+def book_flight(from_airport: str, to_airport: str) -> dict:
+    """Books a flight from one airport to another."""
+    return {
+        "status": "success",
+        "message": f"Flight booked from {from_airport} to {to_airport}."
+    }
+
 
 @tool
-def book_flight(flight: str, passenger: str) -> str:
-    """Book a flight."""
-    return f"Booked {flight} for {passenger}. Confirmation: FL{hash(flight)%10000:04d}"
+def book_hotel(hotel_name: str, city: str) -> dict:
+    """Books a hotel for a stay."""
+    return {
+        "status": "success",
+        "message": f"Successfully booked a stay at {hotel_name} in {city}."
+    }
 
-@tool
-def search_hotels(city: str, checkin: str, nights: int) -> str:
-    """Search hotels in a city."""
-    return f"Hotels in {city} for {nights} nights from {checkin}: Grand Hotel ($199/n), City Inn ($129/n)"
-
-@tool
-def book_hotel(hotel: str, guest: str, nights: int) -> str:
-    """Book a hotel."""
-    return f"Booked {hotel} for {guest}, {nights} nights. Confirmation: HT{hash(hotel)%10000:04d}"
 
 # Sub-Agents
 flight_agent = Agent(
     name="Flight Agent",
     model=Gemini(id="gemini-2.0-flash"),
-    tools=[search_flights, book_flight],
-    instructions=["You handle flight searches and bookings.", "Book the cheapest option."],
+    tools=[book_flight],
+    role="Book flights based on user queries",
+    instructions=[
+        "You are a helpful agent who assists users in booking flights.",
+        "Extract flight details and book using book_flight tool.",
+    ],
 )
 
 hotel_agent = Agent(
     name="Hotel Agent",
     model=Gemini(id="gemini-2.0-flash"),
-    tools=[search_hotels, book_hotel],
-    instructions=["You handle hotel searches and bookings.", "Book mid-range options."],
+    tools=[book_hotel],
+    role="Book hotels based on user queries",
+    instructions=[
+        "You are a helpful agent who assists users in booking hotels.",
+        "Default to Marriott if no hotel specified.",
+        "Use the book_hotel tool with hotel_name and city.",
+    ],
 )
 
-# Coordinator Tools
-@tool
-def delegate_to_flight_agent(task: str) -> str:
-    """Delegate flight tasks to the Flight Agent."""
-    result = flight_agent.run(task)
-    return result.content if hasattr(result, 'content') else str(result)
-
-@tool
-def delegate_to_hotel_agent(task: str) -> str:
-    """Delegate hotel tasks to the Hotel Agent."""
-    result = hotel_agent.run(task)
-    return result.content if hasattr(result, 'content') else str(result)
-
-# Main Travel Agent
-travel_agent = Agent(
-    name="Travel Coordinator",
+trip_summary_agent = Agent(
+    name="Trip Summary Agent",
     model=Gemini(id="gemini-2.0-flash"),
-    tools=[delegate_to_flight_agent, delegate_to_hotel_agent],
+    role="Summarize travel bookings",
     instructions=[
-        "You coordinate travel bookings.",
-        "Use Flight Agent for flights and Hotel Agent for hotels.",
-        "Summarize all bookings at the end.",
+        "Summarize the travel details from flight and hotel bookings.",
+        "Be concise and provide a single sentence summary."
     ],
+)
+
+# Team with sequential task mode (like ADK SequentialAgent)
+travel_team = Team(
+    name="Travel Team",
+    mode=TeamMode.coordinate,
+    model=Gemini(id="gemini-2.0-flash"),
+    members=[flight_agent, hotel_agent, trip_summary_agent],
+    instructions=[
+        "Execute agents in sequence: flight booking, then hotel booking, then summary.",
+        "Pass the user request to each agent in order.",
+    ],
+    share_member_interactions=True,
+    markdown=True,
 )
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("Multi-Agent Travel (Agno + Gemini + Monocle)")
+    print("Multi-Agent Travel (Agno Team + Gemini + Monocle)")
     print("=" * 60)
 
-    query = "Book a flight on 2024-04-20 from SJC to SEA and hotel in Seattle for 5 nights starting 2024-04-20. Proceed with bookings."
+    query = "Book a flight from SJC to SEA and a hotel in Seattle."
     print(f"Query: {query}\n")
 
-    result = travel_agent.run(query, stream=False)
+    result = travel_team.run(query, stream=False)
     print(f"\nResult: {result.content if hasattr(result, 'content') else result}")
 
     print("\nWaiting for traces...")

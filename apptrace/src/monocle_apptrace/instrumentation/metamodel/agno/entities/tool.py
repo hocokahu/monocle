@@ -19,12 +19,12 @@ TOOL = {
             {
                 "_comment": "name of the tool",
                 "attribute": "name",
-                "accessor": lambda arguments: _helper.get_tool_name(arguments['args'][0]) if arguments.get('args') else None
+                "accessor": lambda arguments: _helper.get_tool_name(arguments['kwargs'].get('function_call')) if arguments.get('kwargs') else None
             },
             {
                 "_comment": "tool description",
                 "attribute": "description",
-                "accessor": lambda arguments: _helper.get_tool_description(arguments['args'][0]) if arguments.get('args') else None
+                "accessor": lambda arguments: _helper.get_tool_description(arguments['kwargs'].get('function_call')) if arguments.get('kwargs') else None
             }
         ],
         [
@@ -47,7 +47,7 @@ TOOL = {
                 {
                     "_comment": "this is Tool input",
                     "attribute": "input",
-                    "accessor": lambda arguments: _helper.extract_tool_input(arguments)
+                    "accessor": lambda arguments: _helper.extract_tool_input_from_kwargs(arguments)
                 },
             ]
         },

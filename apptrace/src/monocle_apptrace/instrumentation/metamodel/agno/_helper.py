@@ -345,7 +345,7 @@ def get_tool_description(function_call) -> Optional[str]:
 
 
 def extract_tool_input(arguments: Dict[str, Any]) -> Optional[str]:
-    """Extract tool input arguments."""
+    """Extract tool input arguments (legacy - from args)."""
     try:
         args = arguments.get('args', ())
 
@@ -359,6 +359,21 @@ def extract_tool_input(arguments: Dict[str, Any]) -> Optional[str]:
         return None
     except Exception as e:
         logger.debug(f"Error extracting tool input: {e}")
+        return None
+
+
+def extract_tool_input_from_kwargs(arguments: Dict[str, Any]) -> Optional[str]:
+    """Extract tool input arguments from kwargs (Agno passes function_call as kwarg)."""
+    try:
+        kwargs = arguments.get('kwargs', {})
+        function_call = kwargs.get('function_call')
+
+        if function_call and hasattr(function_call, 'arguments') and function_call.arguments:
+            return str(function_call.arguments)
+
+        return None
+    except Exception as e:
+        logger.debug(f"Error extracting tool input from kwargs: {e}")
         return None
 
 
