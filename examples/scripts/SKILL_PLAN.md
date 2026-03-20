@@ -30,6 +30,7 @@ A set of scripts and Claude CLI skills to analyze Python codebases and add monoc
 | `/ok:run` | `[command]` optional | Smart runner - auto-detects or prompts. See behavior below. |
 | `/ok:local-trace` | `[query]` optional | View local traces. Accepts natural language. Falls back to Okahu MCP if no local traces. |
 | `/ok:status` | `[folder]` optional | Resume session. Finds SESSION.md automatically. |
+| `/ok:add-framework` | `<framework>` | Add monocle instrumentation for a new AI/ML framework. |
 
 ---
 
@@ -169,6 +170,48 @@ These frameworks are auto-instrumented by monocle - no custom YAML needed:
 | **HTTP Frameworks** | Flask, FastAPI, AIOHTTP | Auto + decorators |
 | **Cloud Functions** | Azure Functions, AWS Lambda | Decorators required |
 | **MCP** | FastMCP, MCP SDK | Auto |
+
+---
+
+## Adding New Framework Support
+
+Use `/ok:add-framework` to add instrumentation for frameworks not yet supported by monocle.
+
+### What It Creates
+
+```
+apptrace/src/monocle_apptrace/instrumentation/metamodel/<framework>/
+├── __init__.py
+├── _helper.py              # Data extraction functions
+├── methods.py              # Method instrumentation config
+├── <framework>_handler.py  # Optional: custom span handler
+└── entities/
+    ├── __init__.py
+    ├── agent.py            # AGENTIC_INVOCATION spans
+    ├── inference.py        # INFERENCE spans
+    ├── tool.py             # AGENTIC_TOOL_INVOCATION spans
+    └── team.py             # Team/multi-agent spans
+```
+
+### Span Naming Conventions
+
+| Entity | `span.type` | `entity.type` Pattern |
+|--------|-------------|----------------------|
+| Agent | `agentic.invocation` | `agent.<framework>` |
+| Team | `agentic.invocation` | `team.<framework>` |
+| Tool | `agentic.tool.invocation` | `tool.<framework>` |
+| Inference | `inference` | `inference.<provider>` |
+
+### Workflow
+
+```bash
+/ok:add-framework agno     # Interactive: gathers framework info
+                           # Analyzes framework source
+                           # Generates all files
+                           # Registers in wrapper_method.py
+```
+
+See `.claude/commands/ok/add-framework.md` for full documentation.
 
 ---
 
