@@ -42,13 +42,6 @@ ADK_METHODS = [
       "output_processor": COMPACTION,
     },
     {
-      "package": "google.adk.apps.compaction",
-      "object": "",
-      "method": "_run_compaction_for_token_threshold_config",
-      "wrapper_method": atask_wrapper,
-      "output_processor": COMPACTION,
-    },
-    {
       "package": "google.adk.apps.llm_event_summarizer",
       "object": "LlmEventSummarizer",
       "method": "maybe_summarize_events",

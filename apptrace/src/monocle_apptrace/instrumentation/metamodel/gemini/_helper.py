@@ -48,22 +48,25 @@ def extract_messages(kwargs):
 
 def extract_assistant_message(arguments):
     try:
+        result = arguments.get('result')
+        if result is None:
+            return None
         status = get_status_code(arguments)
         messages = []
         role = "model"
-        if hasattr(arguments['result'], "candidates") and len(arguments['result'].candidates) > 0 and hasattr(arguments['result'].candidates[0], "content") and hasattr(arguments['result'].candidates[0].content, "role"):
-                role = arguments["result"].candidates[0].content.role
+        if hasattr(result, "candidates") and len(result.candidates) > 0 and hasattr(result.candidates[0], "content") and hasattr(result.candidates[0].content, "role"):
+                role = result.candidates[0].content.role
         if status == 'success':
-            if arguments["result"].parts[0].function_call is not None:
+            if hasattr(result, 'parts') and result.parts and result.parts[0].function_call is not None:
                 role = "ai"
-                messages.append({role: f'"model": {arguments["result"].parts[0].function_call.name}, "args": {arguments["result"].parts[0].function_call.args}'})
-            elif hasattr(arguments['result'], "text") and len(arguments['result'].text):
-                messages.append({role: arguments['result'].text})
+                messages.append({role: f'"model": {result.parts[0].function_call.name}, "args": {result.parts[0].function_call.args}'})
+            elif hasattr(result, "text") and result.text:
+                messages.append({role: result.text})
         else:
-            if arguments["exception"] is not None:
+            if arguments.get("exception") is not None:
                 return get_exception_message(arguments)
-            elif hasattr(arguments["result"], "error"):
-                return arguments["result"].error
+            elif hasattr(result, "error"):
+                return result.error
         return get_json_dumps(messages[0]) if messages else ""
     except (IndexError, AttributeError) as e:
         logger.warning("Warning: Error occurred in extract_assistant_message: %s", str(e))

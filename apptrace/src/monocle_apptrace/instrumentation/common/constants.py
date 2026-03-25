@@ -194,6 +194,9 @@ class SPAN_TYPES:
     # LLM inference operation invoked by an LLM orchestration framework (eg LangChain, LlamaIndex, etc)
     INFERENCE_FRAMEWORK = "inference.framework"
 
+    # Memory compaction/summarization operation
+    MEMORY_COMPACTION = "memory.compaction"
+
 class SPAN_SUBTYPES:
     # Agentic planing
     PLANNING = SPAN_SUBTYPE_PLANNING

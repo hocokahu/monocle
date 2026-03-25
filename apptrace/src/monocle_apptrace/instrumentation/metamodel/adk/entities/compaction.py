@@ -68,7 +68,7 @@ COMPACTION = {
 
 
 SUMMARIZATION = {
-    "type": SPAN_TYPES.INFERENCE,
+    "type": SPAN_TYPES.MEMORY_COMPACTION,
     "subtype": SPAN_SUBTYPES.CONTENT_GENERATION,
     "attributes": [
         [
