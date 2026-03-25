@@ -217,3 +217,238 @@ def get_target_agent(instance: Any) -> str:
     """
     return getattr(instance, 'name', getattr(instance, '__name__', 'unknown_target_agent'))
 
+
+# =============================================================================
+# COMPACTION HELPERS
+# =============================================================================
+
+ADK_COMPACTION_TYPE_KEY = "memory.compaction.adk"
+ADK_SUMMARIZER_TYPE_KEY = "memory.summarizer.adk"
+
+
+def get_compaction_type(arguments: Dict[str, Any]) -> str:
+    """Return the compaction entity type key."""
+    return ADK_COMPACTION_TYPE_KEY
+
+
+def get_summarizer_type(arguments: Dict[str, Any]) -> str:
+    """Return the summarizer entity type key."""
+    return ADK_SUMMARIZER_TYPE_KEY
+
+
+def get_compaction_mode(arguments: Dict[str, Any]) -> Optional[str]:
+    """
+    Determine the compaction mode (sliding_window or token_threshold).
+
+    Args:
+        arguments: Dictionary containing function call arguments
+
+    Returns:
+        str: 'sliding_window' or 'token_threshold' based on function name
+    """
+    # Check if this is token threshold compaction based on function context
+    kwargs = arguments.get('kwargs', {})
+    if kwargs.get('skip_token_compaction') is False:
+        return 'token_threshold'
+    return 'sliding_window'
+
+
+def get_compaction_app_name(arguments: Dict[str, Any]) -> Optional[str]:
+    """
+    Extract the app name from compaction arguments.
+
+    Args:
+        arguments: Dictionary containing function call arguments
+
+    Returns:
+        str: The app name or None
+    """
+    args = arguments.get('args', ())
+    if args and len(args) > 0:
+        app = args[0]
+        if hasattr(app, 'name'):
+            return app.name
+    return None
+
+
+def get_compaction_session_id(arguments: Dict[str, Any]) -> Optional[str]:
+    """
+    Extract the session ID from compaction arguments.
+
+    Args:
+        arguments: Dictionary containing function call arguments
+
+    Returns:
+        str: The session ID or None
+    """
+    args = arguments.get('args', ())
+    if args and len(args) > 1:
+        session = args[1]
+        if hasattr(session, 'id'):
+            return session.id
+    return None
+
+
+def get_compaction_config(arguments: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """
+    Extract compaction configuration details.
+
+    Args:
+        arguments: Dictionary containing function call arguments
+
+    Returns:
+        dict: Compaction config details or None
+    """
+    args = arguments.get('args', ())
+    if args and len(args) > 0:
+        app = args[0]
+        if hasattr(app, 'events_compaction_config') and app.events_compaction_config:
+            config = app.events_compaction_config
+            return {
+                'compaction_interval': getattr(config, 'compaction_interval', None),
+                'overlap_size': getattr(config, 'overlap_size', None),
+                'token_threshold': getattr(config, 'token_threshold', None),
+                'event_retention_size': getattr(config, 'event_retention_size', None),
+            }
+    return None
+
+
+def get_events_to_compact_count(arguments: Dict[str, Any]) -> Optional[int]:
+    """
+    Extract the count of events being compacted from summarizer arguments.
+
+    Args:
+        arguments: Dictionary containing function call arguments
+
+    Returns:
+        int: Number of events being compacted or None
+    """
+    kwargs = arguments.get('kwargs', {})
+    events = kwargs.get('events', [])
+    if events:
+        return len(events)
+    return None
+
+
+def get_compaction_time_range(arguments: Dict[str, Any]) -> Optional[Dict[str, float]]:
+    """
+    Extract the time range of events being compacted.
+
+    Args:
+        arguments: Dictionary containing function call arguments
+
+    Returns:
+        dict: Time range with start_timestamp and end_timestamp or None
+    """
+    kwargs = arguments.get('kwargs', {})
+    events = kwargs.get('events', [])
+    if events and len(events) > 0:
+        start_ts = getattr(events[0], 'timestamp', None)
+        end_ts = getattr(events[-1], 'timestamp', None)
+        if start_ts is not None and end_ts is not None:
+            return {
+                'start_timestamp': start_ts,
+                'end_timestamp': end_ts,
+            }
+    return None
+
+
+def get_summarizer_model(instance: Any) -> Optional[str]:
+    """
+    Extract the model name from LlmEventSummarizer instance.
+
+    Args:
+        instance: The LlmEventSummarizer instance
+
+    Returns:
+        str: The model name or None
+    """
+    if hasattr(instance, '_llm'):
+        llm = instance._llm
+        if hasattr(llm, 'model'):
+            return llm.model
+    return None
+
+
+def extract_summarizer_input(arguments: Dict[str, Any]) -> Optional[str]:
+    """
+    Extract the conversation history being summarized.
+
+    Args:
+        arguments: Dictionary containing function call arguments
+
+    Returns:
+        str: Formatted conversation history or None
+    """
+    kwargs = arguments.get('kwargs', {})
+    events = kwargs.get('events', [])
+    if not events:
+        return None
+
+    # Format similar to how LlmEventSummarizer does it
+    formatted_history = []
+    for event in events[:10]:  # Limit to first 10 events for brevity
+        if hasattr(event, 'content') and event.content and hasattr(event.content, 'parts'):
+            for part in event.content.parts:
+                if hasattr(part, 'text') and part.text:
+                    author = getattr(event, 'author', 'unknown')
+                    formatted_history.append(f'{author}: {part.text[:200]}')  # Truncate long messages
+
+    if len(events) > 10:
+        formatted_history.append(f'... and {len(events) - 10} more events')
+
+    return '\n'.join(formatted_history) if formatted_history else None
+
+
+def extract_compacted_summary(arguments: Dict[str, Any]) -> Optional[str]:
+    """
+    Extract the generated summary from compaction result.
+
+    Args:
+        arguments: Dictionary containing function call arguments with result
+
+    Returns:
+        str: The compacted summary text or None
+    """
+    result = arguments.get('result')
+    if result is None:
+        return None
+
+    # Result is an Event with actions.compaction.compacted_content
+    if hasattr(result, 'actions') and result.actions:
+        compaction = getattr(result.actions, 'compaction', None)
+        if compaction and hasattr(compaction, 'compacted_content'):
+            content = compaction.compacted_content
+            if content and hasattr(content, 'parts'):
+                parts_text = []
+                for part in content.parts:
+                    if hasattr(part, 'text') and part.text:
+                        parts_text.append(part.text[:500])  # Truncate
+                return ' '.join(parts_text) if parts_text else None
+
+    # Fallback: check for content directly
+    if hasattr(result, 'content') and result.content:
+        content = result.content
+        if hasattr(content, 'parts'):
+            parts_text = []
+            for part in content.parts:
+                if hasattr(part, 'text') and part.text:
+                    parts_text.append(part.text[:500])
+            return ' '.join(parts_text) if parts_text else None
+
+    return None
+
+
+def was_compaction_successful(arguments: Dict[str, Any]) -> bool:
+    """
+    Check if compaction was successful (produced a compacted event).
+
+    Args:
+        arguments: Dictionary containing function call arguments with result
+
+    Returns:
+        bool: True if compaction produced a result
+    """
+    result = arguments.get('result')
+    return result is not None
+
