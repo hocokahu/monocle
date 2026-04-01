@@ -149,3 +149,5 @@ Append to `.analyze/SESSION.md` after running:
 - `/ok:scan` - Full codebase analysis
 - `/ok:instrument` - Add tracing (zero-code or code-based)
 - `/ok:run` - Run app with tracing
+- `/ok:pause` - Save session before stopping work
+- `/ok:resume` - Resume from saved session

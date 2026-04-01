@@ -1,0 +1,1662 @@
+{
+  "root": "/Users/quanghoc/Documents/GitHub/monocle/examples",
+  "forward": {
+    "run_example1:calculate_sum": [],
+    "run_example1:calculate_product": [],
+    "run_example1:Calculator.add": [],
+    "run_example1:Calculator.multiply": [],
+    "span_exporter:InMemorySpanExporter.__init__": [],
+    "span_exporter:InMemorySpanExporter.export": [],
+    "span_exporter:InMemorySpanExporter.get_captured_spans": [],
+    "span_exporter:InMemorySpanExporter.clear": [],
+    "span_exporter:InMemorySpanExporter.shutdown": [
+      "span_exporter:InMemorySpanExporter.clear"
+    ],
+    "span_exporter:InMemorySpanExporter.force_flush": [],
+    "example4_wrapper_method:standalone_sum": [],
+    "example4_wrapper_method:standalone_product": [],
+    "example4_wrapper_method:async_standalone_fetch": [],
+    "example4_wrapper_method:print_spans": [],
+    "example4_wrapper_method:main": [
+      "example4_wrapper_method:standalone_sum",
+      "example4_wrapper_method:print_spans",
+      "example1_decorator:print_spans",
+      "example2_context_manager:print_spans",
+      "example3_start_stop:print_spans",
+      "example4_wrapper_method:standalone_product",
+      "example4_wrapper_method:async_standalone_fetch"
+    ],
+    "example4_wrapper_method:MyCalculator.__init__": [],
+    "example4_wrapper_method:MyCalculator.add": [],
+    "example4_wrapper_method:MyCalculator.multiply": [],
+    "example4_wrapper_method:MyCalculator.chain_operation": [
+      "example4_wrapper_method:MyCalculator.add",
+      "example4_wrapper_method:MyCalculator.multiply"
+    ],
+    "example4_wrapper_method:MyAsyncService.fetch_item": [],
+    "example4_wrapper_method:MyAsyncService.fetch_batch": [
+      "example4_wrapper_method:MyAsyncService.fetch_item"
+    ],
+    "example1_decorator:calculate_sum": [],
+    "example1_decorator:calculate_product": [],
+    "example1_decorator:complex_calculation": [
+      "example1_decorator:calculate_sum",
+      "run_example1:calculate_sum",
+      "my_functions:calculate_sum",
+      "run_example2:calculate_sum",
+      "example2_context_manager:calculate_sum",
+      "example3_start_stop:calculate_sum",
+      "run_example3:calculate_sum",
+      "example1_decorator:calculate_product",
+      "run_example1:calculate_product",
+      "my_functions:calculate_product",
+      "run_example2:calculate_product",
+      "example2_context_manager:calculate_product",
+      "example3_start_stop:calculate_product",
+      "run_example3:calculate_product"
+    ],
+    "example1_decorator:async_fetch_data": [],
+    "example1_decorator:async_process_items": [
+      "example1_decorator:async_fetch_data",
+      "my_functions:async_fetch_data",
+      "example2_context_manager:async_fetch_data",
+      "example3_start_stop:async_fetch_data"
+    ],
+    "example1_decorator:print_spans": [],
+    "example1_decorator:main": [
+      "example1_decorator:calculate_sum",
+      "run_example1:calculate_sum",
+      "my_functions:calculate_sum",
+      "run_example2:calculate_sum",
+      "example2_context_manager:calculate_sum",
+      "example3_start_stop:calculate_sum",
+      "run_example3:calculate_sum",
+      "example1_decorator:print_spans",
+      "example4_wrapper_method:print_spans",
+      "example2_context_manager:print_spans",
+      "example3_start_stop:print_spans",
+      "example1_decorator:calculate_product",
+      "run_example1:calculate_product",
+      "my_functions:calculate_product",
+      "run_example2:calculate_product",
+      "example2_context_manager:calculate_product",
+      "example3_start_stop:calculate_product",
+      "run_example3:calculate_product",
+      "example1_decorator:complex_calculation",
+      "my_functions:complex_calculation",
+      "example1_decorator:async_fetch_data",
+      "my_functions:async_fetch_data",
+      "example2_context_manager:async_fetch_data",
+      "example3_start_stop:async_fetch_data",
+      "example1_decorator:async_process_items",
+      "my_functions:async_process_items"
+    ],
+    "example1_decorator:Calculator.__init__": [],
+    "example1_decorator:Calculator.add": [],
+    "example1_decorator:Calculator.multiply": [],
+    "example1_decorator:Calculator.complex_operation": [
+      "example1_decorator:Calculator.add",
+      "example1_decorator:Calculator.multiply"
+    ],
+    "example1_decorator:AsyncService.fetch_item": [],
+    "example1_decorator:AsyncService.fetch_all": [
+      "example1_decorator:AsyncService.fetch_item"
+    ],
+    "my_functions:calculate_sum": [],
+    "my_functions:calculate_product": [],
+    "my_functions:complex_calculation": [
+      "my_functions:calculate_sum",
+      "run_example1:calculate_sum",
+      "example1_decorator:calculate_sum",
+      "run_example2:calculate_sum",
+      "example2_context_manager:calculate_sum",
+      "example3_start_stop:calculate_sum",
+      "run_example3:calculate_sum",
+      "my_functions:calculate_product",
+      "run_example1:calculate_product",
+      "example1_decorator:calculate_product",
+      "run_example2:calculate_product",
+      "example2_context_manager:calculate_product",
+      "example3_start_stop:calculate_product",
+      "run_example3:calculate_product"
+    ],
+    "my_functions:async_fetch_data": [],
+    "my_functions:async_process_items": [
+      "my_functions:async_fetch_data",
+      "example1_decorator:async_fetch_data",
+      "example2_context_manager:async_fetch_data",
+      "example3_start_stop:async_fetch_data"
+    ],
+    "run_all_examples:save_spans": [],
+    "run_all_examples:run_example1": [
+      "run_example1:calculate_sum",
+      "example1_decorator:calculate_sum",
+      "my_functions:calculate_sum",
+      "run_example2:calculate_sum",
+      "example2_context_manager:calculate_sum",
+      "example3_start_stop:calculate_sum",
+      "run_example3:calculate_sum",
+      "run_example1:calculate_product",
+      "example1_decorator:calculate_product",
+      "my_functions:calculate_product",
+      "run_example2:calculate_product",
+      "example2_context_manager:calculate_product",
+      "example3_start_stop:calculate_product",
+      "run_example3:calculate_product",
+      "run_all_examples:save_spans"
+    ],
+    "run_all_examples:run_example2": [
+      "run_example1:calculate_sum",
+      "example1_decorator:calculate_sum",
+      "my_functions:calculate_sum",
+      "run_example2:calculate_sum",
+      "example2_context_manager:calculate_sum",
+      "example3_start_stop:calculate_sum",
+      "run_example3:calculate_sum",
+      "run_example1:calculate_product",
+      "example1_decorator:calculate_product",
+      "my_functions:calculate_product",
+      "run_example2:calculate_product",
+      "example2_context_manager:calculate_product",
+      "example3_start_stop:calculate_product",
+      "run_example3:calculate_product",
+      "run_all_examples:save_spans"
+    ],
+    "run_all_examples:run_example3": [
+      "run_example1:calculate_sum",
+      "example1_decorator:calculate_sum",
+      "my_functions:calculate_sum",
+      "run_example2:calculate_sum",
+      "example2_context_manager:calculate_sum",
+      "example3_start_stop:calculate_sum",
+      "run_example3:calculate_sum",
+      "run_example1:calculate_product",
+      "example1_decorator:calculate_product",
+      "my_functions:calculate_product",
+      "run_example2:calculate_product",
+      "example2_context_manager:calculate_product",
+      "example3_start_stop:calculate_product",
+      "run_example3:calculate_product",
+      "run_all_examples:save_spans"
+    ],
+    "run_all_examples:run_example4": [
+      "my_functions:calculate_sum",
+      "my_functions:calculate_product",
+      "run_all_examples:save_spans"
+    ],
+    "run_all_examples:main": [
+      "run_all_examples:run_example1",
+      "run_all_examples:run_example2",
+      "run_all_examples:run_example3",
+      "run_all_examples:run_example4"
+    ],
+    "my_app:main": [
+      "run_example1:calculate_sum",
+      "example1_decorator:calculate_sum",
+      "my_functions:calculate_sum",
+      "run_example2:calculate_sum",
+      "example2_context_manager:calculate_sum",
+      "example3_start_stop:calculate_sum",
+      "run_example3:calculate_sum",
+      "run_example1:calculate_product",
+      "example1_decorator:calculate_product",
+      "my_functions:calculate_product",
+      "run_example2:calculate_product",
+      "example2_context_manager:calculate_product",
+      "example3_start_stop:calculate_product",
+      "run_example3:calculate_product",
+      "example1_decorator:complex_calculation",
+      "my_functions:complex_calculation"
+    ],
+    "my_class:Calculator.__init__": [],
+    "my_class:Calculator.add": [],
+    "my_class:Calculator.multiply": [],
+    "my_class:Calculator.complex_operation": [
+      "my_class:Calculator.add",
+      "my_class:Calculator.multiply"
+    ],
+    "my_class:AsyncDataService.__init__": [],
+    "my_class:AsyncDataService.fetch_item": [],
+    "my_class:AsyncDataService.fetch_multiple": [
+      "my_class:AsyncDataService.fetch_item"
+    ],
+    "run_example2:calculate_sum": [],
+    "run_example2:calculate_product": [],
+    "run_example2:Calculator.add": [],
+    "example2_context_manager:calculate_sum": [],
+    "example2_context_manager:calculate_product": [],
+    "example2_context_manager:async_fetch_data": [],
+    "example2_context_manager:print_spans": [],
+    "example2_context_manager:main": [
+      "example2_context_manager:calculate_sum",
+      "run_example1:calculate_sum",
+      "example1_decorator:calculate_sum",
+      "my_functions:calculate_sum",
+      "run_example2:calculate_sum",
+      "example3_start_stop:calculate_sum",
+      "run_example3:calculate_sum",
+      "example2_context_manager:print_spans",
+      "example4_wrapper_method:print_spans",
+      "example1_decorator:print_spans",
+      "example3_start_stop:print_spans",
+      "example2_context_manager:calculate_product",
+      "run_example1:calculate_product",
+      "example1_decorator:calculate_product",
+      "my_functions:calculate_product",
+      "run_example2:calculate_product",
+      "example3_start_stop:calculate_product",
+      "run_example3:calculate_product",
+      "example2_context_manager:async_fetch_data",
+      "example1_decorator:async_fetch_data",
+      "my_functions:async_fetch_data",
+      "example3_start_stop:async_fetch_data"
+    ],
+    "example2_context_manager:Calculator.add": [],
+    "example2_context_manager:Calculator.multiply": [],
+    "example2_context_manager:AsyncService.fetch_item": [],
+    "example3_start_stop:calculate_sum": [],
+    "example3_start_stop:calculate_product": [],
+    "example3_start_stop:process_data": [],
+    "example3_start_stop:async_fetch_data": [],
+    "example3_start_stop:print_spans": [],
+    "example3_start_stop:main": [
+      "example3_start_stop:calculate_sum",
+      "run_example1:calculate_sum",
+      "example1_decorator:calculate_sum",
+      "my_functions:calculate_sum",
+      "run_example2:calculate_sum",
+      "example2_context_manager:calculate_sum",
+      "run_example3:calculate_sum",
+      "example3_start_stop:print_spans",
+      "example4_wrapper_method:print_spans",
+      "example1_decorator:print_spans",
+      "example2_context_manager:print_spans",
+      "example3_start_stop:calculate_product",
+      "run_example1:calculate_product",
+      "example1_decorator:calculate_product",
+      "my_functions:calculate_product",
+      "run_example2:calculate_product",
+      "example2_context_manager:calculate_product",
+      "run_example3:calculate_product",
+      "example3_start_stop:process_data",
+      "example3_start_stop:async_fetch_data",
+      "example1_decorator:async_fetch_data",
+      "my_functions:async_fetch_data",
+      "example2_context_manager:async_fetch_data"
+    ],
+    "example3_start_stop:Calculator.add": [],
+    "example3_start_stop:Calculator.multiply": [],
+    "run_example3:calculate_sum": [],
+    "run_example3:calculate_product": [],
+    "run_example3:Calculator.add": []
+  },
+  "reverse": {
+    "span_exporter:InMemorySpanExporter.clear": [
+      "span_exporter:InMemorySpanExporter.shutdown"
+    ],
+    "example4_wrapper_method:standalone_sum": [
+      "example4_wrapper_method:main"
+    ],
+    "example4_wrapper_method:print_spans": [
+      "example4_wrapper_method:main",
+      "example1_decorator:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "example1_decorator:print_spans": [
+      "example4_wrapper_method:main",
+      "example1_decorator:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "example2_context_manager:print_spans": [
+      "example4_wrapper_method:main",
+      "example1_decorator:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "example3_start_stop:print_spans": [
+      "example4_wrapper_method:main",
+      "example1_decorator:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "example4_wrapper_method:standalone_product": [
+      "example4_wrapper_method:main"
+    ],
+    "example4_wrapper_method:async_standalone_fetch": [
+      "example4_wrapper_method:main"
+    ],
+    "example4_wrapper_method:MyCalculator.add": [
+      "example4_wrapper_method:MyCalculator.chain_operation"
+    ],
+    "example4_wrapper_method:MyCalculator.multiply": [
+      "example4_wrapper_method:MyCalculator.chain_operation"
+    ],
+    "example4_wrapper_method:MyAsyncService.fetch_item": [
+      "example4_wrapper_method:MyAsyncService.fetch_batch"
+    ],
+    "example1_decorator:calculate_sum": [
+      "example1_decorator:complex_calculation",
+      "example1_decorator:main",
+      "my_functions:complex_calculation",
+      "run_all_examples:run_example1",
+      "run_all_examples:run_example2",
+      "run_all_examples:run_example3",
+      "my_app:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "run_example1:calculate_sum": [
+      "example1_decorator:complex_calculation",
+      "example1_decorator:main",
+      "my_functions:complex_calculation",
+      "run_all_examples:run_example1",
+      "run_all_examples:run_example2",
+      "run_all_examples:run_example3",
+      "my_app:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "my_functions:calculate_sum": [
+      "example1_decorator:complex_calculation",
+      "example1_decorator:main",
+      "my_functions:complex_calculation",
+      "run_all_examples:run_example1",
+      "run_all_examples:run_example2",
+      "run_all_examples:run_example3",
+      "run_all_examples:run_example4",
+      "my_app:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "run_example2:calculate_sum": [
+      "example1_decorator:complex_calculation",
+      "example1_decorator:main",
+      "my_functions:complex_calculation",
+      "run_all_examples:run_example1",
+      "run_all_examples:run_example2",
+      "run_all_examples:run_example3",
+      "my_app:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "example2_context_manager:calculate_sum": [
+      "example1_decorator:complex_calculation",
+      "example1_decorator:main",
+      "my_functions:complex_calculation",
+      "run_all_examples:run_example1",
+      "run_all_examples:run_example2",
+      "run_all_examples:run_example3",
+      "my_app:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "example3_start_stop:calculate_sum": [
+      "example1_decorator:complex_calculation",
+      "example1_decorator:main",
+      "my_functions:complex_calculation",
+      "run_all_examples:run_example1",
+      "run_all_examples:run_example2",
+      "run_all_examples:run_example3",
+      "my_app:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "run_example3:calculate_sum": [
+      "example1_decorator:complex_calculation",
+      "example1_decorator:main",
+      "my_functions:complex_calculation",
+      "run_all_examples:run_example1",
+      "run_all_examples:run_example2",
+      "run_all_examples:run_example3",
+      "my_app:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "example1_decorator:calculate_product": [
+      "example1_decorator:complex_calculation",
+      "example1_decorator:main",
+      "my_functions:complex_calculation",
+      "run_all_examples:run_example1",
+      "run_all_examples:run_example2",
+      "run_all_examples:run_example3",
+      "my_app:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "run_example1:calculate_product": [
+      "example1_decorator:complex_calculation",
+      "example1_decorator:main",
+      "my_functions:complex_calculation",
+      "run_all_examples:run_example1",
+      "run_all_examples:run_example2",
+      "run_all_examples:run_example3",
+      "my_app:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "my_functions:calculate_product": [
+      "example1_decorator:complex_calculation",
+      "example1_decorator:main",
+      "my_functions:complex_calculation",
+      "run_all_examples:run_example1",
+      "run_all_examples:run_example2",
+      "run_all_examples:run_example3",
+      "run_all_examples:run_example4",
+      "my_app:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "run_example2:calculate_product": [
+      "example1_decorator:complex_calculation",
+      "example1_decorator:main",
+      "my_functions:complex_calculation",
+      "run_all_examples:run_example1",
+      "run_all_examples:run_example2",
+      "run_all_examples:run_example3",
+      "my_app:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "example2_context_manager:calculate_product": [
+      "example1_decorator:complex_calculation",
+      "example1_decorator:main",
+      "my_functions:complex_calculation",
+      "run_all_examples:run_example1",
+      "run_all_examples:run_example2",
+      "run_all_examples:run_example3",
+      "my_app:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "example3_start_stop:calculate_product": [
+      "example1_decorator:complex_calculation",
+      "example1_decorator:main",
+      "my_functions:complex_calculation",
+      "run_all_examples:run_example1",
+      "run_all_examples:run_example2",
+      "run_all_examples:run_example3",
+      "my_app:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "run_example3:calculate_product": [
+      "example1_decorator:complex_calculation",
+      "example1_decorator:main",
+      "my_functions:complex_calculation",
+      "run_all_examples:run_example1",
+      "run_all_examples:run_example2",
+      "run_all_examples:run_example3",
+      "my_app:main",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "example1_decorator:async_fetch_data": [
+      "example1_decorator:async_process_items",
+      "example1_decorator:main",
+      "my_functions:async_process_items",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "my_functions:async_fetch_data": [
+      "example1_decorator:async_process_items",
+      "example1_decorator:main",
+      "my_functions:async_process_items",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "example2_context_manager:async_fetch_data": [
+      "example1_decorator:async_process_items",
+      "example1_decorator:main",
+      "my_functions:async_process_items",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "example3_start_stop:async_fetch_data": [
+      "example1_decorator:async_process_items",
+      "example1_decorator:main",
+      "my_functions:async_process_items",
+      "example2_context_manager:main",
+      "example3_start_stop:main"
+    ],
+    "example1_decorator:complex_calculation": [
+      "example1_decorator:main",
+      "my_app:main"
+    ],
+    "my_functions:complex_calculation": [
+      "example1_decorator:main",
+      "my_app:main"
+    ],
+    "example1_decorator:async_process_items": [
+      "example1_decorator:main"
+    ],
+    "my_functions:async_process_items": [
+      "example1_decorator:main"
+    ],
+    "example1_decorator:Calculator.add": [
+      "example1_decorator:Calculator.complex_operation"
+    ],
+    "example1_decorator:Calculator.multiply": [
+      "example1_decorator:Calculator.complex_operation"
+    ],
+    "example1_decorator:AsyncService.fetch_item": [
+      "example1_decorator:AsyncService.fetch_all"
+    ],
+    "run_all_examples:save_spans": [
+      "run_all_examples:run_example1",
+      "run_all_examples:run_example2",
+      "run_all_examples:run_example3",
+      "run_all_examples:run_example4"
+    ],
+    "run_all_examples:run_example1": [
+      "run_all_examples:main"
+    ],
+    "run_all_examples:run_example2": [
+      "run_all_examples:main"
+    ],
+    "run_all_examples:run_example3": [
+      "run_all_examples:main"
+    ],
+    "run_all_examples:run_example4": [
+      "run_all_examples:main"
+    ],
+    "my_class:Calculator.add": [
+      "my_class:Calculator.complex_operation"
+    ],
+    "my_class:Calculator.multiply": [
+      "my_class:Calculator.complex_operation"
+    ],
+    "my_class:AsyncDataService.fetch_item": [
+      "my_class:AsyncDataService.fetch_multiple"
+    ],
+    "example3_start_stop:process_data": [
+      "example3_start_stop:main"
+    ]
+  },
+  "methods": {
+    "run_example1:calculate_sum": {
+      "type": "function",
+      "module": "run_example1",
+      "file": "run_example1.py",
+      "name": "calculate_sum",
+      "lineno": 27,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "run_example1:calculate_product": {
+      "type": "function",
+      "module": "run_example1",
+      "file": "run_example1.py",
+      "name": "calculate_product",
+      "lineno": 32,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "run_example1:Calculator.add": {
+      "type": "method",
+      "module": "run_example1",
+      "file": "run_example1.py",
+      "class": "Calculator",
+      "name": "add",
+      "lineno": 39,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "run_example1:Calculator.multiply": {
+      "type": "method",
+      "module": "run_example1",
+      "file": "run_example1.py",
+      "class": "Calculator",
+      "name": "multiply",
+      "lineno": 44,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "span_exporter:InMemorySpanExporter.__init__": {
+      "type": "method",
+      "module": "span_exporter",
+      "file": "span_exporter.py",
+      "class": "InMemorySpanExporter",
+      "name": "__init__",
+      "lineno": 10,
+      "calls": [],
+      "is_async": false
+    },
+    "span_exporter:InMemorySpanExporter.export": {
+      "type": "method",
+      "module": "span_exporter",
+      "file": "span_exporter.py",
+      "class": "InMemorySpanExporter",
+      "name": "export",
+      "lineno": 13,
+      "calls": [
+        "self._spans.extend"
+      ],
+      "is_async": false
+    },
+    "span_exporter:InMemorySpanExporter.get_captured_spans": {
+      "type": "method",
+      "module": "span_exporter",
+      "file": "span_exporter.py",
+      "class": "InMemorySpanExporter",
+      "name": "get_captured_spans",
+      "lineno": 17,
+      "calls": [
+        "list"
+      ],
+      "is_async": false
+    },
+    "span_exporter:InMemorySpanExporter.clear": {
+      "type": "method",
+      "module": "span_exporter",
+      "file": "span_exporter.py",
+      "class": "InMemorySpanExporter",
+      "name": "clear",
+      "lineno": 20,
+      "calls": [
+        "self._spans.clear"
+      ],
+      "is_async": false
+    },
+    "span_exporter:InMemorySpanExporter.shutdown": {
+      "type": "method",
+      "module": "span_exporter",
+      "file": "span_exporter.py",
+      "class": "InMemorySpanExporter",
+      "name": "shutdown",
+      "lineno": 23,
+      "calls": [
+        "self.clear"
+      ],
+      "is_async": false
+    },
+    "span_exporter:InMemorySpanExporter.force_flush": {
+      "type": "method",
+      "module": "span_exporter",
+      "file": "span_exporter.py",
+      "class": "InMemorySpanExporter",
+      "name": "force_flush",
+      "lineno": 26,
+      "calls": [],
+      "is_async": false
+    },
+    "example4_wrapper_method:standalone_sum": {
+      "type": "function",
+      "module": "example4_wrapper_method",
+      "file": "example4_wrapper_method.py",
+      "name": "standalone_sum",
+      "lineno": 32,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example4_wrapper_method:standalone_product": {
+      "type": "function",
+      "module": "example4_wrapper_method",
+      "file": "example4_wrapper_method.py",
+      "name": "standalone_product",
+      "lineno": 38,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example4_wrapper_method:async_standalone_fetch": {
+      "type": "function",
+      "module": "example4_wrapper_method",
+      "file": "example4_wrapper_method.py",
+      "name": "async_standalone_fetch",
+      "lineno": 44,
+      "calls": [
+        "asyncio.sleep"
+      ],
+      "is_async": true
+    },
+    "example4_wrapper_method:print_spans": {
+      "type": "function",
+      "module": "example4_wrapper_method",
+      "file": "example4_wrapper_method.py",
+      "name": "print_spans",
+      "lineno": 179,
+      "calls": [
+        "print",
+        "exporter.get_captured_spans",
+        "json.loads",
+        "span.to_json",
+        "json.dumps",
+        "exporter.clear"
+      ],
+      "is_async": false
+    },
+    "example4_wrapper_method:main": {
+      "type": "function",
+      "module": "example4_wrapper_method",
+      "file": "example4_wrapper_method.py",
+      "name": "main",
+      "lineno": 197,
+      "calls": [
+        "print",
+        "standalone_sum",
+        "print_spans",
+        "standalone_product",
+        "async_standalone_fetch",
+        "MyCalculator",
+        "calc.add",
+        "calc.multiply",
+        "calc.chain_operation",
+        "MyAsyncService",
+        "service.fetch_item",
+        "service.fetch_batch"
+      ],
+      "is_async": true
+    },
+    "example4_wrapper_method:MyCalculator.__init__": {
+      "type": "method",
+      "module": "example4_wrapper_method",
+      "file": "example4_wrapper_method.py",
+      "class": "MyCalculator",
+      "name": "__init__",
+      "lineno": 56,
+      "calls": [],
+      "is_async": false
+    },
+    "example4_wrapper_method:MyCalculator.add": {
+      "type": "method",
+      "module": "example4_wrapper_method",
+      "file": "example4_wrapper_method.py",
+      "class": "MyCalculator",
+      "name": "add",
+      "lineno": 59,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example4_wrapper_method:MyCalculator.multiply": {
+      "type": "method",
+      "module": "example4_wrapper_method",
+      "file": "example4_wrapper_method.py",
+      "class": "MyCalculator",
+      "name": "multiply",
+      "lineno": 64,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example4_wrapper_method:MyCalculator.chain_operation": {
+      "type": "method",
+      "module": "example4_wrapper_method",
+      "file": "example4_wrapper_method.py",
+      "class": "MyCalculator",
+      "name": "chain_operation",
+      "lineno": 69,
+      "calls": [
+        "self.add",
+        "self.multiply"
+      ],
+      "is_async": false
+    },
+    "example4_wrapper_method:MyAsyncService.fetch_item": {
+      "type": "method",
+      "module": "example4_wrapper_method",
+      "file": "example4_wrapper_method.py",
+      "class": "MyAsyncService",
+      "name": "fetch_item",
+      "lineno": 77,
+      "calls": [
+        "asyncio.sleep"
+      ],
+      "is_async": true
+    },
+    "example4_wrapper_method:MyAsyncService.fetch_batch": {
+      "type": "method",
+      "module": "example4_wrapper_method",
+      "file": "example4_wrapper_method.py",
+      "class": "MyAsyncService",
+      "name": "fetch_batch",
+      "lineno": 82,
+      "calls": [
+        "self.fetch_item"
+      ],
+      "is_async": true
+    },
+    "example1_decorator:calculate_sum": {
+      "type": "function",
+      "module": "example1_decorator",
+      "file": "example1_decorator.py",
+      "name": "calculate_sum",
+      "lineno": 42,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example1_decorator:calculate_product": {
+      "type": "function",
+      "module": "example1_decorator",
+      "file": "example1_decorator.py",
+      "name": "calculate_product",
+      "lineno": 49,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example1_decorator:complex_calculation": {
+      "type": "function",
+      "module": "example1_decorator",
+      "file": "example1_decorator.py",
+      "name": "complex_calculation",
+      "lineno": 56,
+      "calls": [
+        "calculate_sum",
+        "calculate_product"
+      ],
+      "is_async": false
+    },
+    "example1_decorator:async_fetch_data": {
+      "type": "function",
+      "module": "example1_decorator",
+      "file": "example1_decorator.py",
+      "name": "async_fetch_data",
+      "lineno": 68,
+      "calls": [
+        "asyncio.sleep"
+      ],
+      "is_async": true
+    },
+    "example1_decorator:async_process_items": {
+      "type": "function",
+      "module": "example1_decorator",
+      "file": "example1_decorator.py",
+      "name": "async_process_items",
+      "lineno": 75,
+      "calls": [
+        "async_fetch_data",
+        "results.append"
+      ],
+      "is_async": true
+    },
+    "example1_decorator:print_spans": {
+      "type": "function",
+      "module": "example1_decorator",
+      "file": "example1_decorator.py",
+      "name": "print_spans",
+      "lineno": 131,
+      "calls": [
+        "print",
+        "exporter.get_captured_spans",
+        "json.loads",
+        "span.to_json",
+        "json.dumps",
+        "exporter.clear"
+      ],
+      "is_async": false
+    },
+    "example1_decorator:main": {
+      "type": "function",
+      "module": "example1_decorator",
+      "file": "example1_decorator.py",
+      "name": "main",
+      "lineno": 145,
+      "calls": [
+        "print",
+        "calculate_sum",
+        "print_spans",
+        "calculate_product",
+        "complex_calculation",
+        "async_fetch_data",
+        "async_process_items",
+        "Calculator",
+        "calc.add",
+        "calc.complex_operation",
+        "AsyncService",
+        "service.fetch_all"
+      ],
+      "is_async": true
+    },
+    "example1_decorator:Calculator.__init__": {
+      "type": "method",
+      "module": "example1_decorator",
+      "file": "example1_decorator.py",
+      "class": "Calculator",
+      "name": "__init__",
+      "lineno": 91,
+      "calls": [],
+      "is_async": false
+    },
+    "example1_decorator:Calculator.add": {
+      "type": "method",
+      "module": "example1_decorator",
+      "file": "example1_decorator.py",
+      "class": "Calculator",
+      "name": "add",
+      "lineno": 95,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example1_decorator:Calculator.multiply": {
+      "type": "method",
+      "module": "example1_decorator",
+      "file": "example1_decorator.py",
+      "class": "Calculator",
+      "name": "multiply",
+      "lineno": 101,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example1_decorator:Calculator.complex_operation": {
+      "type": "method",
+      "module": "example1_decorator",
+      "file": "example1_decorator.py",
+      "class": "Calculator",
+      "name": "complex_operation",
+      "lineno": 107,
+      "calls": [
+        "self.add",
+        "self.multiply"
+      ],
+      "is_async": false
+    },
+    "example1_decorator:AsyncService.fetch_item": {
+      "type": "method",
+      "module": "example1_decorator",
+      "file": "example1_decorator.py",
+      "class": "AsyncService",
+      "name": "fetch_item",
+      "lineno": 116,
+      "calls": [
+        "asyncio.sleep"
+      ],
+      "is_async": true
+    },
+    "example1_decorator:AsyncService.fetch_all": {
+      "type": "method",
+      "module": "example1_decorator",
+      "file": "example1_decorator.py",
+      "class": "AsyncService",
+      "name": "fetch_all",
+      "lineno": 122,
+      "calls": [
+        "self.fetch_item"
+      ],
+      "is_async": true
+    },
+    "my_functions:calculate_sum": {
+      "type": "function",
+      "module": "my_functions",
+      "file": "my_functions.py",
+      "name": "calculate_sum",
+      "lineno": 7,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "my_functions:calculate_product": {
+      "type": "function",
+      "module": "my_functions",
+      "file": "my_functions.py",
+      "name": "calculate_product",
+      "lineno": 13,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "my_functions:complex_calculation": {
+      "type": "function",
+      "module": "my_functions",
+      "file": "my_functions.py",
+      "name": "complex_calculation",
+      "lineno": 19,
+      "calls": [
+        "calculate_sum",
+        "calculate_product"
+      ],
+      "is_async": false
+    },
+    "my_functions:async_fetch_data": {
+      "type": "function",
+      "module": "my_functions",
+      "file": "my_functions.py",
+      "name": "async_fetch_data",
+      "lineno": 26,
+      "calls": [
+        "asyncio.sleep"
+      ],
+      "is_async": true
+    },
+    "my_functions:async_process_items": {
+      "type": "function",
+      "module": "my_functions",
+      "file": "my_functions.py",
+      "name": "async_process_items",
+      "lineno": 33,
+      "calls": [
+        "async_fetch_data",
+        "results.append"
+      ],
+      "is_async": true
+    },
+    "run_all_examples:save_spans": {
+      "type": "function",
+      "module": "run_all_examples",
+      "file": "run_all_examples.py",
+      "name": "save_spans",
+      "lineno": 20,
+      "calls": [
+        "exporter.get_captured_spans",
+        "spans_data.append",
+        "json.loads",
+        "span.to_json",
+        "os.path.join",
+        "open",
+        "json.dump",
+        "print",
+        "len",
+        "exporter.clear"
+      ],
+      "is_async": false
+    },
+    "run_all_examples:run_example1": {
+      "type": "function",
+      "module": "run_all_examples",
+      "file": "run_all_examples.py",
+      "name": "run_example1",
+      "lineno": 39,
+      "calls": [
+        "print",
+        "InMemorySpanExporter",
+        "setup_monocle_telemetry",
+        "SimpleSpanProcessor",
+        "time.sleep",
+        "monocle_trace_method",
+        "calculate_sum",
+        "calculate_product",
+        "Calculator",
+        "calc.add",
+        "calc.multiply",
+        "save_spans"
+      ],
+      "is_async": false
+    },
+    "run_all_examples:run_example2": {
+      "type": "function",
+      "module": "run_all_examples",
+      "file": "run_all_examples.py",
+      "name": "run_example2",
+      "lineno": 96,
+      "calls": [
+        "print",
+        "InMemorySpanExporter",
+        "setup_monocle_telemetry",
+        "SimpleSpanProcessor",
+        "time.sleep",
+        "monocle_trace",
+        "calculate_sum",
+        "calculate_product",
+        "Calculator",
+        "calc.add",
+        "save_spans"
+      ],
+      "is_async": false
+    },
+    "run_all_examples:run_example3": {
+      "type": "function",
+      "module": "run_all_examples",
+      "file": "run_all_examples.py",
+      "name": "run_example3",
+      "lineno": 156,
+      "calls": [
+        "print",
+        "InMemorySpanExporter",
+        "setup_monocle_telemetry",
+        "SimpleSpanProcessor",
+        "time.sleep",
+        "start_trace",
+        "calculate_sum",
+        "stop_trace",
+        "calculate_product",
+        "Calculator",
+        "calc.add",
+        "save_spans"
+      ],
+      "is_async": false
+    },
+    "run_all_examples:run_example4": {
+      "type": "function",
+      "module": "run_all_examples",
+      "file": "run_all_examples.py",
+      "name": "run_example4",
+      "lineno": 213,
+      "calls": [
+        "print",
+        "InMemorySpanExporter",
+        "WrapperMethod",
+        "setup_monocle_telemetry",
+        "SimpleSpanProcessor",
+        "my_functions.calculate_sum",
+        "my_functions.calculate_product",
+        "my_class.Calculator",
+        "calc.add",
+        "calc.multiply",
+        "save_spans"
+      ],
+      "is_async": false
+    },
+    "run_all_examples:main": {
+      "type": "function",
+      "module": "run_all_examples",
+      "file": "run_all_examples.py",
+      "name": "main",
+      "lineno": 290,
+      "calls": [
+        "print",
+        "run_example1",
+        "run_example2",
+        "run_example3",
+        "run_example4",
+        "sorted",
+        "os.listdir",
+        "f.endswith",
+        "os.path.join",
+        "os.path.getsize"
+      ],
+      "is_async": false
+    },
+    "my_app:main": {
+      "type": "function",
+      "module": "my_app",
+      "file": "my_app.py",
+      "name": "main",
+      "lineno": 15,
+      "calls": [
+        "print",
+        "calculate_sum",
+        "calculate_product",
+        "complex_calculation",
+        "Calculator",
+        "calc.add",
+        "calc.multiply",
+        "calc.complex_operation"
+      ],
+      "is_async": false
+    },
+    "my_class:Calculator.__init__": {
+      "type": "method",
+      "module": "my_class",
+      "file": "my_class.py",
+      "class": "Calculator",
+      "name": "__init__",
+      "lineno": 10,
+      "calls": [],
+      "is_async": false
+    },
+    "my_class:Calculator.add": {
+      "type": "method",
+      "module": "my_class",
+      "file": "my_class.py",
+      "class": "Calculator",
+      "name": "add",
+      "lineno": 14,
+      "calls": [
+        "time.sleep",
+        "self.history.append"
+      ],
+      "is_async": false
+    },
+    "my_class:Calculator.multiply": {
+      "type": "method",
+      "module": "my_class",
+      "file": "my_class.py",
+      "class": "Calculator",
+      "name": "multiply",
+      "lineno": 21,
+      "calls": [
+        "time.sleep",
+        "self.history.append"
+      ],
+      "is_async": false
+    },
+    "my_class:Calculator.complex_operation": {
+      "type": "method",
+      "module": "my_class",
+      "file": "my_class.py",
+      "class": "Calculator",
+      "name": "complex_operation",
+      "lineno": 28,
+      "calls": [
+        "self.add",
+        "self.multiply"
+      ],
+      "is_async": false
+    },
+    "my_class:AsyncDataService.__init__": {
+      "type": "method",
+      "module": "my_class",
+      "file": "my_class.py",
+      "class": "AsyncDataService",
+      "name": "__init__",
+      "lineno": 38,
+      "calls": [],
+      "is_async": false
+    },
+    "my_class:AsyncDataService.fetch_item": {
+      "type": "method",
+      "module": "my_class",
+      "file": "my_class.py",
+      "class": "AsyncDataService",
+      "name": "fetch_item",
+      "lineno": 41,
+      "calls": [
+        "asyncio.sleep"
+      ],
+      "is_async": true
+    },
+    "my_class:AsyncDataService.fetch_multiple": {
+      "type": "method",
+      "module": "my_class",
+      "file": "my_class.py",
+      "class": "AsyncDataService",
+      "name": "fetch_multiple",
+      "lineno": 47,
+      "calls": [
+        "self.fetch_item",
+        "results.append"
+      ],
+      "is_async": true
+    },
+    "run_example2:calculate_sum": {
+      "type": "function",
+      "module": "run_example2",
+      "file": "run_example2.py",
+      "name": "calculate_sum",
+      "lineno": 26,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "run_example2:calculate_product": {
+      "type": "function",
+      "module": "run_example2",
+      "file": "run_example2.py",
+      "name": "calculate_product",
+      "lineno": 30,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "run_example2:Calculator.add": {
+      "type": "method",
+      "module": "run_example2",
+      "file": "run_example2.py",
+      "class": "Calculator",
+      "name": "add",
+      "lineno": 36,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example2_context_manager:calculate_sum": {
+      "type": "function",
+      "module": "example2_context_manager",
+      "file": "example2_context_manager.py",
+      "name": "calculate_sum",
+      "lineno": 42,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example2_context_manager:calculate_product": {
+      "type": "function",
+      "module": "example2_context_manager",
+      "file": "example2_context_manager.py",
+      "name": "calculate_product",
+      "lineno": 48,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example2_context_manager:async_fetch_data": {
+      "type": "function",
+      "module": "example2_context_manager",
+      "file": "example2_context_manager.py",
+      "name": "async_fetch_data",
+      "lineno": 54,
+      "calls": [
+        "asyncio.sleep"
+      ],
+      "is_async": true
+    },
+    "example2_context_manager:print_spans": {
+      "type": "function",
+      "module": "example2_context_manager",
+      "file": "example2_context_manager.py",
+      "name": "print_spans",
+      "lineno": 84,
+      "calls": [
+        "print",
+        "exporter.get_captured_spans",
+        "json.loads",
+        "span.to_json",
+        "json.dumps",
+        "exporter.clear"
+      ],
+      "is_async": false
+    },
+    "example2_context_manager:main": {
+      "type": "function",
+      "module": "example2_context_manager",
+      "file": "example2_context_manager.py",
+      "name": "main",
+      "lineno": 102,
+      "calls": [
+        "print",
+        "monocle_trace",
+        "calculate_sum",
+        "print_spans",
+        "calculate_product",
+        "results.append",
+        "amonocle_trace",
+        "async_fetch_data",
+        "Calculator",
+        "calc.add",
+        "calc.multiply",
+        "AsyncService",
+        "service.fetch_item"
+      ],
+      "is_async": true
+    },
+    "example2_context_manager:Calculator.add": {
+      "type": "method",
+      "module": "example2_context_manager",
+      "file": "example2_context_manager.py",
+      "class": "Calculator",
+      "name": "add",
+      "lineno": 63,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example2_context_manager:Calculator.multiply": {
+      "type": "method",
+      "module": "example2_context_manager",
+      "file": "example2_context_manager.py",
+      "class": "Calculator",
+      "name": "multiply",
+      "lineno": 67,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example2_context_manager:AsyncService.fetch_item": {
+      "type": "method",
+      "module": "example2_context_manager",
+      "file": "example2_context_manager.py",
+      "class": "AsyncService",
+      "name": "fetch_item",
+      "lineno": 75,
+      "calls": [
+        "asyncio.sleep"
+      ],
+      "is_async": true
+    },
+    "example3_start_stop:calculate_sum": {
+      "type": "function",
+      "module": "example3_start_stop",
+      "file": "example3_start_stop.py",
+      "name": "calculate_sum",
+      "lineno": 42,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example3_start_stop:calculate_product": {
+      "type": "function",
+      "module": "example3_start_stop",
+      "file": "example3_start_stop.py",
+      "name": "calculate_product",
+      "lineno": 48,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example3_start_stop:process_data": {
+      "type": "function",
+      "module": "example3_start_stop",
+      "file": "example3_start_stop.py",
+      "name": "process_data",
+      "lineno": 54,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example3_start_stop:async_fetch_data": {
+      "type": "function",
+      "module": "example3_start_stop",
+      "file": "example3_start_stop.py",
+      "name": "async_fetch_data",
+      "lineno": 60,
+      "calls": [
+        "asyncio.sleep"
+      ],
+      "is_async": true
+    },
+    "example3_start_stop:print_spans": {
+      "type": "function",
+      "module": "example3_start_stop",
+      "file": "example3_start_stop.py",
+      "name": "print_spans",
+      "lineno": 82,
+      "calls": [
+        "print",
+        "exporter.get_captured_spans",
+        "json.loads",
+        "span.to_json",
+        "json.dumps",
+        "exporter.clear"
+      ],
+      "is_async": false
+    },
+    "example3_start_stop:main": {
+      "type": "function",
+      "module": "example3_start_stop",
+      "file": "example3_start_stop.py",
+      "name": "main",
+      "lineno": 100,
+      "calls": [
+        "print",
+        "start_trace",
+        "calculate_sum",
+        "stop_trace",
+        "print_spans",
+        "calculate_product",
+        "process_data",
+        "len",
+        "sum",
+        "results.append",
+        "Calculator",
+        "calc.add",
+        "calc.multiply",
+        "async_fetch_data",
+        "on_start",
+        "on_complete"
+      ],
+      "is_async": true
+    },
+    "example3_start_stop:Calculator.add": {
+      "type": "method",
+      "module": "example3_start_stop",
+      "file": "example3_start_stop.py",
+      "class": "Calculator",
+      "name": "add",
+      "lineno": 69,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "example3_start_stop:Calculator.multiply": {
+      "type": "method",
+      "module": "example3_start_stop",
+      "file": "example3_start_stop.py",
+      "class": "Calculator",
+      "name": "multiply",
+      "lineno": 73,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "run_example3:calculate_sum": {
+      "type": "function",
+      "module": "run_example3",
+      "file": "run_example3.py",
+      "name": "calculate_sum",
+      "lineno": 27,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "run_example3:calculate_product": {
+      "type": "function",
+      "module": "run_example3",
+      "file": "run_example3.py",
+      "name": "calculate_product",
+      "lineno": 31,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    },
+    "run_example3:Calculator.add": {
+      "type": "method",
+      "module": "run_example3",
+      "file": "run_example3.py",
+      "class": "Calculator",
+      "name": "add",
+      "lineno": 37,
+      "calls": [
+        "time.sleep"
+      ],
+      "is_async": false
+    }
+  },
+  "summary": {
+    "total_methods": 75,
+    "total_edges": 192,
+    "most_called": [
+      [
+        "my_functions:calculate_sum",
+        10
+      ],
+      [
+        "my_functions:calculate_product",
+        10
+      ],
+      [
+        "example1_decorator:calculate_sum",
+        9
+      ],
+      [
+        "run_example1:calculate_sum",
+        9
+      ],
+      [
+        "run_example2:calculate_sum",
+        9
+      ],
+      [
+        "example2_context_manager:calculate_sum",
+        9
+      ],
+      [
+        "example3_start_stop:calculate_sum",
+        9
+      ],
+      [
+        "run_example3:calculate_sum",
+        9
+      ],
+      [
+        "example1_decorator:calculate_product",
+        9
+      ],
+      [
+        "run_example1:calculate_product",
+        9
+      ]
+    ],
+    "most_calling": [
+      [
+        "example1_decorator:main",
+        26
+      ],
+      [
+        "example3_start_stop:main",
+        23
+      ],
+      [
+        "example2_context_manager:main",
+        22
+      ],
+      [
+        "my_app:main",
+        16
+      ],
+      [
+        "run_all_examples:run_example1",
+        15
+      ],
+      [
+        "run_all_examples:run_example2",
+        15
+      ],
+      [
+        "run_all_examples:run_example3",
+        15
+      ],
+      [
+        "example1_decorator:complex_calculation",
+        14
+      ],
+      [
+        "my_functions:complex_calculation",
+        14
+      ],
+      [
+        "example4_wrapper_method:main",
+        7
+      ]
+    ],
+    "leaf_count": 54,
+    "entry_point_count": 30
+  }
+}

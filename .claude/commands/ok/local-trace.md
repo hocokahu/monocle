@@ -113,3 +113,5 @@ Append to `.analyze/SESSION.md` if errors found or notable observations:
 
 - `/ok:instrument` - Run app to generate local traces first
 - Use Okahu MCP tools for production/cloud traces
+- `/ok:pause` - Save session before stopping work
+- `/ok:resume` - Resume from saved session

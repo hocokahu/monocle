@@ -29,7 +29,9 @@ A set of scripts and Claude CLI skills to analyze Python codebases and add monoc
 | `/ok:instrument` | none | Add tracing - prompts **Zero-code** or **Code-based** |
 | `/ok:run` | `[command]` optional | Smart runner - auto-detects or prompts. See behavior below. |
 | `/ok:local-trace` | `[query]` optional | View local traces. Accepts natural language. Falls back to Okahu MCP if no local traces. |
-| `/ok:status` | `[folder]` optional | Resume session. Finds SESSION.md automatically. |
+| `/ok:pause` | `[folder]` optional | Save conversation context to SESSION.md for cross-session continuity. |
+| `/ok:resume` | `[folder]` optional | Resume session with full context restoration. Finds SESSION.md automatically. |
+| `/ok:status` | `[folder]` optional | **[Deprecated]** Use `/ok:resume` instead. |
 | `/ok:add-framework` | `<framework>` | Add monocle instrumentation for a new AI/ML framework. |
 
 ---
@@ -62,6 +64,26 @@ A set of scripts and Claude CLI skills to analyze Python codebases and add monoc
 ```
 
 Servers that listen on ports run in foreground (user can Ctrl+C to stop).
+
+### Session Persistence
+
+```
+/ok:scan              → Writes to SESSION.md
+chat about frameworks → In Claude's context window
+chat about entry pts  → In Claude's context window
+/ok:pause             → Gathers context + files → Appends to SESSION.md
+
+--- new session or /clear ---
+
+/ok:resume            → Reads SESSION.md → Restores context → Prompts next step
+```
+
+**SESSION.md** accumulates session blocks over time, preserving:
+- Current position (stage, entry point, framework)
+- Decisions made and rationale
+- Findings about the codebase
+- Issues and blockers
+- Next steps
 
 ---
 
@@ -104,7 +126,10 @@ flask run               # Run normally - tracing enabled
 │       ├── instrument.md               # /ok:instrument
 │       ├── run.md                      # /ok:run
 │       ├── local-trace.md              # /ok:local-trace
-│       └── status.md                   # /ok:status
+│       ├── pause.md                    # /ok:pause
+│       ├── resume.md                   # /ok:resume
+│       ├── status.md                   # /ok:status [deprecated]
+│       └── add-framework.md            # /ok:add-framework
 │
 └── scripts/                            # Helper scripts
     ├── ast_parser.py                   # Extract classes, methods, args
@@ -177,9 +202,47 @@ These frameworks are auto-instrumented by monocle - no custom YAML needed:
 
 Use `/ok:add-framework` to add instrumentation for frameworks not yet supported by monocle.
 
+### Workflow Overview
+
+```
+Step 1: Gather Info
+  ├── Framework name (e.g., "agno")
+  ├── Package name (e.g., "agno")
+  ├── Entity types (Agent, Team, Tool, Inference, Retrieval)
+  ├── Create workspace? → examples/<framework>_workspace/
+  └── Download examples? → Research and create working sample
+
+Step 2: Setup Workspace (if selected)
+  ├── mkdir examples/<framework>_workspace
+  ├── python -m venv venv
+  ├── pip install <package>
+  └── Verify: python -c "import <package>; print(<package>.__file__)"
+
+Step 3: Download Example Code (if selected)
+  ├── WebSearch for official examples
+  ├── Create example_<use_case>.py with dotenv support
+  ├── Prompt for .env variables (API keys, etc.)
+  ├── Create .env.example template
+  └── Run and verify example works
+
+Step 4-12: Instrumentation
+  ├── Analyze framework source (classes, methods, signatures)
+  ├── Create metamodel/<framework>/ folder structure
+  ├── Generate _helper.py, methods.py, entities/*.py
+  ├── Optional: Create custom span handler
+  ├── Register in wrapper_method.py
+  └── Test instrumentation
+```
+
 ### What It Creates
 
 ```
+examples/<framework>_workspace/          # Development workspace
+├── venv/                                # Virtual environment
+├── .env                                 # API keys (user-created)
+├── .env.example                         # Template
+└── example_<use_case>.py                # Working sample code
+
 apptrace/src/monocle_apptrace/instrumentation/metamodel/<framework>/
 ├── __init__.py
 ├── _helper.py              # Data extraction functions
@@ -202,16 +265,32 @@ apptrace/src/monocle_apptrace/instrumentation/metamodel/<framework>/
 | Tool | `agentic.tool.invocation` | `tool.<framework>` |
 | Inference | `inference` | `inference.<provider>` |
 
-### Workflow
+### Example Usage
 
 ```bash
-/ok:add-framework agno     # Interactive: gathers framework info
-                           # Analyzes framework source
-                           # Generates all files
-                           # Registers in wrapper_method.py
+# Full workflow with workspace setup
+/ok:add-framework agno
+  → Framework name: agno
+  → Package name: agno
+  → Entity types: [Agent, Team, Tool, Inference]
+  → Create workspace? Yes
+  → Download examples? Yes
+
+# Creates examples/agno_workspace/ with venv and sample code
+# Prompts for OPENAI_API_KEY in .env
+# Verifies example runs successfully
+# Then proceeds to create instrumentation files
 ```
 
-See `.claude/commands/ok/add-framework.md` for full documentation.
+### Key Features
+
+- **Isolated workspace**: All work happens in `examples/<framework>_workspace/` - no pollution of repo root
+- **Automatic venv setup**: Creates and activates virtual environment
+- **Example code research**: Uses WebSearch to find official framework examples
+- **Environment handling**: Prompts for API keys and creates `.env.example` template
+- **Verification**: Runs example code to confirm framework works before instrumenting
+
+See `.claude/commands/ok/add-framework.md` for full step-by-step documentation.
 
 ---
 

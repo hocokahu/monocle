@@ -225,3 +225,5 @@ Analysis output goes to `.analyze/` folder in the target directory.
 ## Related Commands
 
 - `/ok:instrument` - Generate okahu.yaml from scan results
+- `/ok:pause` - Save session before stopping work
+- `/ok:resume` - Resume from saved session

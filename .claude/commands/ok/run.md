@@ -211,3 +211,5 @@ OKAHU_API_KEY             # Okahu API key
 
 - `/ok:instrument` - Must run first to set up tracing
 - `/ok:local-trace` - View traces after running
+- `/ok:pause` - Save session before stopping work
+- `/ok:resume` - Resume from saved session

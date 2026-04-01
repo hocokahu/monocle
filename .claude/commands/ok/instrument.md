@@ -152,3 +152,5 @@ If you need to override this, use the `selected` field instead, but expect dupli
 - `/ok:scan` or `/ok:find` - Run first to analyze codebase
 - `/ok:run` - Execute app with tracing (zero-code approach)
 - `/ok:local-trace` - View traces after running
+- `/ok:pause` - Save session before stopping work
+- `/ok:resume` - Resume from saved session

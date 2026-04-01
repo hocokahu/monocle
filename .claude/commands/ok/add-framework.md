@@ -11,6 +11,7 @@ allowed-tools:
   - Grep
   - AskUserQuestion
   - Agent
+  - WebSearch
 ---
 
 # ok:add-framework
@@ -60,6 +61,24 @@ This skill creates the complete instrumentation package for a new framework foll
         {"label": "Inference", "description": "Direct LLM/model calls"},
         {"label": "Retrieval", "description": "Vector/RAG retrieval operations"}
       ]
+    },
+    {
+      "question": "Create a new workspace at examples/<framework>_workspace?",
+      "header": "Setup Workspace",
+      "multiSelect": false,
+      "options": [
+        {"label": "Yes", "description": "Create isolated workspace with venv and install framework"},
+        {"label": "No", "description": "Skip - framework already installed elsewhere"}
+      ]
+    },
+    {
+      "question": "Download runnable example code for this framework?",
+      "header": "Example Code",
+      "multiSelect": false,
+      "options": [
+        {"label": "Yes", "description": "Research and create working sample code"},
+        {"label": "No", "description": "Skip - I'll provide my own test code"}
+      ]
     }
   ]
 }
@@ -67,12 +86,153 @@ This skill creates the complete instrumentation package for a new framework foll
 
 ---
 
-## Step 2: Analyze Framework Source
+## Step 2: Setup Workspace (if selected)
 
-Explore the framework to identify instrumentable methods:
+If user selected "Yes" to create workspace:
+
+### 2.1 Create Workspace Directory
 
 ```bash
-# Find the framework's installed location
+# Create workspace folder
+mkdir -p examples/<framework>_workspace
+cd examples/<framework>_workspace
+
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+### 2.2 Install Framework
+
+```bash
+# Install the framework package
+pip install <package>
+
+# Verify installation - this MUST succeed before proceeding
+python -c "import <package>; print(f'Installed: {<package>.__file__}')"
+```
+
+If verification fails, troubleshoot:
+- Check package name spelling
+- Try `pip install <package> --upgrade`
+- Check for Python version requirements
+
+### 2.3 Record Framework Location
+
+Store the framework path for later analysis:
+```bash
+FRAMEWORK_PATH=$(python -c "import <package>; import os; print(os.path.dirname(<package>.__file__))")
+echo "Framework source at: $FRAMEWORK_PATH"
+```
+
+---
+
+## Step 3: Download Example Code (if selected)
+
+If user selected "Yes" to download examples:
+
+### 3.1 Research Framework Examples
+
+**USE WebSearch** to find official examples:
+- Search: `"<framework>" python example code tutorial`
+- Search: `"<framework>" quickstart getting started`
+- Check official docs, GitHub repos, blog posts
+
+### 3.2 Create Example Script
+
+Create `examples/<framework>_workspace/example_<use_case>.py`:
+
+```python
+"""
+<Framework> example - <use_case description>
+Auto-generated for monocle instrumentation testing.
+"""
+
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Framework imports
+from <package> import <classes>
+
+# Example code here...
+```
+
+### 3.3 Handle Environment Variables
+
+If the framework requires API keys or other env vars:
+
+**USE AskUserQuestion** to prompt for required variables:
+
+```json
+{
+  "questions": [
+    {
+      "question": "The framework requires environment variables. Please add them to examples/<framework>_workspace/.env file.\n\nRequired variables detected:\n- <VAR_NAME>: <description>\n\nHave you added the variables to .env?",
+      "header": "Environment Setup",
+      "multiSelect": false,
+      "options": [
+        {"label": "Yes, I've added the .env file", "description": "Continue to run the example"},
+        {"label": "Skip for now", "description": "I'll add them later"}
+      ]
+    }
+  ]
+}
+```
+
+Create `.env.example` template:
+```bash
+# examples/<framework>_workspace/.env.example
+# Copy this to .env and fill in your values
+
+# Required for <framework>
+OPENAI_API_KEY=your-api-key-here
+# Add other required vars...
+```
+
+### 3.4 Run and Verify Example
+
+```bash
+cd examples/<framework>_workspace
+source venv/bin/activate
+
+# Source environment variables
+set -a && source .env && set +a
+
+# Run the example
+python example_<use_case>.py
+```
+
+**Success criteria:**
+- Script runs without import errors
+- Framework initializes correctly
+- If API calls are made, they return valid responses
+
+If errors occur:
+1. Check .env variables are set correctly
+2. Verify package installation
+3. Check API key permissions/quotas
+4. Review error message and fix code
+
+---
+
+## Step 4: Analyze Framework Source
+
+Explore the framework to identify instrumentable methods.
+
+**If workspace was created**, the framework is at:
+```bash
+cd examples/<framework>_workspace
+source venv/bin/activate
+FRAMEWORK_PATH=$(python -c "import <package>; import os; print(os.path.dirname(<package>.__file__))")
+```
+
+**Otherwise**, find the framework's installed location:
+```bash
 python -c "import <package>; print(<package>.__file__)"
 
 # Or search in common locations
@@ -100,7 +260,7 @@ For each class, determine:
 
 ---
 
-## Step 3: Create Folder Structure
+## Step 5: Create Folder Structure
 
 ```
 apptrace/src/monocle_apptrace/instrumentation/metamodel/<framework>/
@@ -118,7 +278,7 @@ apptrace/src/monocle_apptrace/instrumentation/metamodel/<framework>/
 
 ---
 
-## Step 4: Create `__init__.py`
+## Step 6: Create `__init__.py`
 
 ```python
 # <framework> framework instrumentation
@@ -126,7 +286,7 @@ apptrace/src/monocle_apptrace/instrumentation/metamodel/<framework>/
 
 ---
 
-## Step 5: Create `_helper.py`
+## Step 7: Create `_helper.py`
 
 Template for helper functions:
 
@@ -602,7 +762,7 @@ def get_team_members(instance) -> Optional[List[str]]:
 
 ---
 
-## Step 6: Create Entity Definitions
+## Step 8: Create Entity Definitions
 
 ### `entities/__init__.py`
 
@@ -888,7 +1048,7 @@ TEAM = {
 
 ---
 
-## Step 7: Create `methods.py`
+## Step 9: Create `methods.py`
 
 ```python
 """
@@ -965,7 +1125,7 @@ from monocle_apptrace.instrumentation.metamodel.<framework>.entities.inference i
 
 ---
 
-## Step 8: Create Custom Handler (Optional)
+## Step 10: Create Custom Handler (Optional)
 
 Only create if you need custom pre/post tracing logic (e.g., session scope management):
 
@@ -1007,7 +1167,7 @@ class <Framework>SpanHandler(SpanHandler):
 
 ---
 
-## Step 9: Register in `wrapper_method.py`
+## Step 11: Register in `wrapper_method.py`
 
 Edit `apptrace/src/monocle_apptrace/instrumentation/common/wrapper_method.py`:
 
@@ -1041,7 +1201,7 @@ MONOCLE_SPAN_HANDLERS: Dict[str, SpanHandler] = {
 
 ---
 
-## Step 10: Test the Instrumentation
+## Step 12: Test the Instrumentation
 
 Create a test script:
 
@@ -1127,3 +1287,5 @@ Check that spans are created with:
 - `/ok:instrument` - Add tracing to your app
 - `/ok:run` - Execute app with tracing enabled
 - `/ok:local-trace` - View traces from `.monocle/` folder
+- `/ok:pause` - Save session before stopping work
+- `/ok:resume` - Resume from saved session

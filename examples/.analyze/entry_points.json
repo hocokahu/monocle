@@ -1,0 +1,59 @@
+{
+  "root": "/Users/quanghoc/Documents/GitHub/monocle/examples",
+  "entry_points": [
+    {
+      "type": "cli",
+      "location": "example4_wrapper_method:main",
+      "file": "example4_wrapper_method.py",
+      "lineno": 197,
+      "detection": "__main__ pattern",
+      "description": "CLI entry point (main function)"
+    },
+    {
+      "type": "cli",
+      "location": "example1_decorator:main",
+      "file": "example1_decorator.py",
+      "lineno": 145,
+      "detection": "__main__ pattern",
+      "description": "CLI entry point (main function)"
+    },
+    {
+      "type": "cli",
+      "location": "run_all_examples:main",
+      "file": "run_all_examples.py",
+      "lineno": 290,
+      "detection": "__main__ pattern",
+      "description": "CLI entry point (main function)"
+    },
+    {
+      "type": "cli",
+      "location": "my_app:main",
+      "file": "my_app.py",
+      "lineno": 15,
+      "detection": "__main__ pattern",
+      "description": "CLI entry point (main function)"
+    },
+    {
+      "type": "cli",
+      "location": "example2_context_manager:main",
+      "file": "example2_context_manager.py",
+      "lineno": 102,
+      "detection": "__main__ pattern",
+      "description": "CLI entry point (main function)"
+    },
+    {
+      "type": "cli",
+      "location": "example3_start_stop:main",
+      "file": "example3_start_stop.py",
+      "lineno": 100,
+      "detection": "__main__ pattern",
+      "description": "CLI entry point (main function)"
+    }
+  ],
+  "summary": {
+    "total": 6,
+    "by_type": {
+      "cli": 6
+    }
+  }
+}

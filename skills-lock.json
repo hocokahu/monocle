@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "skills": {
+    "chat-widget": {
+      "source": "Shpigford/skills",
+      "sourceType": "github",
+      "computedHash": "f53e1e66789349fbf48daace5d5c186e6ff77de38c47753d5ec6d48d4299f2cd"
+    },
+    "conductor-setup": {
+      "source": "Shpigford/skills",
+      "sourceType": "github",
+      "computedHash": "8dbfdf761d8f47967b760199374da21cfea3ee1fc8bad1743c8d27e8c307941a"
+    },
+    "favicon": {
+      "source": "Shpigford/skills",
+      "sourceType": "github",
+      "computedHash": "d393d216ef161dac3387f803c20e6a805a5cc6bce5c1baa7939fe8e134e67b2b"
+    },
+    "feature-image": {
+      "source": "Shpigford/skills",
+      "sourceType": "github",
+      "computedHash": "02ea62c980d027ea0807c84cad5e2f29136cd1ad3112033ef7fa2e2b434b913f"
+    },
+    "issues": {
+      "source": "Shpigford/skills",
+      "sourceType": "github",
+      "computedHash": "7752397f3881183d5541fa914731ccc53e09c1e2a2f157fe25c88745a58503d4"
+    },
+    "new-rails-project": {
+      "source": "Shpigford/skills",
+      "sourceType": "github",
+      "computedHash": "4f81f1179626d135601a07b12d4d6069fd4197445790cb1f643b2abc06ff732c"
+    },
+    "readme": {
+      "source": "Shpigford/skills",
+      "sourceType": "github",
+      "computedHash": "1626ec24fed073dc77c22f97a452b2dc0539e1d0c05023798915687929f3f97a"
+    },
+    "screenshots": {
+      "source": "Shpigford/skills",
+      "sourceType": "github",
+      "computedHash": "3a5604206a41443115763caade5e26fed4c671f771fdf3ba6c5ebeb43c961d1d"
+    }
+  }
+}

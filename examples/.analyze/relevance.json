@@ -1,0 +1,1026 @@
+{
+  "root": "/Users/quanghoc/Documents/GitHub/monocle/examples",
+  "methods": {
+    "run_example1:calculate_sum": {
+      "fqn": "run_example1:calculate_sum",
+      "score": 0.75,
+      "reasons": [
+        "Medium call count: 9 callers",
+        "Leaf method (no calls)",
+        "On path from entry: my_app:main"
+      ],
+      "caller_count": 9,
+      "callee_count": 0
+    },
+    "run_example1:calculate_product": {
+      "fqn": "run_example1:calculate_product",
+      "score": 0.75,
+      "reasons": [
+        "Medium call count: 9 callers",
+        "Leaf method (no calls)",
+        "On path from entry: my_app:main"
+      ],
+      "caller_count": 9,
+      "callee_count": 0
+    },
+    "run_example1:Calculator.add": {
+      "fqn": "run_example1:Calculator.add",
+      "score": 0.35,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    },
+    "run_example1:Calculator.multiply": {
+      "fqn": "run_example1:Calculator.multiply",
+      "score": 0.35,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    },
+    "span_exporter:InMemorySpanExporter.__init__": {
+      "fqn": "span_exporter:InMemorySpanExporter.__init__",
+      "score": 0.05,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)",
+        "Dunder method: __init__"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    },
+    "span_exporter:InMemorySpanExporter.export": {
+      "fqn": "span_exporter:InMemorySpanExporter.export",
+      "score": 0.35,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    },
+    "span_exporter:InMemorySpanExporter.get_captured_spans": {
+      "fqn": "span_exporter:InMemorySpanExporter.get_captured_spans",
+      "score": 0.35,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    },
+    "span_exporter:InMemorySpanExporter.clear": {
+      "fqn": "span_exporter:InMemorySpanExporter.clear",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 1,
+      "callee_count": 0
+    },
+    "span_exporter:InMemorySpanExporter.shutdown": {
+      "fqn": "span_exporter:InMemorySpanExporter.shutdown",
+      "score": 0.4,
+      "reasons": [
+        "No callers (orphan or entry)"
+      ],
+      "caller_count": 0,
+      "callee_count": 1
+    },
+    "span_exporter:InMemorySpanExporter.force_flush": {
+      "fqn": "span_exporter:InMemorySpanExporter.force_flush",
+      "score": 0.35,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    },
+    "example4_wrapper_method:standalone_sum": {
+      "fqn": "example4_wrapper_method:standalone_sum",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 1,
+      "callee_count": 0
+    },
+    "example4_wrapper_method:standalone_product": {
+      "fqn": "example4_wrapper_method:standalone_product",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 1,
+      "callee_count": 0
+    },
+    "example4_wrapper_method:async_standalone_fetch": {
+      "fqn": "example4_wrapper_method:async_standalone_fetch",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 1,
+      "callee_count": 0
+    },
+    "example4_wrapper_method:print_spans": {
+      "fqn": "example4_wrapper_method:print_spans",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 4,
+      "callee_count": 0
+    },
+    "example4_wrapper_method:main": {
+      "fqn": "example4_wrapper_method:main",
+      "score": 0.4,
+      "reasons": [
+        "No callers (orphan or entry)"
+      ],
+      "caller_count": 0,
+      "callee_count": 7
+    },
+    "example4_wrapper_method:MyCalculator.__init__": {
+      "fqn": "example4_wrapper_method:MyCalculator.__init__",
+      "score": 0.05,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)",
+        "Dunder method: __init__"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    },
+    "example4_wrapper_method:MyCalculator.add": {
+      "fqn": "example4_wrapper_method:MyCalculator.add",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 1,
+      "callee_count": 0
+    },
+    "example4_wrapper_method:MyCalculator.multiply": {
+      "fqn": "example4_wrapper_method:MyCalculator.multiply",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 1,
+      "callee_count": 0
+    },
+    "example4_wrapper_method:MyCalculator.chain_operation": {
+      "fqn": "example4_wrapper_method:MyCalculator.chain_operation",
+      "score": 0.4,
+      "reasons": [
+        "No callers (orphan or entry)"
+      ],
+      "caller_count": 0,
+      "callee_count": 2
+    },
+    "example4_wrapper_method:MyAsyncService.fetch_item": {
+      "fqn": "example4_wrapper_method:MyAsyncService.fetch_item",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 1,
+      "callee_count": 0
+    },
+    "example4_wrapper_method:MyAsyncService.fetch_batch": {
+      "fqn": "example4_wrapper_method:MyAsyncService.fetch_batch",
+      "score": 0.4,
+      "reasons": [
+        "No callers (orphan or entry)"
+      ],
+      "caller_count": 0,
+      "callee_count": 1
+    },
+    "example1_decorator:calculate_sum": {
+      "fqn": "example1_decorator:calculate_sum",
+      "score": 0.75,
+      "reasons": [
+        "Medium call count: 9 callers",
+        "Leaf method (no calls)",
+        "On path from entry: my_app:main"
+      ],
+      "caller_count": 9,
+      "callee_count": 0
+    },
+    "example1_decorator:calculate_product": {
+      "fqn": "example1_decorator:calculate_product",
+      "score": 0.75,
+      "reasons": [
+        "Medium call count: 9 callers",
+        "Leaf method (no calls)",
+        "On path from entry: my_app:main"
+      ],
+      "caller_count": 9,
+      "callee_count": 0
+    },
+    "example1_decorator:complex_calculation": {
+      "fqn": "example1_decorator:complex_calculation",
+      "score": 0.8,
+      "reasons": [
+        "High fan-out: 14 calls",
+        "On path from entry: my_app:main"
+      ],
+      "caller_count": 2,
+      "callee_count": 14
+    },
+    "example1_decorator:async_fetch_data": {
+      "fqn": "example1_decorator:async_fetch_data",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 5,
+      "callee_count": 0
+    },
+    "example1_decorator:async_process_items": {
+      "fqn": "example1_decorator:async_process_items",
+      "score": 0.5,
+      "reasons": [],
+      "caller_count": 1,
+      "callee_count": 4
+    },
+    "example1_decorator:print_spans": {
+      "fqn": "example1_decorator:print_spans",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 4,
+      "callee_count": 0
+    },
+    "example1_decorator:main": {
+      "fqn": "example1_decorator:main",
+      "score": 0.5,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "High fan-out: 26 calls"
+      ],
+      "caller_count": 0,
+      "callee_count": 26
+    },
+    "example1_decorator:Calculator.__init__": {
+      "fqn": "example1_decorator:Calculator.__init__",
+      "score": 0.05,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)",
+        "Dunder method: __init__"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    },
+    "example1_decorator:Calculator.add": {
+      "fqn": "example1_decorator:Calculator.add",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 1,
+      "callee_count": 0
+    },
+    "example1_decorator:Calculator.multiply": {
+      "fqn": "example1_decorator:Calculator.multiply",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 1,
+      "callee_count": 0
+    },
+    "example1_decorator:Calculator.complex_operation": {
+      "fqn": "example1_decorator:Calculator.complex_operation",
+      "score": 0.4,
+      "reasons": [
+        "No callers (orphan or entry)"
+      ],
+      "caller_count": 0,
+      "callee_count": 2
+    },
+    "example1_decorator:AsyncService.fetch_item": {
+      "fqn": "example1_decorator:AsyncService.fetch_item",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 1,
+      "callee_count": 0
+    },
+    "example1_decorator:AsyncService.fetch_all": {
+      "fqn": "example1_decorator:AsyncService.fetch_all",
+      "score": 0.4,
+      "reasons": [
+        "No callers (orphan or entry)"
+      ],
+      "caller_count": 0,
+      "callee_count": 1
+    },
+    "my_functions:calculate_sum": {
+      "fqn": "my_functions:calculate_sum",
+      "score": 0.75,
+      "reasons": [
+        "Medium call count: 10 callers",
+        "Leaf method (no calls)",
+        "On path from entry: my_app:main"
+      ],
+      "caller_count": 10,
+      "callee_count": 0
+    },
+    "my_functions:calculate_product": {
+      "fqn": "my_functions:calculate_product",
+      "score": 0.75,
+      "reasons": [
+        "Medium call count: 10 callers",
+        "Leaf method (no calls)",
+        "On path from entry: my_app:main"
+      ],
+      "caller_count": 10,
+      "callee_count": 0
+    },
+    "my_functions:complex_calculation": {
+      "fqn": "my_functions:complex_calculation",
+      "score": 0.8,
+      "reasons": [
+        "High fan-out: 14 calls",
+        "On path from entry: my_app:main"
+      ],
+      "caller_count": 2,
+      "callee_count": 14
+    },
+    "my_functions:async_fetch_data": {
+      "fqn": "my_functions:async_fetch_data",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 5,
+      "callee_count": 0
+    },
+    "my_functions:async_process_items": {
+      "fqn": "my_functions:async_process_items",
+      "score": 0.5,
+      "reasons": [],
+      "caller_count": 1,
+      "callee_count": 4
+    },
+    "run_all_examples:save_spans": {
+      "fqn": "run_all_examples:save_spans",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 4,
+      "callee_count": 0
+    },
+    "run_all_examples:run_example1": {
+      "fqn": "run_all_examples:run_example1",
+      "score": 0.6,
+      "reasons": [
+        "High fan-out: 15 calls"
+      ],
+      "caller_count": 1,
+      "callee_count": 15
+    },
+    "run_all_examples:run_example2": {
+      "fqn": "run_all_examples:run_example2",
+      "score": 0.6,
+      "reasons": [
+        "High fan-out: 15 calls"
+      ],
+      "caller_count": 1,
+      "callee_count": 15
+    },
+    "run_all_examples:run_example3": {
+      "fqn": "run_all_examples:run_example3",
+      "score": 0.6,
+      "reasons": [
+        "High fan-out: 15 calls"
+      ],
+      "caller_count": 1,
+      "callee_count": 15
+    },
+    "run_all_examples:run_example4": {
+      "fqn": "run_all_examples:run_example4",
+      "score": 0.5,
+      "reasons": [],
+      "caller_count": 1,
+      "callee_count": 3
+    },
+    "run_all_examples:main": {
+      "fqn": "run_all_examples:main",
+      "score": 0.4,
+      "reasons": [
+        "No callers (orphan or entry)"
+      ],
+      "caller_count": 0,
+      "callee_count": 4
+    },
+    "my_app:main": {
+      "fqn": "my_app:main",
+      "score": 1.0,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "High fan-out: 16 calls",
+        "On path from entry: my_app:main",
+        "Entry point"
+      ],
+      "caller_count": 0,
+      "callee_count": 16
+    },
+    "my_class:Calculator.__init__": {
+      "fqn": "my_class:Calculator.__init__",
+      "score": 0.05,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)",
+        "Dunder method: __init__"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    },
+    "my_class:Calculator.add": {
+      "fqn": "my_class:Calculator.add",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 1,
+      "callee_count": 0
+    },
+    "my_class:Calculator.multiply": {
+      "fqn": "my_class:Calculator.multiply",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 1,
+      "callee_count": 0
+    },
+    "my_class:Calculator.complex_operation": {
+      "fqn": "my_class:Calculator.complex_operation",
+      "score": 0.4,
+      "reasons": [
+        "No callers (orphan or entry)"
+      ],
+      "caller_count": 0,
+      "callee_count": 2
+    },
+    "my_class:AsyncDataService.__init__": {
+      "fqn": "my_class:AsyncDataService.__init__",
+      "score": 0.05,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)",
+        "Dunder method: __init__"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    },
+    "my_class:AsyncDataService.fetch_item": {
+      "fqn": "my_class:AsyncDataService.fetch_item",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 1,
+      "callee_count": 0
+    },
+    "my_class:AsyncDataService.fetch_multiple": {
+      "fqn": "my_class:AsyncDataService.fetch_multiple",
+      "score": 0.4,
+      "reasons": [
+        "No callers (orphan or entry)"
+      ],
+      "caller_count": 0,
+      "callee_count": 1
+    },
+    "run_example2:calculate_sum": {
+      "fqn": "run_example2:calculate_sum",
+      "score": 0.75,
+      "reasons": [
+        "Medium call count: 9 callers",
+        "Leaf method (no calls)",
+        "On path from entry: my_app:main"
+      ],
+      "caller_count": 9,
+      "callee_count": 0
+    },
+    "run_example2:calculate_product": {
+      "fqn": "run_example2:calculate_product",
+      "score": 0.75,
+      "reasons": [
+        "Medium call count: 9 callers",
+        "Leaf method (no calls)",
+        "On path from entry: my_app:main"
+      ],
+      "caller_count": 9,
+      "callee_count": 0
+    },
+    "run_example2:Calculator.add": {
+      "fqn": "run_example2:Calculator.add",
+      "score": 0.35,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    },
+    "example2_context_manager:calculate_sum": {
+      "fqn": "example2_context_manager:calculate_sum",
+      "score": 0.9,
+      "reasons": [
+        "Medium call count: 9 callers",
+        "Leaf method (no calls)",
+        "On path from entry: my_app:main",
+        "High-value module pattern: manager"
+      ],
+      "caller_count": 9,
+      "callee_count": 0
+    },
+    "example2_context_manager:calculate_product": {
+      "fqn": "example2_context_manager:calculate_product",
+      "score": 0.9,
+      "reasons": [
+        "Medium call count: 9 callers",
+        "Leaf method (no calls)",
+        "On path from entry: my_app:main",
+        "High-value module pattern: manager"
+      ],
+      "caller_count": 9,
+      "callee_count": 0
+    },
+    "example2_context_manager:async_fetch_data": {
+      "fqn": "example2_context_manager:async_fetch_data",
+      "score": 0.6,
+      "reasons": [
+        "Leaf method (no calls)",
+        "High-value module pattern: manager"
+      ],
+      "caller_count": 5,
+      "callee_count": 0
+    },
+    "example2_context_manager:print_spans": {
+      "fqn": "example2_context_manager:print_spans",
+      "score": 0.6,
+      "reasons": [
+        "Leaf method (no calls)",
+        "High-value module pattern: manager"
+      ],
+      "caller_count": 4,
+      "callee_count": 0
+    },
+    "example2_context_manager:main": {
+      "fqn": "example2_context_manager:main",
+      "score": 0.65,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "High fan-out: 22 calls",
+        "High-value module pattern: manager"
+      ],
+      "caller_count": 0,
+      "callee_count": 22
+    },
+    "example2_context_manager:Calculator.add": {
+      "fqn": "example2_context_manager:Calculator.add",
+      "score": 0.5,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)",
+        "High-value module pattern: manager"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    },
+    "example2_context_manager:Calculator.multiply": {
+      "fqn": "example2_context_manager:Calculator.multiply",
+      "score": 0.5,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)",
+        "High-value module pattern: manager"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    },
+    "example2_context_manager:AsyncService.fetch_item": {
+      "fqn": "example2_context_manager:AsyncService.fetch_item",
+      "score": 0.5,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)",
+        "High-value module pattern: manager"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    },
+    "example3_start_stop:calculate_sum": {
+      "fqn": "example3_start_stop:calculate_sum",
+      "score": 0.75,
+      "reasons": [
+        "Medium call count: 9 callers",
+        "Leaf method (no calls)",
+        "On path from entry: my_app:main"
+      ],
+      "caller_count": 9,
+      "callee_count": 0
+    },
+    "example3_start_stop:calculate_product": {
+      "fqn": "example3_start_stop:calculate_product",
+      "score": 0.75,
+      "reasons": [
+        "Medium call count: 9 callers",
+        "Leaf method (no calls)",
+        "On path from entry: my_app:main"
+      ],
+      "caller_count": 9,
+      "callee_count": 0
+    },
+    "example3_start_stop:process_data": {
+      "fqn": "example3_start_stop:process_data",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 1,
+      "callee_count": 0
+    },
+    "example3_start_stop:async_fetch_data": {
+      "fqn": "example3_start_stop:async_fetch_data",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 5,
+      "callee_count": 0
+    },
+    "example3_start_stop:print_spans": {
+      "fqn": "example3_start_stop:print_spans",
+      "score": 0.45,
+      "reasons": [
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 4,
+      "callee_count": 0
+    },
+    "example3_start_stop:main": {
+      "fqn": "example3_start_stop:main",
+      "score": 0.5,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "High fan-out: 23 calls"
+      ],
+      "caller_count": 0,
+      "callee_count": 23
+    },
+    "example3_start_stop:Calculator.add": {
+      "fqn": "example3_start_stop:Calculator.add",
+      "score": 0.35,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    },
+    "example3_start_stop:Calculator.multiply": {
+      "fqn": "example3_start_stop:Calculator.multiply",
+      "score": 0.35,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    },
+    "run_example3:calculate_sum": {
+      "fqn": "run_example3:calculate_sum",
+      "score": 0.75,
+      "reasons": [
+        "Medium call count: 9 callers",
+        "Leaf method (no calls)",
+        "On path from entry: my_app:main"
+      ],
+      "caller_count": 9,
+      "callee_count": 0
+    },
+    "run_example3:calculate_product": {
+      "fqn": "run_example3:calculate_product",
+      "score": 0.75,
+      "reasons": [
+        "Medium call count: 9 callers",
+        "Leaf method (no calls)",
+        "On path from entry: my_app:main"
+      ],
+      "caller_count": 9,
+      "callee_count": 0
+    },
+    "run_example3:Calculator.add": {
+      "fqn": "run_example3:Calculator.add",
+      "score": 0.35,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "Leaf method (no calls)"
+      ],
+      "caller_count": 0,
+      "callee_count": 0
+    }
+  },
+  "modules": {
+    "run_example1": {
+      "module": "run_example1",
+      "score": 0.69,
+      "method_count": 4,
+      "max_score": 0.75,
+      "avg_score": 0.55,
+      "methods": [
+        "run_example1:calculate_sum",
+        "run_example1:calculate_product",
+        "run_example1:Calculator.add",
+        "run_example1:Calculator.multiply"
+      ]
+    },
+    "span_exporter": {
+      "module": "span_exporter",
+      "score": 0.41,
+      "method_count": 6,
+      "max_score": 0.45,
+      "avg_score": 0.33,
+      "methods": [
+        "span_exporter:InMemorySpanExporter.__init__",
+        "span_exporter:InMemorySpanExporter.export",
+        "span_exporter:InMemorySpanExporter.get_captured_spans",
+        "span_exporter:InMemorySpanExporter.clear",
+        "span_exporter:InMemorySpanExporter.shutdown",
+        "span_exporter:InMemorySpanExporter.force_flush"
+      ]
+    },
+    "example4_wrapper_method": {
+      "module": "example4_wrapper_method",
+      "score": 0.43,
+      "method_count": 11,
+      "max_score": 0.45,
+      "avg_score": 0.4,
+      "methods": [
+        "example4_wrapper_method:standalone_sum",
+        "example4_wrapper_method:standalone_product",
+        "example4_wrapper_method:async_standalone_fetch",
+        "example4_wrapper_method:print_spans",
+        "example4_wrapper_method:main",
+        "example4_wrapper_method:MyCalculator.__init__",
+        "example4_wrapper_method:MyCalculator.add",
+        "example4_wrapper_method:MyCalculator.multiply",
+        "example4_wrapper_method:MyCalculator.chain_operation",
+        "example4_wrapper_method:MyAsyncService.fetch_item",
+        "example4_wrapper_method:MyAsyncService.fetch_batch"
+      ]
+    },
+    "example1_decorator": {
+      "module": "example1_decorator",
+      "score": 0.71,
+      "method_count": 13,
+      "max_score": 0.8,
+      "avg_score": 0.49,
+      "methods": [
+        "example1_decorator:calculate_sum",
+        "example1_decorator:calculate_product",
+        "example1_decorator:complex_calculation",
+        "example1_decorator:async_fetch_data",
+        "example1_decorator:async_process_items",
+        "example1_decorator:print_spans",
+        "example1_decorator:main",
+        "example1_decorator:Calculator.__init__",
+        "example1_decorator:Calculator.add",
+        "example1_decorator:Calculator.multiply",
+        "example1_decorator:Calculator.complex_operation",
+        "example1_decorator:AsyncService.fetch_item",
+        "example1_decorator:AsyncService.fetch_all"
+      ]
+    },
+    "my_functions": {
+      "module": "my_functions",
+      "score": 0.75,
+      "method_count": 5,
+      "max_score": 0.8,
+      "avg_score": 0.65,
+      "methods": [
+        "my_functions:calculate_sum",
+        "my_functions:calculate_product",
+        "my_functions:complex_calculation",
+        "my_functions:async_fetch_data",
+        "my_functions:async_process_items"
+      ]
+    },
+    "run_all_examples": {
+      "module": "run_all_examples",
+      "score": 0.58,
+      "method_count": 6,
+      "max_score": 0.6,
+      "avg_score": 0.53,
+      "methods": [
+        "run_all_examples:save_spans",
+        "run_all_examples:run_example1",
+        "run_all_examples:run_example2",
+        "run_all_examples:run_example3",
+        "run_all_examples:run_example4",
+        "run_all_examples:main"
+      ]
+    },
+    "my_app": {
+      "module": "my_app",
+      "score": 1.0,
+      "method_count": 1,
+      "max_score": 1.0,
+      "avg_score": 1.0,
+      "methods": [
+        "my_app:main"
+      ]
+    },
+    "my_class": {
+      "module": "my_class",
+      "score": 0.41,
+      "method_count": 7,
+      "max_score": 0.45,
+      "avg_score": 0.32,
+      "methods": [
+        "my_class:Calculator.__init__",
+        "my_class:Calculator.add",
+        "my_class:Calculator.multiply",
+        "my_class:Calculator.complex_operation",
+        "my_class:AsyncDataService.__init__",
+        "my_class:AsyncDataService.fetch_item",
+        "my_class:AsyncDataService.fetch_multiple"
+      ]
+    },
+    "run_example2": {
+      "module": "run_example2",
+      "score": 0.71,
+      "method_count": 3,
+      "max_score": 0.75,
+      "avg_score": 0.62,
+      "methods": [
+        "run_example2:calculate_sum",
+        "run_example2:calculate_product",
+        "run_example2:Calculator.add"
+      ]
+    },
+    "example2_context_manager": {
+      "module": "example2_context_manager",
+      "score": 0.82,
+      "method_count": 8,
+      "max_score": 0.9,
+      "avg_score": 0.64,
+      "methods": [
+        "example2_context_manager:calculate_sum",
+        "example2_context_manager:calculate_product",
+        "example2_context_manager:async_fetch_data",
+        "example2_context_manager:print_spans",
+        "example2_context_manager:main",
+        "example2_context_manager:Calculator.add",
+        "example2_context_manager:Calculator.multiply",
+        "example2_context_manager:AsyncService.fetch_item"
+      ]
+    },
+    "example3_start_stop": {
+      "module": "example3_start_stop",
+      "score": 0.68,
+      "method_count": 8,
+      "max_score": 0.75,
+      "avg_score": 0.51,
+      "methods": [
+        "example3_start_stop:calculate_sum",
+        "example3_start_stop:calculate_product",
+        "example3_start_stop:process_data",
+        "example3_start_stop:async_fetch_data",
+        "example3_start_stop:print_spans",
+        "example3_start_stop:main",
+        "example3_start_stop:Calculator.add",
+        "example3_start_stop:Calculator.multiply"
+      ]
+    },
+    "run_example3": {
+      "module": "run_example3",
+      "score": 0.71,
+      "method_count": 3,
+      "max_score": 0.75,
+      "avg_score": 0.62,
+      "methods": [
+        "run_example3:calculate_sum",
+        "run_example3:calculate_product",
+        "run_example3:Calculator.add"
+      ]
+    }
+  },
+  "high": [
+    {
+      "module": "my_app",
+      "score": 1.0,
+      "method_count": 1,
+      "reasons": [
+        "High method scores"
+      ]
+    },
+    {
+      "module": "example2_context_manager",
+      "score": 0.82,
+      "method_count": 8,
+      "reasons": [
+        "High method scores",
+        "Important module type: manager"
+      ]
+    },
+    {
+      "module": "my_functions",
+      "score": 0.75,
+      "method_count": 5,
+      "reasons": [
+        "High method scores"
+      ]
+    },
+    {
+      "module": "example1_decorator",
+      "score": 0.71,
+      "method_count": 13,
+      "reasons": [
+        "High method scores",
+        "Large module (13 methods)"
+      ]
+    },
+    {
+      "module": "run_example2",
+      "score": 0.71,
+      "method_count": 3,
+      "reasons": [
+        "High method scores"
+      ]
+    },
+    {
+      "module": "run_example3",
+      "score": 0.71,
+      "method_count": 3,
+      "reasons": [
+        "High method scores"
+      ]
+    }
+  ],
+  "medium": [
+    {
+      "module": "run_example1",
+      "score": 0.69,
+      "method_count": 4,
+      "reasons": []
+    },
+    {
+      "module": "example3_start_stop",
+      "score": 0.68,
+      "method_count": 8,
+      "reasons": []
+    },
+    {
+      "module": "run_all_examples",
+      "score": 0.58,
+      "method_count": 6,
+      "reasons": []
+    },
+    {
+      "module": "example4_wrapper_method",
+      "score": 0.43,
+      "method_count": 11,
+      "reasons": [
+        "Large module (11 methods)"
+      ]
+    },
+    {
+      "module": "span_exporter",
+      "score": 0.41,
+      "method_count": 6,
+      "reasons": []
+    },
+    {
+      "module": "my_class",
+      "score": 0.41,
+      "method_count": 7,
+      "reasons": []
+    }
+  ],
+  "low": [],
+  "summary": {
+    "total_modules": 12,
+    "total_methods": 75,
+    "high_count": 6,
+    "medium_count": 6,
+    "low_count": 0,
+    "recommended_trace": 12
+  }
+}

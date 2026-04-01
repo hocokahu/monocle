@@ -1,0 +1,2044 @@
+{
+  "root": "/Users/quanghoc/Documents/GitHub/monocle/examples",
+  "methods": {
+    "run_example1:calculate_sum": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_example1:calculate_product": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_example1:Calculator.add": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_example1:Calculator.multiply": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "span_exporter:InMemorySpanExporter.__init__": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "span_exporter:InMemorySpanExporter.export": {
+      "args": {
+        "spans": {
+          "name": "spans",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "spans"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "span_exporter:InMemorySpanExporter.get_captured_spans": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "span_exporter:InMemorySpanExporter.clear": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "span_exporter:InMemorySpanExporter.shutdown": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "span_exporter:InMemorySpanExporter.force_flush": {
+      "args": {
+        "timeout_millis": {
+          "name": "timeout_millis",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "timeout_millis"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:standalone_sum": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:standalone_product": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:async_standalone_fetch": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:print_spans": {
+      "args": {
+        "title": {
+          "name": "title",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "title"
+        ],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:main": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:MyCalculator.__init__": {
+      "args": {
+        "name": {
+          "name": "name",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "name"
+        ],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:MyCalculator.add": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:MyCalculator.multiply": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:MyCalculator.chain_operation": {
+      "args": {
+        "x": {
+          "name": "x",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "x"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:MyAsyncService.fetch_item": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example4_wrapper_method:MyAsyncService.fetch_batch": {
+      "args": {
+        "ids": {
+          "name": "ids",
+          "type": "list",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: list"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "list",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "ids"
+        ],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:calculate_sum": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:calculate_product": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:complex_calculation": {
+      "args": {
+        "x": {
+          "name": "x",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "x"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:async_fetch_data": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:async_process_items": {
+      "args": {
+        "item_ids": {
+          "name": "item_ids",
+          "type": "list",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: list"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "list",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "item_ids"
+        ],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:print_spans": {
+      "args": {
+        "title": {
+          "name": "title",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "title"
+        ],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:main": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:Calculator.__init__": {
+      "args": {
+        "name": {
+          "name": "name",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "name"
+        ],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:Calculator.add": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:Calculator.multiply": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:Calculator.complex_operation": {
+      "args": {
+        "x": {
+          "name": "x",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "x"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:AsyncService.fetch_item": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example1_decorator:AsyncService.fetch_all": {
+      "args": {
+        "ids": {
+          "name": "ids",
+          "type": "list",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: list"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "list",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "ids"
+        ],
+        "sensitive": []
+      }
+    },
+    "my_functions:calculate_sum": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_functions:calculate_product": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_functions:complex_calculation": {
+      "args": {
+        "x": {
+          "name": "x",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "x"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_functions:async_fetch_data": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_functions:async_process_items": {
+      "args": {
+        "item_ids": {
+          "name": "item_ids",
+          "type": "list",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: list"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "list",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "item_ids"
+        ],
+        "sensitive": []
+      }
+    },
+    "run_all_examples:save_spans": {
+      "args": {
+        "exporter": {
+          "name": "exporter",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "filename": {
+          "name": "filename",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "exporter",
+          "filename"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_all_examples:run_example1": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_all_examples:run_example2": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_all_examples:run_example3": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_all_examples:run_example4": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_all_examples:main": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_app:main": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_class:Calculator.__init__": {
+      "args": {
+        "name": {
+          "name": "name",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "name"
+        ],
+        "sensitive": []
+      }
+    },
+    "my_class:Calculator.add": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_class:Calculator.multiply": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_class:Calculator.complex_operation": {
+      "args": {
+        "x": {
+          "name": "x",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "x"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_class:AsyncDataService.__init__": {
+      "args": {
+        "service_name": {
+          "name": "service_name",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "service_name"
+        ],
+        "sensitive": []
+      }
+    },
+    "my_class:AsyncDataService.fetch_item": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "my_class:AsyncDataService.fetch_multiple": {
+      "args": {
+        "item_ids": {
+          "name": "item_ids",
+          "type": "list",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: list"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "list",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "item_ids"
+        ],
+        "sensitive": []
+      }
+    },
+    "run_example2:calculate_sum": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_example2:calculate_product": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_example2:Calculator.add": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example2_context_manager:calculate_sum": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example2_context_manager:calculate_product": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example2_context_manager:async_fetch_data": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example2_context_manager:print_spans": {
+      "args": {
+        "title": {
+          "name": "title",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "title"
+        ],
+        "sensitive": []
+      }
+    },
+    "example2_context_manager:main": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example2_context_manager:Calculator.add": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example2_context_manager:Calculator.multiply": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example2_context_manager:AsyncService.fetch_item": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example3_start_stop:calculate_sum": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example3_start_stop:calculate_product": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example3_start_stop:process_data": {
+      "args": {
+        "data": {
+          "name": "data",
+          "type": "list",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: list"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": "list",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: list"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "data"
+        ],
+        "sensitive": []
+      }
+    },
+    "example3_start_stop:async_fetch_data": {
+      "args": {
+        "item_id": {
+          "name": "item_id",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "dict",
+        "risk": "high",
+        "reasons": [
+          "Potentially large return type: dict"
+        ],
+        "recommendation": "extract_or_truncate"
+      },
+      "recommendations": {
+        "include": [
+          "item_id"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example3_start_stop:print_spans": {
+      "args": {
+        "title": {
+          "name": "title",
+          "type": "str",
+          "risk": "high",
+          "reasons": [
+            "Potentially large type: str"
+          ],
+          "recommendation": "truncate"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [
+          "title"
+        ],
+        "sensitive": []
+      }
+    },
+    "example3_start_stop:main": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example3_start_stop:Calculator.add": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "example3_start_stop:Calculator.multiply": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_example3:calculate_sum": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_example3:calculate_product": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "run_example3:Calculator.add": {
+      "args": {
+        "a": {
+          "name": "a",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "b": {
+          "name": "b",
+          "type": "int",
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": "int",
+        "risk": "low",
+        "reasons": [],
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "a",
+          "b"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    }
+  },
+  "summary": {
+    "total_methods": 75,
+    "total_args": 92,
+    "high_risk_args": 14,
+    "sensitive_args": 0,
+    "high_risk_methods": [
+      "example4_wrapper_method:print_spans",
+      "example4_wrapper_method:MyCalculator.__init__",
+      "example4_wrapper_method:MyAsyncService.fetch_batch",
+      "example1_decorator:async_process_items",
+      "example1_decorator:print_spans",
+      "example1_decorator:Calculator.__init__",
+      "example1_decorator:AsyncService.fetch_all",
+      "my_functions:async_process_items",
+      "my_class:Calculator.__init__",
+      "my_class:AsyncDataService.__init__",
+      "my_class:AsyncDataService.fetch_multiple",
+      "example2_context_manager:print_spans",
+      "example3_start_stop:process_data",
+      "example3_start_stop:print_spans"
+    ],
+    "sensitive_methods": []
+  }
+}
