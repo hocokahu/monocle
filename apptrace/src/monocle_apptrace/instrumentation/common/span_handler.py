@@ -35,7 +35,8 @@ WORKFLOW_TYPE_MAP = {
     "gemini": "workflow.gemini",
     "litellm": "workflow.litellm",
     "mistralai": "workflow.mistral",
-    "huggingface_hub": "workflow.huggingface"
+    "huggingface_hub": "workflow.huggingface",
+    "claude_code": "workflow.claude_code"
 }
 
 FRAMEWORK_WORKFLOW_LIST = [

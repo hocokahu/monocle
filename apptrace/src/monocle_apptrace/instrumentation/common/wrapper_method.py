@@ -50,6 +50,7 @@ from monocle_apptrace.instrumentation.metamodel.strands.strands_processor import
 from monocle_apptrace.instrumentation.metamodel.agentcore.methods import AGENTCORE_METHODS
 from monocle_apptrace.instrumentation.metamodel.agno.methods import AGNO_METHODS
 from monocle_apptrace.instrumentation.metamodel.agno.agno_handler import AgnoSpanHandler
+from monocle_apptrace.instrumentation.metamodel.claude_code.methods import CLAUDE_CODE_METHODS
 
 class WrapperMethod:
     def __init__(
@@ -128,7 +129,8 @@ DEFAULT_METHODS_LIST = (
     HUGGING_FACE_METHODS +
     STRAND_METHODS +
     AGENTCORE_METHODS +
-    AGNO_METHODS
+    AGNO_METHODS +
+    CLAUDE_CODE_METHODS
 )
 
 MONOCLE_SPAN_HANDLERS: Dict[str, SpanHandler] = {
