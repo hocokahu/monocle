@@ -65,7 +65,7 @@ settings.setdefault("hooks", {})
 settings["hooks"].setdefault("Stop", [])
 
 # Check if already added
-hook_cmd = "python3 ~/.claude/hooks/monocle_hook.py"
+hook_cmd = "bash -c 'set -a && source .env 2>/dev/null && set +a && python3 ~/.claude/hooks/monocle_hook.py'"
 already_added = any(
     isinstance(h, dict) and h.get("command") == hook_cmd
     for h in settings["hooks"]["Stop"]
@@ -91,7 +91,7 @@ PYTHON
     "Stop": [
       {
         "type": "command",
-        "command": "python3 ~/.claude/hooks/monocle_hook.py"
+        "command": "bash -c 'set -a && source .env 2>/dev/null && set +a && python3 ~/.claude/hooks/monocle_hook.py'"
       }
     ]
   }
@@ -116,7 +116,7 @@ JSON
     info "Installation complete!"
     echo ""
     echo "Next steps:"
-    echo "  1. Set environment variables in your shell profile:"
+    echo "  1. Create .env file in your project root:"
     echo "     export OKAHU_API_KEY=\"your-key\""
     echo "     export OKAHU_INGESTION_ENDPOINT=\"https://ingest.okahu.co/api/v1/trace/ingest\""
     echo "     export MONOCLE_EXPORTER=\"okahu\""
