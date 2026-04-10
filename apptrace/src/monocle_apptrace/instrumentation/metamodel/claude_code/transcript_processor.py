@@ -141,6 +141,13 @@ def _emit_turn(tracer, turn, turn_num, session_id, sdk_version, service_name):
                     span_attrs["entity.1.name"] = subagent_type
                     span_attrs["entity.1.description"] = tool_input.get("description", "")
 
+                if tool_name == "Skill" and isinstance(tool_input, dict):
+                    skill_name = tool_input.get("skill", "unknown")
+                    span_attrs["entity.1.name"] = skill_name
+                    span_attrs["entity.1.skill_name"] = skill_name
+                    if tool_input.get("args"):
+                        span_attrs["entity.1.skill_args"] = tool_input.get("args")
+
                 with tracer.start_as_current_span(
                     name=f"Tool: {tool_name}",
                     attributes=span_attrs,

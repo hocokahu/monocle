@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 CLAUDE_CODE_AGENT_TYPE_KEY = "agent.claude_code"
 CLAUDE_CODE_TOOL_TYPE_KEY = "tool.claude_code"
 CLAUDE_CODE_MCP_TOOL_TYPE_KEY = "tool.mcp"
+CLAUDE_CODE_SKILL_TYPE_KEY = "skill.claude_code"
 
 MAX_CHARS = 20000
 
@@ -226,6 +227,8 @@ def classify_tool(tool_name: str) -> str:
     """Return span type based on tool name."""
     if tool_name == "Agent":
         return "agentic.invocation"
+    elif tool_name == "Skill":
+        return "agentic.skill.invocation"
     elif tool_name.startswith("mcp__"):
         return "agentic.mcp.invocation"
     else:
@@ -236,6 +239,8 @@ def classify_tool_entity_type(tool_name: str) -> str:
     """Return entity type key based on tool name."""
     if tool_name == "Agent":
         return CLAUDE_CODE_AGENT_TYPE_KEY
+    elif tool_name == "Skill":
+        return CLAUDE_CODE_SKILL_TYPE_KEY
     elif tool_name.startswith("mcp__"):
         return CLAUDE_CODE_MCP_TOOL_TYPE_KEY
     else:
