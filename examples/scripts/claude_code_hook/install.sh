@@ -3,8 +3,10 @@
 # Install Monocle hook for Claude Code
 #
 # Usage:
-#   ./install.sh              # Install hook
-#   ./install.sh --uninstall  # Remove hook
+#   ./install.sh              # Interactive install (prompts for location)
+#   ./install.sh --global     # Install to ~/.claude/settings.json
+#   ./install.sh --project    # Install to .claude/settings.local.json
+#   ./install.sh --uninstall  # Remove hook from all locations
 #
 
 set -e
@@ -12,20 +14,151 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HOOK_DIR="$HOME/.claude/hooks"
 STATE_DIR="$HOME/.claude/state"
-SETTINGS="$HOME/.claude/settings.json"
+GLOBAL_SETTINGS="$HOME/.claude/settings.json"
+PROJECT_SETTINGS=".claude/settings.local.json"
 
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+DIM='\033[2m'
 NC='\033[0m'
 
-info() { echo -e "${GREEN}[INFO]${NC} $1"; }
-warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
+info()  { echo -e "${GREEN}[INFO]${NC} $1"; }
+warn()  { echo -e "${YELLOW}[WARN]${NC} $1"; }
 error() { echo -e "${RED}[ERROR]${NC} $1"; exit 1; }
 
+# --- Interactive location picker ---
+prompt_install_location() {
+    echo ""
+    echo -e "${BOLD}${CYAN}Monocle Claude Code Hook Installer${NC}"
+    echo ""
+    echo -e "  Where would you like to install the Stop hook?"
+    echo ""
+    echo -e "  ${BOLD}1)${NC} ${GREEN}Global${NC}  ~/.claude/settings.json"
+    echo -e "     ${DIM}Traces all Claude Code sessions across every project${NC}"
+    echo ""
+    echo -e "  ${BOLD}2)${NC} ${GREEN}Project${NC} .claude/settings.local.json"
+    echo -e "     ${DIM}Traces only sessions in the current project directory${NC}"
+    echo ""
+    echo -e "  ${BOLD}3)${NC} ${GREEN}Both${NC}    Global + Project"
+    echo -e "     ${DIM}Hook is registered in both locations${NC}"
+    echo ""
+
+    while true; do
+        echo -ne "  ${BOLD}Choose [1/2/3]:${NC} "
+        read -r choice
+        case "$choice" in
+            1) INSTALL_TARGET="global"; break ;;
+            2) INSTALL_TARGET="project"; break ;;
+            3) INSTALL_TARGET="both"; break ;;
+            *) echo -e "  ${RED}Invalid choice. Enter 1, 2, or 3.${NC}" ;;
+        esac
+    done
+    echo ""
+}
+
+# --- Add hook to a settings file using Python ---
+add_hook_to_settings() {
+    local settings_path="$1"
+    local hook_cmd="$2"
+    local label="$3"
+
+    python3 << PYTHON
+import json, sys
+from pathlib import Path
+
+settings_path = Path("$settings_path")
+
+try:
+    with open(settings_path, "r") as f:
+        settings = json.load(f)
+except Exception:
+    settings = {}
+
+settings.setdefault("hooks", {})
+settings["hooks"].setdefault("Stop", [])
+
+hook_cmd = """$hook_cmd"""
+
+# Claude Code expects hooks wrapped in a "hooks" array
+already_added = False
+for entry in settings["hooks"]["Stop"]:
+    hooks_list = entry.get("hooks", []) if isinstance(entry, dict) else []
+    for h in hooks_list:
+        if isinstance(h, dict) and "monocle_hook" in h.get("command", ""):
+            already_added = True
+            break
+    # Also check flat format
+    if isinstance(entry, dict) and "monocle_hook" in entry.get("command", ""):
+        already_added = True
+    if already_added:
+        break
+
+if not already_added:
+    settings["hooks"]["Stop"].append({
+        "hooks": [{"type": "command", "command": hook_cmd}]
+    })
+    settings_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(settings_path, "w") as f:
+        json.dump(settings, f, indent=2)
+    print(f"Hook added to {settings_path}")
+else:
+    print(f"Hook already configured in {settings_path}")
+PYTHON
+}
+
+# --- Remove hook from a settings file ---
+remove_hook_from_settings() {
+    local settings_path="$1"
+
+    [ -f "$settings_path" ] || return 0
+
+    python3 << PYTHON
+import json
+from pathlib import Path
+
+settings_path = Path("$settings_path")
+try:
+    with open(settings_path, "r") as f:
+        settings = json.load(f)
+except Exception:
+    exit(0)
+
+if "hooks" not in settings or "Stop" not in settings["hooks"]:
+    exit(0)
+
+filtered = []
+for entry in settings["hooks"]["Stop"]:
+    if isinstance(entry, dict):
+        # Handle wrapped format {"hooks": [{"command": "..."}]}
+        hooks_list = entry.get("hooks", [])
+        clean_hooks = [h for h in hooks_list if not (isinstance(h, dict) and "monocle_hook" in h.get("command", ""))]
+        if clean_hooks:
+            entry["hooks"] = clean_hooks
+            filtered.append(entry)
+        elif not hooks_list:
+            # Flat format {"command": "..."}
+            if "monocle_hook" not in entry.get("command", ""):
+                filtered.append(entry)
+    else:
+        filtered.append(entry)
+
+settings["hooks"]["Stop"] = filtered
+with open(settings_path, "w") as f:
+    json.dump(settings, f, indent=2)
+print(f"Hook removed from {settings_path}")
+PYTHON
+}
+
+# --- Core install logic ---
 install_hook() {
+    local target="$1"
+
     info "Installing Monocle Claude Code hook..."
+    echo ""
 
     # Create directories
     mkdir -p "$HOOK_DIR"
@@ -36,69 +169,28 @@ install_hook() {
     chmod +x "$HOOK_DIR/monocle_hook.py"
     info "Copied monocle_hook.py to $HOOK_DIR/"
 
-    # Update Claude Code settings
-    if [ -f "$SETTINGS" ]; then
-        # Check if hook already configured
-        if grep -q "monocle_hook.py" "$SETTINGS" 2>/dev/null; then
-            info "Hook already configured in settings.json"
-        else
-            # Backup existing settings
-            cp "$SETTINGS" "$SETTINGS.bak"
-            info "Backed up settings.json to settings.json.bak"
+    # Build the hook command
+    HOOK_CMD="bash -c 'set -a && source \"\$(git rev-parse --show-toplevel 2>/dev/null)/.env\" 2>/dev/null && set +a && python3 $HOOK_DIR/monocle_hook.py'"
 
-            # Add hook using Python (handles JSON properly)
-            python3 << 'PYTHON'
-import json
-import sys
-from pathlib import Path
+    # Install to selected target(s)
+    case "$target" in
+        global)
+            [ -f "$GLOBAL_SETTINGS" ] && cp "$GLOBAL_SETTINGS" "$GLOBAL_SETTINGS.bak" && info "Backed up settings.json"
+            add_hook_to_settings "$GLOBAL_SETTINGS" "$HOOK_CMD" "global"
+            ;;
+        project)
+            [ -f "$PROJECT_SETTINGS" ] && cp "$PROJECT_SETTINGS" "$PROJECT_SETTINGS.bak" && info "Backed up settings.local.json"
+            add_hook_to_settings "$PROJECT_SETTINGS" "$HOOK_CMD" "project"
+            ;;
+        both)
+            [ -f "$GLOBAL_SETTINGS" ] && cp "$GLOBAL_SETTINGS" "$GLOBAL_SETTINGS.bak"
+            [ -f "$PROJECT_SETTINGS" ] && cp "$PROJECT_SETTINGS" "$PROJECT_SETTINGS.bak"
+            add_hook_to_settings "$GLOBAL_SETTINGS" "$HOOK_CMD" "global"
+            add_hook_to_settings "$PROJECT_SETTINGS" "$HOOK_CMD" "project"
+            ;;
+    esac
 
-settings_path = Path.home() / ".claude" / "settings.json"
-
-try:
-    with open(settings_path, "r") as f:
-        settings = json.load(f)
-except Exception:
-    settings = {}
-
-# Ensure hooks structure exists
-settings.setdefault("hooks", {})
-settings["hooks"].setdefault("Stop", [])
-
-# Check if already added
-hook_cmd = "bash -c 'set -a && source .env 2>/dev/null && set +a && python3 ~/.claude/hooks/monocle_hook.py'"
-already_added = any(
-    isinstance(h, dict) and h.get("command") == hook_cmd
-    for h in settings["hooks"]["Stop"]
-)
-
-if not already_added:
-    settings["hooks"]["Stop"].append({
-        "type": "command",
-        "command": hook_cmd
-    })
-    with open(settings_path, "w") as f:
-        json.dump(settings, f, indent=2)
-    print("Hook added to settings.json")
-else:
-    print("Hook already in settings.json")
-PYTHON
-        fi
-    else
-        # Create new settings file
-        cat > "$SETTINGS" << 'JSON'
-{
-  "hooks": {
-    "Stop": [
-      {
-        "type": "command",
-        "command": "bash -c 'set -a && source .env 2>/dev/null && set +a && python3 ~/.claude/hooks/monocle_hook.py'"
-      }
-    ]
-  }
-}
-JSON
-        info "Created settings.json with hook configuration"
-    fi
+    echo ""
 
     # Check dependencies
     if python3 -c "import monocle_apptrace" 2>/dev/null; then
@@ -109,21 +201,38 @@ JSON
 
     # Check environment variables
     if [ -z "$OKAHU_API_KEY" ]; then
-        warn "OKAHU_API_KEY not set. Export it in your shell profile."
+        if [ -f ".env" ] && grep -q "OKAHU_API_KEY" .env 2>/dev/null; then
+            info "OKAHU_API_KEY found in .env file"
+        else
+            warn "OKAHU_API_KEY not set. Add it to your .env file."
+        fi
+    else
+        info "OKAHU_API_KEY is set"
     fi
 
     echo ""
-    info "Installation complete!"
+    echo -e "${GREEN}${BOLD}Installation complete!${NC}"
     echo ""
-    echo "Next steps:"
-    echo "  1. Create .env file in your project root:"
-    echo "     export OKAHU_API_KEY=\"your-key\""
-    echo "     export OKAHU_INGESTION_ENDPOINT=\"https://ingest.okahu.co/api/v1/trace/ingest\""
-    echo "     export MONOCLE_EXPORTER=\"okahu\""
+    echo "  Installed to:"
+    case "$target" in
+        global)  echo -e "    ${CYAN}~/.claude/settings.json${NC} (global)" ;;
+        project) echo -e "    ${CYAN}.claude/settings.local.json${NC} (this project)" ;;
+        both)
+            echo -e "    ${CYAN}~/.claude/settings.json${NC} (global)"
+            echo -e "    ${CYAN}.claude/settings.local.json${NC} (this project)"
+            ;;
+    esac
     echo ""
-    echo "  2. Restart Claude Code to pick up the new hook"
+    echo "  Next steps:"
+    echo "    1. Create a .env file in your project root (if not already):"
+    echo "       export OKAHU_API_KEY=\"your-key\""
+    echo "       export OKAHU_INGESTION_ENDPOINT=\"https://ingest.okahu.co/api/v1/trace/ingest\""
+    echo "       export MONOCLE_EXPORTER=\"okahu\""
     echo ""
-    echo "  3. Check logs at: ~/.claude/state/monocle_hook.log"
+    echo "    2. Restart Claude Code to pick up the new hook"
+    echo ""
+    echo "    3. Check logs at: ~/.claude/state/monocle_hook.log"
+    echo ""
 }
 
 uninstall_hook() {
@@ -135,49 +244,41 @@ uninstall_hook() {
         info "Removed monocle_hook.py"
     fi
 
-    # Remove from settings
-    if [ -f "$SETTINGS" ]; then
-        python3 << 'PYTHON'
-import json
-from pathlib import Path
+    # Remove from both settings locations
+    remove_hook_from_settings "$GLOBAL_SETTINGS"
+    remove_hook_from_settings "$PROJECT_SETTINGS"
 
-settings_path = Path.home() / ".claude" / "settings.json"
-
-try:
-    with open(settings_path, "r") as f:
-        settings = json.load(f)
-except Exception:
-    settings = {}
-
-if "hooks" in settings and "Stop" in settings["hooks"]:
-    settings["hooks"]["Stop"] = [
-        h for h in settings["hooks"]["Stop"]
-        if not (isinstance(h, dict) and "monocle_hook" in h.get("command", ""))
-    ]
-    with open(settings_path, "w") as f:
-        json.dump(settings, f, indent=2)
-    print("Hook removed from settings.json")
-PYTHON
-    fi
-
+    echo ""
     info "Uninstallation complete!"
 }
 
-# Main
+# --- Main ---
 case "${1:-}" in
     --uninstall|-u)
         uninstall_hook
         ;;
+    --global|-g)
+        install_hook "global"
+        ;;
+    --project|-p)
+        install_hook "project"
+        ;;
     --help|-h)
-        echo "Usage: $0 [--uninstall]"
+        echo ""
+        echo "Usage: $0 [option]"
         echo ""
         echo "Install or remove Monocle hook for Claude Code"
         echo ""
         echo "Options:"
-        echo "  --uninstall, -u    Remove the hook"
+        echo "  (none)             Interactive install — prompts for location"
+        echo "  --global, -g       Install to ~/.claude/settings.json"
+        echo "  --project, -p      Install to .claude/settings.local.json"
+        echo "  --uninstall, -u    Remove the hook from all locations"
         echo "  --help, -h         Show this help"
+        echo ""
         ;;
     *)
-        install_hook
+        prompt_install_location
+        install_hook "$INSTALL_TARGET"
         ;;
 esac

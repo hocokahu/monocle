@@ -110,3 +110,5 @@ test_tools/LICENSE.analyze/
 .env.*
 *.env
 examples/agno_test/venv/
+.analyze/
+.playwright-mcp/

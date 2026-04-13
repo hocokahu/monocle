@@ -13,56 +13,64 @@ Observe Claude Code CLI sessions with Monocle tracing. Captures prompts, respons
 
 ## Quick Start
 
-### 1. Install Dependencies
+### 1. Install Monocle with Claude Code instrumentation
+
+The published `monocle_apptrace` on PyPI does not yet include Claude Code instrumentation.
+Install directly from the branch that has it:
 
 ```bash
-pip install monocle_apptrace
+pip install "monocle_apptrace @ git+https://github.com/monocle2ai/monocle.git@hoc/claude-skill#subdirectory=apptrace"
 ```
 
-### 2. Set Environment Variables
+### 2. Clone and run the installer
 
 ```bash
-# Required for Okahu export
-export OKAHU_API_KEY="your-api-key"
-export OKAHU_INGESTION_ENDPOINT="https://ingest.okahu.co/api/v1/trace/ingest"
-export MONOCLE_EXPORTER="okahu"
-
-# Optional
-export MONOCLE_SERVICE_NAME="claude-cli"
-export MONOCLE_CLAUDE_DEBUG="true"
-```
-
-### 3. Install Hook
-
-**Option A: Run install script**
-
-```bash
-cd examples/scripts/claude_code_hook
+git clone -b hoc/claude-skill https://github.com/monocle2ai/monocle.git
+cd monocle/examples/scripts/claude_code_hook
 ./install.sh
 ```
 
-**Option B: Manual installation**
+The interactive installer will prompt you to choose where to register the Stop hook:
+
+```
+  Monocle Claude Code Hook Installer
+
+  Where would you like to install the Stop hook?
+
+  1) Global  ~/.claude/settings.json
+     Traces all Claude Code sessions across every project
+
+  2) Project .claude/settings.local.json
+     Traces only sessions in the current project directory
+
+  3) Both    Global + Project
+     Hook is registered in both locations
+
+  Choose [1/2/3]:
+```
+
+You can also skip the prompt with flags:
 
 ```bash
-# Create hooks directory
-mkdir -p ~/.claude/hooks
+./install.sh --global    # Install to ~/.claude/settings.json
+./install.sh --project   # Install to .claude/settings.local.json
+```
 
-# Copy hook script
-cp monocle_hook.py ~/.claude/hooks/
+### 3. Configure environment variables
 
-# Add to Claude Code settings
-cat >> ~/.claude/settings.json << 'EOF'
-{
-  "hooks": {
-    "Stop": [
-      {
-        "type": "command",
-        "command": "python3 ~/.claude/hooks/monocle_hook.py"
-      }
-    ]
-  }
-}
-EOF
+Create a `.env` file in your project root:
+
+```bash
+export OKAHU_API_KEY="your-api-key"
+export OKAHU_INGESTION_ENDPOINT="https://ingest.okahu.co/api/v1/trace/ingest"
+export MONOCLE_EXPORTER="okahu"
+```
+
+Optional variables:
+
+```bash
+export MONOCLE_SERVICE_NAME="claude-cli"    # Service name in spans
+export MONOCLE_CLAUDE_DEBUG="true"          # Enable debug logging
 ```
 
 ### 4. Verify
@@ -89,15 +97,24 @@ tail -f ~/.claude/state/monocle_hook.log
 
 ### Claude Code Settings
 
-Location: `~/.claude/settings.json`
+The hook can be installed in two locations:
+
+| Location | File | Scope |
+|----------|------|-------|
+| Global | `~/.claude/settings.json` | All projects |
+| Project | `.claude/settings.local.json` | Current project only |
 
 ```json
 {
   "hooks": {
     "Stop": [
       {
-        "type": "command",
-        "command": "python3 ~/.claude/hooks/monocle_hook.py"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'set -a && source \"$(git rev-parse --show-toplevel 2>/dev/null)/.env\" 2>/dev/null && set +a && python3 ~/.claude/hooks/monocle_hook.py'"
+          }
+        ]
       }
     ]
   }
