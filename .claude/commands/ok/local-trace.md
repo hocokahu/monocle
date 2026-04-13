@@ -44,12 +44,53 @@ Users can say things like:
    - If user agrees, use `mcp__okahu-mcp-stage__get_traces` tool
 3. If local traces exist:
    - Interpret the user's natural language query
-   - Map to appropriate `trace_minify.py` options
-   - Run: `python .claude/scripts/trace_minify.py [options]`
-   - Display formatted output
+   - **For interactive viewing**: Suggest the user run the interactive viewer directly:
+     `! python .claude/scripts/trace_viewer.py [options]`
+     (This launches a curses-based TUI with arrow-key navigation — must run via `!` prefix)
+   - **For inline display**: Map to `trace_viewer.py --print` or `trace_minify.py` options
+   - Run: `python .claude/scripts/trace_viewer.py --print [options]` for inline output
+   - Run: `python .claude/scripts/trace_minify.py [options]` for compact debug output
 4. Optionally update `.analyze/SESSION.md` if notable findings
 
+## Interactive Viewer (trace_viewer.py)
+
+A curses-based TUI for exploring traces with keyboard navigation.
+**Must be launched by the user** with `!` prefix (needs a real TTY):
+
+```bash
+! python .claude/scripts/trace_viewer.py                     # Latest traces
+! python .claude/scripts/trace_viewer.py --last 5m           # Recent traces
+! python .claude/scripts/trace_viewer.py --trace-id abc123   # Specific trace
+```
+
+Keys:
+- **↑/↓** or **j/k** — Navigate between spans
+- **←/→** or **h/l** — Collapse/expand child spans
+- **Enter/Space** — Toggle detail panel
+- **t** — Cycle through loaded traces
+- **q/Esc** — Quit
+
+Features:
+- Color-coded Gantt waterfall bars by span type (workflow, turn, inference, tool, agent, MCP)
+- Collapsible span tree with depth indentation
+- Detail panel with attributes, events, and token usage
+- Multi-trace support with `t` to cycle
+- Scrolling for large traces
+- Falls back to `--print` mode automatically when no TTY is available
+
 ## Script Options Reference
+
+### trace_viewer.py (interactive + print modes)
+
+```
+--dir, -d DIR      Monocle trace directory (default: .monocle)
+--last, -l TIME    Show traces from last N minutes (e.g., 5m, 1h)
+--trace-id, -t ID  Filter by trace ID (partial match)
+--limit, -n N      Max trace files to load (default: 20)
+--print, -p        Non-interactive print mode (for use in Bash tool)
+```
+
+### trace_minify.py (compact debug output)
 
 ```
 --dir, -d DIR      Monocle trace directory (default: .monocle)
@@ -104,7 +145,12 @@ Append to `.analyze/SESSION.md` if errors found or notable observations:
 /ok:local-trace find the slowest trace
 /ok:local-trace show trace abc123
 
-# Direct options still work
+# Interactive viewer (user runs directly)
+! python .claude/scripts/trace_viewer.py
+! python .claude/scripts/trace_viewer.py --last 5m
+! python .claude/scripts/trace_viewer.py --trace-id abc123
+
+# Inline output (works in Bash tool)
 /ok:local-trace --last 5m
 /ok:local-trace --errors-only
 ```

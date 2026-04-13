@@ -30,33 +30,69 @@ info()  { echo -e "${GREEN}[INFO]${NC} $1"; }
 warn()  { echo -e "${YELLOW}[WARN]${NC} $1"; }
 error() { echo -e "${RED}[ERROR]${NC} $1"; exit 1; }
 
-# --- Interactive location picker ---
+# --- Interactive location picker (radio-style like npx) ---
 prompt_install_location() {
     echo ""
     echo -e "${BOLD}${CYAN}Monocle Claude Code Hook Installer${NC}"
     echo ""
-    echo -e "  Where would you like to install the Stop hook?"
-    echo ""
-    echo -e "  ${BOLD}1)${NC} ${GREEN}Global${NC}  ~/.claude/settings.json"
-    echo -e "     ${DIM}Traces all Claude Code sessions across every project${NC}"
-    echo ""
-    echo -e "  ${BOLD}2)${NC} ${GREEN}Project${NC} .claude/settings.local.json"
-    echo -e "     ${DIM}Traces only sessions in the current project directory${NC}"
-    echo ""
-    echo -e "  ${BOLD}3)${NC} ${GREEN}Both${NC}    Global + Project"
-    echo -e "     ${DIM}Hook is registered in both locations${NC}"
-    echo ""
+    echo -e "  ${BOLD}Installation scope${NC}"
 
-    while true; do
-        echo -ne "  ${BOLD}Choose [1/2/3]:${NC} "
-        read -r choice
-        case "$choice" in
-            1) INSTALL_TARGET="global"; break ;;
-            2) INSTALL_TARGET="project"; break ;;
-            3) INSTALL_TARGET="both"; break ;;
-            *) echo -e "  ${RED}Invalid choice. Enter 1, 2, or 3.${NC}" ;;
-        esac
-    done
+    local options=("project" "global")
+    local labels=("Project" "Global")
+    local descs=("Install in current directory (committed with your project)" "Install in ~/.claude/settings.json (applies to all projects)")
+    local selected=0
+
+    # Check if terminal supports cursor movement
+    if [ -t 0 ] && command -v tput &>/dev/null; then
+        # Interactive radio selector
+        tput civis 2>/dev/null  # hide cursor
+        trap 'tput cnorm 2>/dev/null' EXIT
+
+        while true; do
+            # Draw options
+            for i in "${!options[@]}"; do
+                if [ "$i" -eq "$selected" ]; then
+                    echo -e "  │  ${GREEN}●${NC} ${BOLD}${labels[$i]}${NC} ${DIM}(${descs[$i]})${NC}"
+                else
+                    echo -e "  │  ○ ${labels[$i]} ${DIM}(${descs[$i]})${NC}"
+                fi
+            done
+
+            # Read single keypress
+            IFS= read -rsn1 key
+            if [[ "$key" == $'\x1b' ]]; then
+                read -rsn2 key
+                case "$key" in
+                    '[A') selected=$(( (selected - 1 + ${#options[@]}) % ${#options[@]} )) ;;  # Up
+                    '[B') selected=$(( (selected + 1) % ${#options[@]} )) ;;  # Down
+                esac
+                # Move cursor back up to redraw
+                tput cuu ${#options[@]} 2>/dev/null
+            elif [[ "$key" == "" ]]; then
+                # Enter pressed
+                break
+            fi
+        done
+
+        tput cnorm 2>/dev/null  # restore cursor
+    else
+        # Fallback: simple numbered prompt
+        for i in "${!options[@]}"; do
+            echo -e "  │  $((i+1))) ${labels[$i]} ${DIM}(${descs[$i]})${NC}"
+        done
+        echo ""
+        while true; do
+            echo -ne "  ${BOLD}Choose [1/2]:${NC} "
+            read -r choice
+            case "$choice" in
+                1) selected=0; break ;;
+                2) selected=1; break ;;
+                *) echo -e "  ${RED}Invalid choice.${NC}" ;;
+            esac
+        done
+    fi
+
+    INSTALL_TARGET="${options[$selected]}"
     echo ""
 }
 
@@ -172,7 +208,7 @@ install_hook() {
     # Build the hook command
     HOOK_CMD="bash -c 'set -a && source \"\$(git rev-parse --show-toplevel 2>/dev/null)/.env\" 2>/dev/null && set +a && python3 $HOOK_DIR/monocle_hook.py'"
 
-    # Install to selected target(s)
+    # Install to selected target
     case "$target" in
         global)
             [ -f "$GLOBAL_SETTINGS" ] && cp "$GLOBAL_SETTINGS" "$GLOBAL_SETTINGS.bak" && info "Backed up settings.json"
@@ -180,12 +216,6 @@ install_hook() {
             ;;
         project)
             [ -f "$PROJECT_SETTINGS" ] && cp "$PROJECT_SETTINGS" "$PROJECT_SETTINGS.bak" && info "Backed up settings.local.json"
-            add_hook_to_settings "$PROJECT_SETTINGS" "$HOOK_CMD" "project"
-            ;;
-        both)
-            [ -f "$GLOBAL_SETTINGS" ] && cp "$GLOBAL_SETTINGS" "$GLOBAL_SETTINGS.bak"
-            [ -f "$PROJECT_SETTINGS" ] && cp "$PROJECT_SETTINGS" "$PROJECT_SETTINGS.bak"
-            add_hook_to_settings "$GLOBAL_SETTINGS" "$HOOK_CMD" "global"
             add_hook_to_settings "$PROJECT_SETTINGS" "$HOOK_CMD" "project"
             ;;
     esac
@@ -217,10 +247,6 @@ install_hook() {
     case "$target" in
         global)  echo -e "    ${CYAN}~/.claude/settings.json${NC} (global)" ;;
         project) echo -e "    ${CYAN}.claude/settings.local.json${NC} (this project)" ;;
-        both)
-            echo -e "    ${CYAN}~/.claude/settings.json${NC} (global)"
-            echo -e "    ${CYAN}.claude/settings.local.json${NC} (this project)"
-            ;;
     esac
     echo ""
     echo "  Next steps:"

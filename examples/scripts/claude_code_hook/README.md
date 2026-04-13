@@ -35,25 +35,16 @@ The interactive installer will prompt you to choose where to register the Stop h
 ```
   Monocle Claude Code Hook Installer
 
-  Where would you like to install the Stop hook?
-
-  1) Global  ~/.claude/settings.json
-     Traces all Claude Code sessions across every project
-
-  2) Project .claude/settings.local.json
-     Traces only sessions in the current project directory
-
-  3) Both    Global + Project
-     Hook is registered in both locations
-
-  Choose [1/2/3]:
+  Installation scope
+  │  ● Project (Install in current directory (committed with your project))
+  │  ○ Global  (Install in ~/.claude/settings.json (applies to all projects))
 ```
 
-You can also skip the prompt with flags:
+Use arrow keys to select, Enter to confirm. You can also skip the prompt with flags:
 
 ```bash
-./install.sh --global    # Install to ~/.claude/settings.json
 ./install.sh --project   # Install to .claude/settings.local.json
+./install.sh --global    # Install to ~/.claude/settings.json
 ```
 
 ### 3. Configure environment variables
