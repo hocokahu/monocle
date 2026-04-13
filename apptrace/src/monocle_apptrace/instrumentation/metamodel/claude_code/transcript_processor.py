@@ -27,9 +27,11 @@ from monocle_apptrace.instrumentation.metamodel.claude_code._helper import (
     get_model,
     get_usage,
     iter_tool_uses,
+    parse_command_skill,
     read_new_jsonl,
     SessionState,
     CLAUDE_CODE_AGENT_TYPE_KEY,
+    CLAUDE_CODE_SKILL_TYPE_KEY,
 )
 
 logger = logging.getLogger(__name__)
@@ -113,6 +115,41 @@ def _emit_turn(tracer, turn, turn_num, session_id, sdk_version, service_name):
             if metadata_attrs:
                 inference_span.add_event("metadata", metadata_attrs)
 
+        # Detect harness-injected skill (slash command like /internal-comms)
+        # These bypass Tool: Skill — the harness injects content via <command-name> tags
+        cmd_skill = parse_command_skill(user_text)
+        has_explicit_skill = any(
+            tu.get("name") == "Skill"
+            for am in turn.assistant_msgs
+            for tu in iter_tool_uses(get_content(am))
+        )
+        if cmd_skill and not has_explicit_skill:
+            skill_name = cmd_skill["skill_name"]
+            skill_input = {"skill": skill_name}
+            if cmd_skill["args"]:
+                skill_input["args"] = cmd_skill["args"]
+            if cmd_skill["plugin_name"]:
+                skill_input["plugin"] = cmd_skill["plugin_name"]
+
+            with tracer.start_as_current_span(
+                name=f"Skill: {skill_name}",
+                attributes={
+                    "span.type": "agentic.skill.invocation",
+                    "scope.agentic.session": session_id,
+                    "entity.1.type": CLAUDE_CODE_SKILL_TYPE_KEY,
+                    "entity.1.name": skill_name,
+                    "entity.1.skill_name": skill_name,
+                    **({"entity.1.skill_args": cmd_skill["args"]} if cmd_skill["args"] else {}),
+                    **({"entity.1.plugin_name": cmd_skill["plugin_name"]} if cmd_skill["plugin_name"] else {}),
+                    "entity.1.invocation": "harness",
+                    "monocle_apptrace.version": sdk_version,
+                    "workflow.name": service_name,
+                },
+            ) as skill_span:
+                skill_span.set_status(StatusCode.OK)
+                skill_span.add_event("data.input", {"input": json.dumps(skill_input)})
+                skill_span.add_event("data.output", {"response": f"/{cmd_skill['command_name']}"})
+
         # Tool spans
         for assistant_msg in turn.assistant_msgs:
             for tool_use in iter_tool_uses(get_content(assistant_msg)):
@@ -141,15 +178,17 @@ def _emit_turn(tracer, turn, turn_num, session_id, sdk_version, service_name):
                     span_attrs["entity.1.name"] = subagent_type
                     span_attrs["entity.1.description"] = tool_input.get("description", "")
 
+                span_name = f"Tool: {tool_name}"
                 if tool_name == "Skill" and isinstance(tool_input, dict):
                     skill_name = tool_input.get("skill", "unknown")
                     span_attrs["entity.1.name"] = skill_name
                     span_attrs["entity.1.skill_name"] = skill_name
                     if tool_input.get("args"):
                         span_attrs["entity.1.skill_args"] = tool_input.get("args")
+                    span_name = f"Skill: {skill_name}"
 
                 with tracer.start_as_current_span(
-                    name=f"Tool: {tool_name}",
+                    name=span_name,
                     attributes=span_attrs,
                 ) as tool_span:
                     tool_span.set_status(StatusCode.OK)

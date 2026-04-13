@@ -13,6 +13,7 @@ This module extracts structured data from those transcripts for span creation.
 
 import json
 import logging
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -221,6 +222,53 @@ def build_turns(messages: List[Dict[str, Any]]) -> List[Turn]:
 
     flush_turn()
     return turns
+
+
+def parse_command_skill(user_text: str) -> Optional[Dict[str, str]]:
+    """Detect harness-injected skill invocations from <command-name>/<command-message> tags.
+
+    When a user types /skill-name in Claude Code CLI, the harness intercepts
+    and injects the skill content directly as user message tags instead of
+    going through the Tool: Skill call. This function detects those tags
+    so we can emit a synthetic skill span.
+
+    Returns dict with 'skill_name', 'plugin_name', 'command_name', 'args'
+    or None if no skill command found.
+    """
+    # Match <command-name>/some-skill</command-name>
+    cn_match = re.search(r"<command-name>/([^<]+)</command-name>", user_text)
+    if not cn_match:
+        return None
+
+    command_name = cn_match.group(1).strip()
+
+    # Match <command-message>...</command-message>
+    cm_match = re.search(r"<command-message>([^<]+)</command-message>", user_text)
+    command_message = cm_match.group(1).strip() if cm_match else command_name
+
+    # Match <command-args>...</command-args>
+    args_match = re.search(r"<command-args>([^<]*)</command-args>", user_text)
+    args = args_match.group(1).strip() if args_match else ""
+
+    # Parse plugin_name:skill_name from command_message
+    if ":" in command_message:
+        plugin_name, skill_name = command_message.split(":", 1)
+    else:
+        plugin_name = ""
+        skill_name = command_message
+
+    # Skip built-in CLI commands (clear, exit, help, etc.)
+    builtins = {"clear", "exit", "help", "compact", "config", "mcp", "skills",
+                "init", "login", "logout", "doctor", "review", "cost", "fast"}
+    if skill_name in builtins:
+        return None
+
+    return {
+        "skill_name": skill_name,
+        "plugin_name": plugin_name,
+        "command_name": command_name,
+        "args": args,
+    }
 
 
 def classify_tool(tool_name: str) -> str:

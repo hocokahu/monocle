@@ -75,6 +75,19 @@ class Span:
         self.trace_id: str = ctx.get("trace_id", "")
         self.parent_id: Optional[str] = raw.get("parent_id")
         self.span_type: str = attrs.get("span.type", "")
+
+        # Friendly display name for skill spans: "Skill: <name>"
+        if "skill" in self.span_type:
+            skill_name = ""
+            for k, v in attrs.items():
+                if k.startswith("entity.") and k.endswith(".skill_name"):
+                    skill_name = v
+                    break
+                if k.startswith("entity.") and k.endswith(".name"):
+                    skill_name = v
+            self.display_name = f"Skill: {skill_name}" if skill_name else self.name
+        else:
+            self.display_name = self.name
         self.status: str = raw.get("status", {}).get("status_code", "")
 
         start = parse_ts(raw.get("start_time", ""))
@@ -163,6 +176,9 @@ C_OK = 12
 C_ERR = 13
 C_AGENT = 14
 C_MCP = 15
+C_NEW_BRIGHT = 16
+C_NEW_MID = 17
+C_NEW_DIM = 18
 
 
 def init_colors():
@@ -183,6 +199,9 @@ def init_colors():
     curses.init_pair(C_ERR, curses.COLOR_RED, -1)
     curses.init_pair(C_AGENT, curses.COLOR_WHITE, curses.COLOR_RED)
     curses.init_pair(C_MCP, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    curses.init_pair(C_NEW_BRIGHT, curses.COLOR_BLACK, curses.COLOR_GREEN)
+    curses.init_pair(C_NEW_MID, curses.COLOR_GREEN, -1)
+    curses.init_pair(C_NEW_DIM, 8, -1)  # same as C_DIM, final fade stage
 
 
 def bar_color(span_type: str) -> int:
@@ -241,12 +260,80 @@ def draw_bar(win, y, x, length, color):
 # ── Main UI ─────────────────────────────────────────────────────────
 
 class TraceViewer:
-    def __init__(self, traces: List[Tuple[str, List[Span], float]]):
+    def __init__(self, traces: List[Tuple[str, List[Span], float]],
+                 monocle_dir: Optional[Path] = None,
+                 last_minutes: Optional[int] = None,
+                 trace_id_filter: Optional[str] = None,
+                 limit: int = 0):
         self.traces = traces  # [(filename, roots, total_ms), ...]
         self.trace_idx = 0
         self.selected = 0
         self.detail_open = True
         self.scroll_offset = 0
+        # Live-reload state
+        self.monocle_dir = monocle_dir
+        self.last_minutes = last_minutes
+        self.trace_id_filter = trace_id_filter
+        self.limit = limit
+        self._known_files: set = {t[0] for t in traces}
+        self._new_trace_ids: Dict[str, int] = {}  # trace_id -> fade ticks remaining
+        self._fade_ticks = 8  # number of render cycles for fade
+
+    def _check_new_traces(self):
+        """Poll monocle_dir for new trace files. Insert new ones at top."""
+        if not self.monocle_dir:
+            return
+        files = get_trace_files(self.monocle_dir, self.last_minutes,
+                                self.trace_id_filter, self.limit)
+        seen_tids = {roots[0].trace_id for _, roots, _ in self.traces if roots}
+        new_entries = []
+        for f in files:
+            if f.name in self._known_files:
+                continue
+            try:
+                raw = load_trace(f)
+            except Exception:
+                continue
+            roots, total_ms = build_tree(raw)
+            if not roots:
+                continue
+            tid = roots[0].trace_id
+            if tid in seen_tids:
+                continue
+            self._known_files.add(f.name)
+            seen_tids.add(tid)
+            self._new_trace_ids[tid] = self._fade_ticks
+            new_entries.append((f.name, roots, total_ms))
+        if new_entries:
+            # Insert at top (newest first)
+            self.traces = new_entries + self.traces
+
+    def _fade_attr(self, trace_roots) -> Optional[int]:
+        """Return a fade color attribute if this trace is newly appeared, else None."""
+        if not trace_roots:
+            return None
+        tid = trace_roots[0].trace_id
+        ticks = self._new_trace_ids.get(tid)
+        if ticks is None:
+            return None
+        if ticks > 5:
+            return curses.color_pair(C_NEW_BRIGHT) | curses.A_BOLD
+        elif ticks > 2:
+            return curses.color_pair(C_NEW_MID) | curses.A_BOLD
+        elif ticks > 0:
+            return curses.color_pair(C_NEW_MID)
+        else:
+            return None
+
+    def _tick_fades(self):
+        """Decrement fade counters and remove expired ones."""
+        expired = []
+        for tid in self._new_trace_ids:
+            self._new_trace_ids[tid] -= 1
+            if self._new_trace_ids[tid] <= 0:
+                expired.append(tid)
+        for tid in expired:
+            del self._new_trace_ids[tid]
 
     @property
     def current(self):
@@ -261,18 +348,25 @@ class TraceViewer:
         return result
 
     def trace_picker(self, stdscr) -> Optional[int]:
-        """Show a trace selection screen. Returns selected index or None to quit."""
+        """Show a trace selection screen with live-reload. Returns selected index or None to quit."""
         pick_sel = 0
         pick_scroll = 0
 
+        # Use halfdelay for ~2s polling (20 tenths of a second)
+        curses.halfdelay(20)
+
         while True:
-            stdscr.clear()
+            # Poll for new trace files
+            self._check_new_traces()
+
+            stdscr.erase()
             h, w = stdscr.getmaxyx()
 
             # Header
             safe(stdscr, 0, 0, " " * w, curses.color_pair(C_HEADER))
             safe(stdscr, 0, 1, "SELECT A TRACE", curses.color_pair(C_HEADER) | curses.A_BOLD)
-            count_str = f" {len(self.traces)} traces "
+            live_indicator = " LIVE" if self.monocle_dir else ""
+            count_str = f"{live_indicator}  {len(self.traces)} traces "
             safe(stdscr, 0, max(0, w - len(count_str) - 1), count_str, curses.color_pair(C_HEADER))
 
             # Column headers
@@ -299,9 +393,14 @@ class TraceViewer:
                 fname, roots, total_ms = self.traces[idx]
                 is_sel = idx == pick_sel
 
+                # Determine base attr: selected, fade-in, or normal
+                fade = self._fade_attr(roots)
                 if is_sel:
                     safe(stdscr, y, 0, " " * w, curses.color_pair(C_SELECTED))
                     attr = curses.color_pair(C_SELECTED) | curses.A_BOLD
+                elif fade is not None:
+                    safe(stdscr, y, 0, " " * w, fade)
+                    attr = fade
                 else:
                     attr = curses.A_NORMAL
 
@@ -326,7 +425,11 @@ class TraceViewer:
                 if roots and roots[0].start_time != datetime.min:
                     start_dt = roots[0].start_time.strftime("%Y-%m-%d %H:%M")
 
-                safe(stdscr, y, 2, num, attr)
+                # NEW marker for fresh traces
+                if fade is not None:
+                    safe(stdscr, y, 2, "●", attr)
+                else:
+                    safe(stdscr, y, 2, num, attr)
                 safe(stdscr, y, 5, start_dt, attr)
                 safe(stdscr, y, 24, tid, attr)
                 safe(stdscr, y, 59, span_count, attr)
@@ -349,14 +452,23 @@ class TraceViewer:
 
             stdscr.refresh()
 
+            # Tick fade animations
+            self._tick_fades()
+
             key = stdscr.getch()
+            if key == curses.ERR:
+                continue  # halfdelay timeout — just re-render
             if key == ord("q") or key == ord("Q") or key == 27:
+                # Restore normal blocking input before returning
+                curses.cbreak()
                 return None
             elif key == curses.KEY_UP or key == ord("k"):
                 pick_sel = max(0, pick_sel - 1)
             elif key == curses.KEY_DOWN or key == ord("j"):
                 pick_sel = min(len(self.traces) - 1, pick_sel + 1)
             elif key == ord("\n") or key == ord(" "):
+                # Restore normal blocking input before returning
+                curses.cbreak()
                 return pick_sel
 
     def run(self, stdscr):
@@ -383,7 +495,7 @@ class TraceViewer:
 
         # Build all lines as (text, color_pair) tuples
         lines: List[Tuple[str, int]] = []
-        lines.append((f"● {span.name}", C_VAL))
+        lines.append((f"● {span.display_name}", C_VAL))
         lines.append((f"  type: {span.span_type}", C_DIM))
         lines.append((f"  span_id: {span.span_id}", C_DIM))
         if span.parent_id:
@@ -436,7 +548,7 @@ class TraceViewer:
             # Header
             safe(stdscr, 0, 0, " " * w, curses.color_pair(C_HEADER))
             safe(stdscr, 0, 1, "SPAN DETAIL", curses.color_pair(C_HEADER) | curses.A_BOLD)
-            safe(stdscr, 0, 14, span.name[:w - 30], curses.color_pair(C_HEADER))
+            safe(stdscr, 0, 14, span.display_name[:w - 30], curses.color_pair(C_HEADER))
             pos = f" {scroll+1}-{min(scroll+h-2, len(lines))}/{len(lines)} "
             safe(stdscr, 0, max(0, w - len(pos) - 1), pos, curses.color_pair(C_HEADER))
 
@@ -526,7 +638,7 @@ class TraceViewer:
                 else:
                     collapse_marker = "  "
                 badge = type_badge(span.span_type)
-                label = f"{indent}{collapse_marker}[{badge}] {span.name}"
+                label = f"{indent}{collapse_marker}[{badge}] {span.display_name}"
                 label = label[:name_col - 1]
 
                 is_sel = idx == self.selected
@@ -559,8 +671,8 @@ class TraceViewer:
                 dy += 1
 
                 # Title row
-                safe(stdscr, dy, 1, f"● {span.name}", curses.A_BOLD)
-                safe(stdscr, dy, 3 + len(span.name), f"  {span.span_type}", curses.color_pair(C_DIM))
+                safe(stdscr, dy, 1, f"● {span.display_name}", curses.A_BOLD)
+                safe(stdscr, dy, 3 + len(span.display_name), f"  {span.span_type}", curses.color_pair(C_DIM))
                 dy += 1
                 safe(stdscr, dy, 1, f"span_id: {span.span_id}", curses.color_pair(C_DIM))
                 dy += 1
@@ -697,7 +809,7 @@ def print_trace(fname: str, roots: List[Span], total_ms: float):
     for span in all_spans:
         indent = "  " * span.depth
         badge = type_badge(span.span_type)
-        label = f"{indent}[{badge}] {span.name}"[:30]
+        label = f"{indent}[{badge}] {span.display_name}"[:30]
         frac = span.duration_ms / total_ms if total_ms > 0 else 0
         filled = max(1, int(bar_w * frac))
         empty = bar_w - filled
@@ -710,7 +822,7 @@ def print_trace(fname: str, roots: List[Span], total_ms: float):
 
     # Span details
     for i, span in enumerate(all_spans):
-        print(f"  {BOLD}{CYAN}── Span {i+1}/{len(all_spans)}: {span.name}{RESET} {GRAY}{span.span_type}{RESET}")
+        print(f"  {BOLD}{CYAN}── Span {i+1}/{len(all_spans)}: {span.display_name}{RESET} {GRAY}{span.span_type}{RESET}")
         print(f"    {GRAY}id: {span.span_id}{RESET}")
         dur = f"{span.duration_ms:.0f}ms" if span.duration_ms >= 1 else "<1ms"
         print(f"    {GRAY}duration: {dur}{RESET}")
@@ -790,7 +902,10 @@ def main():
         for fname, roots, total_ms in traces:
             print_trace(fname, roots, total_ms)
     else:
-        viewer = TraceViewer(traces)
+        viewer = TraceViewer(traces, monocle_dir=monocle_dir,
+                             last_minutes=last_min,
+                             trace_id_filter=args.trace_id,
+                             limit=args.limit)
         curses.wrapper(viewer.run)
 
 
