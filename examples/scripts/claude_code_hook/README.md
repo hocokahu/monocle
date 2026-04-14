@@ -19,13 +19,13 @@ The published `monocle_apptrace` on PyPI does not yet include Claude Code instru
 Install directly from the branch that has it:
 
 ```bash
-pip install "monocle_apptrace @ git+https://github.com/monocle2ai/monocle.git@hoc/claude-skill#subdirectory=apptrace"
+pip install "monocle_apptrace @ git+https://github.com/hocokahu/monocle.git@hoc/claude-skill#subdirectory=apptrace"
 ```
 
 ### 2. Clone and run the installer
 
 ```bash
-git clone -b hoc/claude-skill https://github.com/monocle2ai/monocle.git
+git clone -b hoc/claude-skill https://github.com/hocokahu/monocle.git
 cd monocle/examples/scripts/claude_code_hook
 ./install.sh
 ```
