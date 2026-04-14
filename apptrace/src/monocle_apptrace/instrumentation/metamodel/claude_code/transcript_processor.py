@@ -53,7 +53,7 @@ def _build_full_response(turn):
     return "\n".join(parts)
 
 
-def _emit_turn(tracer, turn, turn_num, session_id, sdk_version, service_name):
+def _emit_turn(tracer, turn, turn_num, session_id, sdk_version, service_name, user_name=None):
     """Emit spans for a single turn: agentic.turn -> inference + tool spans."""
     user_text = extract_text(get_content(turn.user_msg))
 
@@ -66,9 +66,7 @@ def _emit_turn(tracer, turn, turn_num, session_id, sdk_version, service_name):
     model = get_model(turn.assistant_msgs[0])
     usage = get_usage(last_assistant)
 
-    with tracer.start_as_current_span(
-        name=f"Claude Code - Turn {turn_num}",
-        attributes={
+    turn_attrs = {
             "span.type": "agentic.turn",
             "span.subtype": "turn",
             "scope.agentic.session": session_id,
@@ -77,7 +75,13 @@ def _emit_turn(tracer, turn, turn_num, session_id, sdk_version, service_name):
             "workflow.name": service_name,
             "monocle_apptrace.version": sdk_version,
             "monocle.service.name": service_name,
-        }
+    }
+    if user_name:
+        turn_attrs["user.name"] = user_name
+
+    with tracer.start_as_current_span(
+        name=f"Claude Code - Turn {turn_num}",
+        attributes=turn_attrs,
     ) as turn_span:
         turn_span.set_status(StatusCode.OK)
         turn_span.add_event("data.input", {"input": user_text})
@@ -205,6 +209,7 @@ def process_transcript(
     sdk_version: str,
     service_name: str = SERVICE_NAME,
     start_turn: int = 0,
+    user_name: Optional[str] = None,
 ) -> int:
     """
     Emit Monocle-compatible spans for a list of turns.
@@ -219,9 +224,7 @@ def process_transcript(
 
     emitted = 0
 
-    with tracer.start_as_current_span(
-        name="workflow",
-        attributes={
+    workflow_attrs = {
             "span.type": "workflow",
             "entity.1.name": service_name,
             "entity.1.type": "workflow.claude_code",
@@ -230,12 +233,18 @@ def process_transcript(
             "monocle_apptrace.version": sdk_version,
             "monocle_apptrace.language": "python",
             "workflow.name": service_name,
-        }
+    }
+    if user_name:
+        workflow_attrs["user.name"] = user_name
+
+    with tracer.start_as_current_span(
+        name="workflow",
+        attributes=workflow_attrs,
     ) as workflow_span:
         workflow_span.set_status(StatusCode.OK)
         for i, turn in enumerate(turns):
             turn_num = start_turn + i + 1
-            if _emit_turn(tracer, turn, turn_num, session_id, sdk_version, service_name):
+            if _emit_turn(tracer, turn, turn_num, session_id, sdk_version, service_name, user_name):
                 emitted += 1
 
     return emitted
@@ -248,6 +257,7 @@ def process_transcript_file(
     sdk_version: str,
     service_name: str = SERVICE_NAME,
     session_state: Optional[SessionState] = None,
+    user_name: Optional[str] = None,
 ) -> tuple:
     """
     Higher-level API: read new JSONL from a transcript file, build turns, emit spans.
@@ -272,6 +282,7 @@ def process_transcript_file(
         sdk_version=sdk_version,
         service_name=service_name,
         start_turn=session_state.turn_count,
+        user_name=user_name,
     )
     session_state.turn_count += len(turns)
 

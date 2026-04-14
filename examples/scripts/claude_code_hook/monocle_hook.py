@@ -24,9 +24,11 @@ Environment Variables:
     OKAHU_INGESTION_ENDPOINT    Okahu ingestion endpoint
     OKAHU_API_KEY               Okahu API key
     MONOCLE_CLAUDE_DEBUG        Enable debug logging (default: false)
-    MONOCLE_SERVICE_NAME        Service name for spans (default: claude-cli)
+    MONOCLE_WORKFLOW_NAME       Workflow name for spans (default: claude-cli)
+    DEFAULT_WORKFLOW_NAME       Fallback workflow name if MONOCLE_WORKFLOW_NAME is not set
 """
 
+import configparser
 import hashlib
 import json
 import os
@@ -43,7 +45,43 @@ STATE_FILE = STATE_DIR / "monocle_state.json"
 LOCK_FILE = STATE_DIR / "monocle_state.lock"
 
 DEBUG = os.environ.get("MONOCLE_CLAUDE_DEBUG", "").lower() == "true"
-SERVICE_NAME = os.environ.get("MONOCLE_SERVICE_NAME", "claude-cli")
+DEFAULT_WORKFLOW_NAME = os.environ.get("DEFAULT_WORKFLOW_NAME", "claude-cli")
+WORKFLOW_NAME = os.environ.get("MONOCLE_WORKFLOW_NAME", DEFAULT_WORKFLOW_NAME)
+
+# --- Git User Identity (reads config files directly, no git CLI needed) ---
+def _read_git_config() -> configparser.ConfigParser:
+    """Parse git config files in priority order: local .git/config > global ~/.gitconfig > XDG."""
+    parser = configparser.ConfigParser()
+    # Read in low-to-high priority order (last wins)
+    candidates = [
+        Path.home() / ".config" / "git" / "config",   # XDG
+        Path.home() / ".gitconfig",                     # global
+    ]
+    # Local repo config (walk up to find .git)
+    cwd = Path.cwd()
+    for parent in [cwd, *cwd.parents]:
+        local = parent / ".git" / "config"
+        if local.is_file():
+            candidates.append(local)
+            break
+    for path in candidates:
+        try:
+            if path.is_file():
+                parser.read(str(path), encoding="utf-8")
+        except Exception:
+            pass
+    return parser
+
+def _git_user_field(field: str) -> Optional[str]:
+    """Read a field from the [user] section of git config files."""
+    try:
+        cfg = _read_git_config()
+        value = cfg.get("user", field, fallback=None)
+        return value.strip() if value and value.strip() else None
+    except Exception:
+        return None
+
+GIT_USER_NAME = _git_user_field("name")
 
 # --- Logging (fail-open, never block) ---
 def _log(level: str, message: str) -> None:
@@ -236,7 +274,10 @@ def main() -> int:
                 return 0
 
             # Set up TracerProvider with Okahu exporters
-            resource = Resource.create({SVC_NAME: SERVICE_NAME})
+            resource_attrs = {SVC_NAME: WORKFLOW_NAME}
+            if GIT_USER_NAME:
+                resource_attrs["user.name"] = GIT_USER_NAME
+            resource = Resource.create(resource_attrs)
             provider = TracerProvider(resource=resource)
             exporters = get_monocle_exporter()
             debug(f"Exporters: {[type(e).__name__ for e in exporters]}")
@@ -252,8 +293,9 @@ def main() -> int:
                 turns=turns,
                 tracer=tracer,
                 sdk_version=sdk_version,
-                service_name=SERVICE_NAME,
+                service_name=WORKFLOW_NAME,
                 start_turn=ss.turn_count,
+                user_name=GIT_USER_NAME,
             )
             ss.turn_count += len(turns)
 
