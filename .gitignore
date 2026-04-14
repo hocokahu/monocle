@@ -112,3 +112,4 @@ test_tools/LICENSE.analyze/
 examples/agno_test/venv/
 .analyze/
 .playwright-mcp/
+.claude/state/

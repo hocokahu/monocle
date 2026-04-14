@@ -423,7 +423,7 @@ class TraceViewer:
                 # Extract datetime from root span start_time
                 start_dt = ""
                 if roots and roots[0].start_time != datetime.min:
-                    start_dt = roots[0].start_time.strftime("%Y-%m-%d %H:%M")
+                    start_dt = roots[0].start_time.astimezone().strftime("%Y-%m-%d %H:%M")
 
                 # NEW marker for fresh traces
                 if fade is not None:
