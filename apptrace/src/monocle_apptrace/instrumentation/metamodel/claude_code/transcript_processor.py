@@ -10,6 +10,7 @@ since Claude Code is a CLI binary, not a Python library).
 
 import json
 import logging
+import uuid
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -25,6 +26,7 @@ from monocle_apptrace.instrumentation.metamodel.claude_code._helper import (
     get_content,
     get_message_id,
     get_model,
+    get_stop_reason,
     get_usage,
     iter_tool_uses,
     parse_command_skill,
@@ -54,7 +56,7 @@ def _build_full_response(turn):
 
 
 def _emit_turn(tracer, turn, turn_num, session_id, sdk_version, service_name, user_name=None):
-    """Emit spans for a single turn: agentic.turn -> inference + tool spans."""
+    """Emit spans for a single turn: agentic.turn -> agentic.invocation -> inference + tool spans."""
     user_text = extract_text(get_content(turn.user_msg))
 
     if not turn.assistant_msgs:
@@ -66,12 +68,18 @@ def _emit_turn(tracer, turn, turn_num, session_id, sdk_version, service_name, us
     model = get_model(turn.assistant_msgs[0])
     usage = get_usage(last_assistant)
 
+    # Stable IDs scoped to this turn — required by NarrativeGraph builder
+    turn_id = str(uuid.uuid4())
+    invocation_id = str(uuid.uuid4())
+
     turn_attrs = {
             "span.type": "agentic.turn",
             "span.subtype": "turn",
             "scope.agentic.session": session_id,
+            "scope.agentic.turn": turn_id,
             "turn.number": turn_num,
             "entity.1.type": CLAUDE_CODE_AGENT_TYPE_KEY,
+            "entity.1.name": "Claude",
             "workflow.name": service_name,
             "monocle_apptrace.version": sdk_version,
             "monocle.service.name": service_name,
@@ -87,117 +95,149 @@ def _emit_turn(tracer, turn, turn_num, session_id, sdk_version, service_name, us
         turn_span.add_event("data.input", {"input": user_text})
         turn_span.add_event("data.output", {"response": full_response})
 
-        # Inference span
+        # Invocation span — required by NarrativeGraph to create AgentNode + INVOKES edge
         with tracer.start_as_current_span(
-            name="Claude Inference",
+            name="Claude Invocation",
             attributes={
-                "span.type": "inference",
+                "span.type": "agentic.invocation",
                 "scope.agentic.session": session_id,
-                "entity.1.type": "inference.anthropic",
-                "entity.1.provider_name": "anthropic",
-                "entity.2.name": model,
-                "entity.2.type": f"model.llm.{model}",
-                "gen_ai.system": "anthropic",
-                "gen_ai.request.model": model,
-                "gen_ai.response.id": get_message_id(last_assistant) or "",
-                "monocle_apptrace.version": sdk_version,
+                "scope.agentic.turn": turn_id,
+                "scope.agentic.invocation": invocation_id,
+                "entity.1.type": CLAUDE_CODE_AGENT_TYPE_KEY,
+                "entity.1.name": "Claude",
                 "workflow.name": service_name,
+                "monocle_apptrace.version": sdk_version,
             }
-        ) as inference_span:
-            inference_span.set_status(StatusCode.OK)
-            inference_span.add_event("data.input", {"input": user_text})
-            inference_span.add_event("data.output", {"response": assistant_text})
-            metadata_attrs = {}
-            if usage.get("output_tokens"):
-                metadata_attrs["completion_tokens"] = usage["output_tokens"]
-            if usage.get("input_tokens"):
-                metadata_attrs["prompt_tokens"] = usage["input_tokens"]
-            if usage.get("cache_read_tokens"):
-                metadata_attrs["cache_read_tokens"] = usage["cache_read_tokens"]
-            if usage.get("cache_creation_tokens"):
-                metadata_attrs["cache_creation_tokens"] = usage["cache_creation_tokens"]
-            if metadata_attrs:
-                inference_span.add_event("metadata", metadata_attrs)
+        ) as invocation_span:
+            invocation_span.set_status(StatusCode.OK)
+            invocation_span.add_event("data.input", {"input": user_text})
+            invocation_span.add_event("data.output", {"response": full_response})
 
-        # Detect harness-injected skill (slash command like /internal-comms)
-        # These bypass Tool: Skill — the harness injects content via <command-name> tags
-        cmd_skill = parse_command_skill(user_text)
-        has_explicit_skill = any(
-            tu.get("name") == "Skill"
-            for am in turn.assistant_msgs
-            for tu in iter_tool_uses(get_content(am))
-        )
-        if cmd_skill and not has_explicit_skill:
-            skill_name = cmd_skill["skill_name"]
-            skill_input = {"skill": skill_name}
-            if cmd_skill["args"]:
-                skill_input["args"] = cmd_skill["args"]
-            if cmd_skill["plugin_name"]:
-                skill_input["plugin"] = cmd_skill["plugin_name"]
-
+            # Inference span
             with tracer.start_as_current_span(
-                name=f"Skill: {skill_name}",
+                name="Claude Inference",
                 attributes={
-                    "span.type": "agentic.skill.invocation",
+                    "span.type": "inference",
                     "scope.agentic.session": session_id,
-                    "entity.1.type": CLAUDE_CODE_SKILL_TYPE_KEY,
-                    "entity.1.name": skill_name,
-                    "entity.1.skill_name": skill_name,
-                    **({"entity.1.skill_args": cmd_skill["args"]} if cmd_skill["args"] else {}),
-                    **({"entity.1.plugin_name": cmd_skill["plugin_name"]} if cmd_skill["plugin_name"] else {}),
-                    "entity.1.invocation": "harness",
-                    "monocle_apptrace.version": sdk_version,
-                    "workflow.name": service_name,
-                },
-            ) as skill_span:
-                skill_span.set_status(StatusCode.OK)
-                skill_span.add_event("data.input", {"input": json.dumps(skill_input)})
-                skill_span.add_event("data.output", {"response": f"/{cmd_skill['command_name']}"})
-
-        # Tool spans
-        for assistant_msg in turn.assistant_msgs:
-            for tool_use in iter_tool_uses(get_content(assistant_msg)):
-                tool_id = tool_use.get("id", "")
-                tool_name = tool_use.get("name", "unknown")
-                tool_input = tool_use.get("input", {})
-                tool_output = turn.tool_results_by_id.get(tool_id, "")
-
-                span_type = classify_tool(tool_name)
-                entity_type = classify_tool_entity_type(tool_name)
-
-                input_str = json.dumps(tool_input) if isinstance(tool_input, dict) else str(tool_input)
-                output_str = tool_output if isinstance(tool_output, str) else json.dumps(tool_output) if tool_output else ""
-
-                span_attrs = {
-                    "span.type": span_type,
-                    "scope.agentic.session": session_id,
-                    "entity.1.type": entity_type,
-                    "entity.1.name": tool_name,
+                    "scope.agentic.turn": turn_id,
+                    "scope.agentic.invocation": invocation_id,
+                    "entity.1.type": "inference.anthropic",
+                    "entity.1.provider_name": "anthropic",
+                    "entity.2.name": model,
+                    "entity.2.type": f"model.llm.{model}",
+                    "gen_ai.system": "anthropic",
+                    "gen_ai.request.model": model,
+                    "gen_ai.response.id": get_message_id(last_assistant) or "",
                     "monocle_apptrace.version": sdk_version,
                     "workflow.name": service_name,
                 }
+            ) as inference_span:
+                inference_span.set_status(StatusCode.OK)
+                inference_span.add_event("data.input", {"input": user_text})
+                inference_span.add_event("data.output", {"response": assistant_text})
+                stop_reason = get_stop_reason(last_assistant) or "end_turn"
+                finish_type = "tool_call" if stop_reason == "tool_use" else "success"
+                metadata_attrs = {
+                    "finish_reason": stop_reason,
+                    "finish_type": finish_type,
+                }
+                if usage.get("output_tokens"):
+                    metadata_attrs["completion_tokens"] = usage["output_tokens"]
+                if usage.get("input_tokens"):
+                    metadata_attrs["prompt_tokens"] = usage["input_tokens"]
+                input_t = usage.get("input_tokens") or 0
+                output_t = usage.get("output_tokens") or 0
+                if input_t or output_t:
+                    metadata_attrs["total_tokens"] = input_t + output_t
+                if usage.get("cache_read_tokens"):
+                    metadata_attrs["cache_read_tokens"] = usage["cache_read_tokens"]
+                if usage.get("cache_creation_tokens"):
+                    metadata_attrs["cache_creation_tokens"] = usage["cache_creation_tokens"]
+                inference_span.add_event("metadata", metadata_attrs)
 
-                if tool_name == "Agent" and isinstance(tool_input, dict):
-                    subagent_type = tool_input.get("subagent_type", "general-purpose")
-                    span_attrs["entity.1.name"] = subagent_type
-                    span_attrs["entity.1.description"] = tool_input.get("description", "")
-
-                span_name = f"Tool: {tool_name}"
-                if tool_name == "Skill" and isinstance(tool_input, dict):
-                    skill_name = tool_input.get("skill", "unknown")
-                    span_attrs["entity.1.name"] = skill_name
-                    span_attrs["entity.1.skill_name"] = skill_name
-                    if tool_input.get("args"):
-                        span_attrs["entity.1.skill_args"] = tool_input.get("args")
-                    span_name = f"Skill: {skill_name}"
+            # Detect harness-injected skill (slash command like /internal-comms)
+            # These bypass Tool: Skill — the harness injects content via <command-name> tags
+            cmd_skill = parse_command_skill(user_text)
+            has_explicit_skill = any(
+                tu.get("name") == "Skill"
+                for am in turn.assistant_msgs
+                for tu in iter_tool_uses(get_content(am))
+            )
+            if cmd_skill and not has_explicit_skill:
+                skill_name = cmd_skill["skill_name"]
+                skill_input = {"skill": skill_name}
+                if cmd_skill["args"]:
+                    skill_input["args"] = cmd_skill["args"]
+                if cmd_skill["plugin_name"]:
+                    skill_input["plugin"] = cmd_skill["plugin_name"]
 
                 with tracer.start_as_current_span(
-                    name=span_name,
-                    attributes=span_attrs,
-                ) as tool_span:
-                    tool_span.set_status(StatusCode.OK)
-                    tool_span.add_event("data.input", {"input": input_str})
-                    tool_span.add_event("data.output", {"response": output_str})
+                    name=f"Skill: {skill_name}",
+                    attributes={
+                        "span.type": "agentic.skill.invocation",
+                        "scope.agentic.session": session_id,
+                        "scope.agentic.turn": turn_id,
+                        "scope.agentic.invocation": invocation_id,
+                        "entity.1.type": CLAUDE_CODE_SKILL_TYPE_KEY,
+                        "entity.1.name": skill_name,
+                        "entity.1.skill_name": skill_name,
+                        **({"entity.1.skill_args": cmd_skill["args"]} if cmd_skill["args"] else {}),
+                        **({"entity.1.plugin_name": cmd_skill["plugin_name"]} if cmd_skill["plugin_name"] else {}),
+                        "entity.1.invocation": "harness",
+                        "monocle_apptrace.version": sdk_version,
+                        "workflow.name": service_name,
+                    },
+                ) as skill_span:
+                    skill_span.set_status(StatusCode.OK)
+                    skill_span.add_event("data.input", {"input": json.dumps(skill_input)})
+                    skill_span.add_event("data.output", {"response": f"/{cmd_skill['command_name']}"})
+
+            # Tool spans
+            for assistant_msg in turn.assistant_msgs:
+                for tool_use in iter_tool_uses(get_content(assistant_msg)):
+                    tool_id = tool_use.get("id", "")
+                    tool_name = tool_use.get("name", "unknown")
+                    tool_input = tool_use.get("input", {})
+                    tool_output = turn.tool_results_by_id.get(tool_id, "")
+
+                    span_type = classify_tool(tool_name)
+                    entity_type = classify_tool_entity_type(tool_name)
+
+                    input_str = json.dumps(tool_input) if isinstance(tool_input, dict) else str(tool_input)
+                    output_str = tool_output if isinstance(tool_output, str) else json.dumps(tool_output) if tool_output else ""
+
+                    span_attrs = {
+                        "span.type": span_type,
+                        "scope.agentic.session": session_id,
+                        "scope.agentic.turn": turn_id,
+                        "scope.agentic.invocation": invocation_id,
+                        "entity.1.type": entity_type,
+                        "entity.1.name": tool_name,
+                        "monocle_apptrace.version": sdk_version,
+                        "workflow.name": service_name,
+                    }
+
+                    if tool_name == "Agent" and isinstance(tool_input, dict):
+                        subagent_type = tool_input.get("subagent_type", "general-purpose")
+                        span_attrs["entity.1.name"] = subagent_type
+                        span_attrs["entity.1.description"] = tool_input.get("description", "")
+
+                    span_name = f"Tool: {tool_name}"
+                    if tool_name == "Skill" and isinstance(tool_input, dict):
+                        skill_name = tool_input.get("skill", "unknown")
+                        span_attrs["entity.1.name"] = skill_name
+                        span_attrs["entity.1.skill_name"] = skill_name
+                        if tool_input.get("args"):
+                            span_attrs["entity.1.skill_args"] = tool_input.get("args")
+                        span_name = f"Skill: {skill_name}"
+
+                    with tracer.start_as_current_span(
+                        name=span_name,
+                        attributes=span_attrs,
+                    ) as tool_span:
+                        tool_span.set_status(StatusCode.OK)
+                        tool_span.add_event("data.input", {"input": input_str})
+                        tool_span.add_event("data.output", {"response": output_str})
 
     return True
 

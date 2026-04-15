@@ -142,6 +142,14 @@ def get_usage(msg: Dict[str, Any]) -> Dict[str, int]:
     return {}
 
 
+def get_stop_reason(msg: Dict[str, Any]) -> Optional[str]:
+    """Return the stop_reason from an assistant message (e.g., 'end_turn', 'tool_use', 'max_tokens')."""
+    m = msg.get("message")
+    if isinstance(m, dict):
+        return m.get("stop_reason")
+    return None
+
+
 def read_new_jsonl(transcript_path: Path, ss: SessionState) -> Tuple[List[Dict[str, Any]], SessionState]:
     """Read only new bytes since last offset, handling partial lines."""
     if not transcript_path.exists():
