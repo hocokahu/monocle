@@ -772,15 +772,28 @@ def get_team_members(instance) -> Optional[List[str]]:
 
 ### `entities/agent.py`
 
+**IMPORTANT:** Agent instrumentation MUST define both `AGENT_REQUEST` (the `agentic.turn` parent) and `AGENT` (the `agentic.invocation` child). The `agentic.invocation` span is always a direct child of `agentic.turn` — this hierarchy is enforced via `output_processor_list` in `methods.py`.
+
 ```python
 """
 <Framework> Agent entity processor for span creation.
+
+Defines two entities used together via output_processor_list:
+  - AGENT_REQUEST: agentic.turn (outer span — the user-facing turn)
+  - AGENT:         agentic.invocation (inner span — the agent's processing)
+
+The turn→invocation parent-child relationship is enforced by
+methods.py using: output_processor_list: [AGENT_REQUEST, AGENT]
 """
 
 from monocle_apptrace.instrumentation.common.constants import SPAN_SUBTYPES, SPAN_TYPES
 from monocle_apptrace.instrumentation.common.utils import get_error_message
 from monocle_apptrace.instrumentation.metamodel.<framework> import _helper
 
+# ---------------------------------------------------------------------------
+# AGENT (agentic.invocation) — always a direct child of AGENT_REQUEST
+# Subtype: content_processing — the agent processing/handling content
+# ---------------------------------------------------------------------------
 AGENT = {
     "type": SPAN_TYPES.AGENTIC_INVOCATION,
     "subtype": SPAN_SUBTYPES.CONTENT_PROCESSING,
@@ -806,6 +819,50 @@ AGENT = {
                 "attribute": "instructions",
                 "accessor": lambda arguments: _helper.get_agent_instructions(arguments['instance'])
             },
+        ]
+    ],
+    "events": [
+        {
+            "name": "data.input",
+            "attributes": [
+                {
+                    "_comment": "agent input",
+                    "attribute": "input",
+                    "accessor": lambda arguments: _helper.extract_agent_input(arguments)
+                }
+            ]
+        },
+        {
+            "name": "data.output",
+            "attributes": [
+                {
+                    "attribute": "error_code",
+                    "accessor": lambda arguments: get_error_message(arguments)
+                },
+                {
+                    "_comment": "agent response",
+                    "attribute": "response",
+                    "accessor": lambda arguments: _helper.extract_agent_response(arguments['result'])
+                }
+            ]
+        }
+    ]
+}
+
+# ---------------------------------------------------------------------------
+# AGENT_REQUEST (agentic.turn) — the outer parent span
+# Subtype: turn — represents an external request/turn to the agent
+# ---------------------------------------------------------------------------
+AGENT_REQUEST = {
+    "type": SPAN_TYPES.AGENTIC_REQUEST,
+    "subtype": SPAN_SUBTYPES.TURN,
+    "attributes": [
+        [
+            {
+                "_comment": "agent type",
+                "attribute": "type",
+                "accessor": lambda arguments: _helper.<FRAMEWORK>_AGENT_TYPE_KEY
+            }
         ]
     ],
     "events": [
@@ -986,15 +1043,25 @@ TOOL = {
 
 ### `entities/team.py` (if applicable)
 
+Like agents, teams should also use `output_processor_list` in `methods.py` to create the turn→invocation hierarchy.
+
 ```python
 """
 <Framework> Team entity processor for span creation.
+
+Defines two entities used together via output_processor_list:
+  - TEAM_REQUEST: agentic.turn (outer span)
+  - TEAM:         agentic.invocation (inner span — routing subtype for orchestration)
 """
 
 from monocle_apptrace.instrumentation.common.constants import SPAN_SUBTYPES, SPAN_TYPES
 from monocle_apptrace.instrumentation.common.utils import get_error_message
 from monocle_apptrace.instrumentation.metamodel.<framework> import _helper
 
+# ---------------------------------------------------------------------------
+# TEAM (agentic.invocation) — always a direct child of TEAM_REQUEST
+# Subtype: routing — the team orchestrates/routes across agents
+# ---------------------------------------------------------------------------
 TEAM = {
     "type": SPAN_TYPES.AGENTIC_INVOCATION,
     "subtype": SPAN_SUBTYPES.ROUTING,
@@ -1044,6 +1111,49 @@ TEAM = {
         }
     ]
 }
+
+# ---------------------------------------------------------------------------
+# TEAM_REQUEST (agentic.turn) — the outer parent span
+# ---------------------------------------------------------------------------
+TEAM_REQUEST = {
+    "type": SPAN_TYPES.AGENTIC_REQUEST,
+    "subtype": SPAN_SUBTYPES.TURN,
+    "attributes": [
+        [
+            {
+                "_comment": "team type",
+                "attribute": "type",
+                "accessor": lambda arguments: _helper.<FRAMEWORK>_TEAM_TYPE_KEY
+            }
+        ]
+    ],
+    "events": [
+        {
+            "name": "data.input",
+            "attributes": [
+                {
+                    "_comment": "team input",
+                    "attribute": "input",
+                    "accessor": lambda arguments: _helper.extract_agent_input(arguments)
+                }
+            ]
+        },
+        {
+            "name": "data.output",
+            "attributes": [
+                {
+                    "attribute": "error_code",
+                    "accessor": lambda arguments: get_error_message(arguments)
+                },
+                {
+                    "_comment": "team response",
+                    "attribute": "response",
+                    "accessor": lambda arguments: _helper.extract_agent_response(arguments['result'])
+                }
+            ]
+        }
+    ]
+}
 ```
 
 ---
@@ -1060,7 +1170,7 @@ from monocle_apptrace.instrumentation.common.wrapper import (
     atask_wrapper,
     atask_iter_wrapper,
 )
-from monocle_apptrace.instrumentation.metamodel.<framework>.entities.agent import AGENT
+from monocle_apptrace.instrumentation.metamodel.<framework>.entities.agent import AGENT, AGENT_REQUEST
 from monocle_apptrace.instrumentation.metamodel.<framework>.entities.inference import INFERENCE
 # Import other entities as needed:
 # from monocle_apptrace.instrumentation.metamodel.<framework>.entities.team import TEAM
@@ -1068,22 +1178,24 @@ from monocle_apptrace.instrumentation.metamodel.<framework>.entities.inference i
 
 <FRAMEWORK>_METHODS = [
     # Agent execution (sync)
+    # Uses output_processor_list to create agentic.turn → agentic.invocation hierarchy
     {
         "package": "<package.module>",
         "object": "Agent",
         "method": "run",
         "wrapper_method": task_wrapper,
         "span_handler": "<framework>_handler",  # or "default"
-        "output_processor": AGENT,
+        "output_processor_list": [AGENT_REQUEST, AGENT],
     },
     # Agent execution (async)
+    # Uses output_processor_list to create agentic.turn → agentic.invocation hierarchy
     {
         "package": "<package.module>",
         "object": "Agent",
         "method": "arun",
         "wrapper_method": atask_iter_wrapper,  # or atask_wrapper
         "span_handler": "<framework>_handler",
-        "output_processor": AGENT,
+        "output_processor_list": [AGENT_REQUEST, AGENT],
     },
     # Model inference (sync)
     {
@@ -1105,6 +1217,15 @@ from monocle_apptrace.instrumentation.metamodel.<framework>.entities.inference i
     },
 ]
 ```
+
+**IMPORTANT: `output_processor_list` vs `output_processor`**
+
+| Key | Use When | Creates |
+|-----|----------|---------|
+| `output_processor_list` | Agent methods — need turn→invocation hierarchy | Nested spans: first item is parent, second is child |
+| `output_processor` | Leaf spans (inference, tools) — no nesting needed | Single span |
+
+Agent methods MUST use `output_processor_list: [AGENT_REQUEST, AGENT]` so that `agentic.invocation` is always a direct child of `agentic.turn`. The wrapper recursively processes the list, creating the parent-child hierarchy via OpenTelemetry's span context.
 
 ### Wrapper Method Selection Guide
 
@@ -1239,8 +1360,8 @@ Check that spans are created with:
 
 | Constant | Value | Use For |
 |----------|-------|---------|
-| `AGENTIC_INVOCATION` | `agentic.invocation` | Agent/Team invocation |
-| `AGENTIC_REQUEST` | `agentic.turn` | Agent turn (external input) |
+| `AGENTIC_REQUEST` | `agentic.turn` | Agent turn (outer parent span) |
+| `AGENTIC_INVOCATION` | `agentic.invocation` | Agent processing (always direct child of `agentic.turn`) |
 | `AGENTIC_TOOL_INVOCATION` | `agentic.tool.invocation` | Tool invoked by agent |
 | `AGENTIC_MCP_INVOCATION` | `agentic.mcp.invocation` | MCP tool execution |
 | `INFERENCE` | `inference` | Direct LLM inference |
@@ -1253,11 +1374,13 @@ Check that spans are created with:
 
 | Constant | Value | Use For |
 |----------|-------|---------|
+| `TURN` | `turn` | External request/turn (`agentic.turn` spans) |
+| `CONTENT_PROCESSING` | `content_processing` | Agent processing content (`agentic.invocation` spans) |
+| `ROUTING` | `routing` | Routing/orchestration decisions (teams, delegation) |
+| `CONTENT_GENERATION` | `content_generation` | Generating content (tool invocations) |
 | `PLANNING` | `planning` | Agentic planning |
-| `ROUTING` | `routing` | Routing decisions |
-| `CONTENT_PROCESSING` | `content_processing` | Handling content |
-| `CONTENT_GENERATION` | `content_generation` | Generating content |
 | `COMMUNICATION` | `communication` | Returning info |
+| `GENERIC` | `generic` | Generic/unclassified |
 
 ### Entity Type Patterns
 
