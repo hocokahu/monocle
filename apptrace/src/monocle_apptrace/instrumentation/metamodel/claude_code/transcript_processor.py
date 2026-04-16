@@ -306,28 +306,8 @@ def _emit_turn(
                         else _parse_timestamp_ns(get_timestamp(turn.assistant_msgs[i - 1]))
                     )
 
-                # Token metadata — what we report depends on whether this is an
-                # intermediate round (Claude decided to call tools) or the final round.
-                #
-                # Intermediate rounds: prompt_tokens is nearly identical across all
-                # rounds due to Anthropic prompt caching (the whole conversation is
-                # cached). Only completion_tokens is meaningfully different per round,
-                # so that's all we emit for intermediate rounds to avoid noise.
-                #
-                # Final round: emit the full breakdown (prompt, completion, cache stats)
-                # plus an estimated cost in USD. Cost is always emitted on the final round
-                # because that's where we have the full picture.
-                #
-                # Anthropic pricing (all four token types cost money at different rates):
-                #   input_tokens            standard input price  (varies by model)
-                #   cache_creation_tokens   1.25× input price     (costs more to write cache)
-                #   cache_read_tokens       0.10× input price     (90% discount for cache hits)
-                #   output_tokens           ~5× input price       (generation is most expensive)
-                cache_read_t = round_usage.get("cache_read_tokens") or 0
-                cache_creation_t = round_usage.get("cache_creation_tokens") or 0
-                raw_input_t = round_usage.get("input_tokens") or 0
+                # Per-round token counts from this LLM call.
                 output_t = round_usage.get("output_tokens") or 0
-                prompt_t = raw_input_t + cache_read_t + cache_creation_t
                 is_final_round = (i == num_rounds - 1)
                 round_metadata: Dict[str, Any] = {
                     "finish_reason": round_stop_reason,
@@ -336,38 +316,22 @@ def _emit_turn(
                 if output_t:
                     round_metadata["completion_tokens"] = output_t
                 if is_final_round:
-                    # Full token breakdown on the last round only
-                    if prompt_t:
-                        round_metadata["prompt_tokens"] = prompt_t
-                    if prompt_t or output_t:
-                        round_metadata["total_tokens"] = prompt_t + output_t
-                    if cache_read_t:
-                        round_metadata["cache_read_tokens"] = cache_read_t
-                    if cache_creation_t:
-                        round_metadata["cache_creation_tokens"] = cache_creation_t
-                    # Estimated cost in USD using per-model Anthropic pricing.
-                    # Prices per 1M tokens (input / cache_write / cache_read / output).
-                    # Falls back to Sonnet pricing for unknown models.
-                    _PRICING: Dict[str, tuple] = {
-                        "claude-opus-4":    (15.00, 18.75, 1.50, 75.00),
-                        "claude-opus":      (15.00, 18.75, 1.50, 75.00),
-                        "claude-sonnet-4":  ( 3.00,  3.75, 0.30, 15.00),
-                        "claude-sonnet":    ( 3.00,  3.75, 0.30, 15.00),
-                        "claude-haiku-4":   ( 0.80,  1.00, 0.08,  4.00),
-                        "claude-haiku":     ( 0.80,  1.00, 0.08,  4.00),
-                    }
-                    inp_p, cw_p, cr_p, out_p = next(
-                        (v for k, v in _PRICING.items() if model.startswith(k)),
-                        (3.00, 3.75, 0.30, 15.00),  # default: Sonnet
-                    )
-                    cost_usd = (
-                        raw_input_t   * inp_p / 1_000_000 +
-                        cache_creation_t * cw_p  / 1_000_000 +
-                        cache_read_t  * cr_p  / 1_000_000 +
-                        output_t      * out_p / 1_000_000
-                    )
-                    if cost_usd > 0:
-                        round_metadata["estimated_cost_usd"] = round(cost_usd, 6)
+                    # Aggregate token counts across ALL rounds so prompt_tokens and
+                    # total_tokens reflect the full turn, not just the last LLM call.
+                    total_usage = aggregate_usage(turn.assistant_msgs)
+                    total_input_t = total_usage.get("input_tokens") or 0
+                    total_cache_read_t = total_usage.get("cache_read_tokens") or 0
+                    total_cache_creation_t = total_usage.get("cache_creation_tokens") or 0
+                    total_output_t = total_usage.get("output_tokens") or 0
+                    total_prompt_t = total_input_t + total_cache_read_t + total_cache_creation_t
+                    if total_prompt_t:
+                        round_metadata["prompt_tokens"] = total_prompt_t
+                    if total_prompt_t or total_output_t:
+                        round_metadata["total_tokens"] = total_prompt_t + total_output_t
+                    if total_cache_read_t:
+                        round_metadata["cache_read_tokens"] = total_cache_read_t
+                    if total_cache_creation_t:
+                        round_metadata["cache_creation_tokens"] = total_cache_creation_t
 
                 inf_name = (
                     "Claude Inference" if num_rounds == 1
