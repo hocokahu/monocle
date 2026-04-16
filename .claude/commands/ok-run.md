@@ -31,7 +31,7 @@ Smart runner for instrumented apps. Automatically determines how to run based on
 1. Read `.analyze/SESSION.md` to determine:
    - Instrumentation approach (zero-code or code-based)
    - Entry points detected during scan
-2. If no SESSION.md → tell user: "Run `/ok:instrument` first."
+2. If no SESSION.md → tell user: "Run `/ok-instrument` first."
 
 ### Step 2: Check Okahu Credentials
 
@@ -102,7 +102,7 @@ Smart runner for instrumented apps. Automatically determines how to run based on
 **If user selects "Local-only tracing":**
 - Continue without setting credentials
 - Traces will be saved to `.monocle/` folder only
-- Tell user: "Traces will be saved locally to `.monocle/`. Use `/ok:local-trace` to view them."
+- Tell user: "Traces will be saved locally to `.monocle/`. Use `/ok-local-trace` to view them."
 
 **If user selects "Already set in environment":**
 - Verify by checking env vars again
@@ -143,7 +143,7 @@ Note: Build options dynamically from:
 - Always include "Enter custom command" and "Don't run - exit"
 
 **If user selects "Don't run - exit":**
-- Say "Okay, not running. You can run manually or use `/ok:run <command>` later."
+- Say "Okay, not running. You can run manually or use `/ok-run <command>` later."
 - Exit without running anything
 
 **If user selects "Enter custom command":**
@@ -176,24 +176,24 @@ For servers/workers that listen on ports:
 After running (or if user exits), append to `.analyze/SESSION.md`:
 
 ```markdown
-## Run (/ok:run)
+## Run (/ok-run)
 - **Command**: flask run -p 8080
 - **Approach**: Zero-code (via okahu-instrument) / Code-based (direct)
 - **Status**: Completed / User exited / Error
-- **Next**: Run `/ok:local-trace` to inspect traces
+- **Next**: Run `/ok-local-trace` to inspect traces
 ```
 
 ## Examples
 
 ```bash
 # Explicit command
-/ok:run python app.py
-/ok:run flask run -p 8080
-/ok:run uvicorn app:app --host 0.0.0.0 --port 8000
-/ok:run celery -A myapp worker --loglevel=info
+/ok-run python app.py
+/ok-run flask run -p 8080
+/ok-run uvicorn app:app --host 0.0.0.0 --port 8000
+/ok-run celery -A myapp worker --loglevel=info
 
 # Auto-detect (will prompt if multiple options)
-/ok:run
+/ok-run
 ```
 
 ## Environment Variables
@@ -209,7 +209,7 @@ OKAHU_API_KEY             # Okahu API key
 
 ## Related Commands
 
-- `/ok:instrument` - Must run first to set up tracing
-- `/ok:local-trace` - View traces after running
-- `/ok:pause` - Save session before stopping work
-- `/ok:resume` - Resume from saved session
+- `/ok-instrument` - Must run first to set up tracing
+- `/ok-local-trace` - View traces after running
+- `/ok-pause` - Save session before stopping work
+- `/ok-resume` - Resume from saved session

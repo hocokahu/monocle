@@ -168,7 +168,7 @@ Skill: /ship
 
 ### Vision
 
-The `/ok:*` skill family generates instrumentation for any codebase using Monocle's metamodel framework.
+The `/ok-*` skill family generates instrumentation for any codebase using Monocle's metamodel framework.
 
 ### Metamodel Reference
 
@@ -179,12 +179,12 @@ Monocle provides instrumentation adapters for common frameworks:
 
 | Skill | Purpose |
 |-------|---------|
-| `/ok:scan` | Full codebase scan to recommend what to trace |
-| `/ok:instrument` | Add tracing to your app (zero-code or code-based) |
-| `/ok:find` | Find methods by name, trace execution paths |
-| `/ok:run` | Run your app with Monocle tracing enabled |
-| `/ok:local-trace` | View local traces from `.monocle/` folder |
-| `/ok:add-framework` | Add instrumentation for a new AI/ML framework |
+| `/ok-scan` | Full codebase scan to recommend what to trace |
+| `/ok-instrument` | Add tracing to your app (zero-code or code-based) |
+| `/ok-find` | Find methods by name, trace execution paths |
+| `/ok-run` | Run your app with Monocle tracing enabled |
+| `/ok-local-trace` | View local traces from `.monocle/` folder |
+| `/ok-add-framework` | Add instrumentation for a new AI/ML framework |
 
 ### Zero-Code Instrumentation
 
@@ -227,7 +227,7 @@ async def my_async_function(input_data):
 
 ### Framework Detection
 
-`/ok:scan` detects and recommends instrumentation:
+`/ok-scan` detects and recommends instrumentation:
 
 ```
 Detected frameworks:
@@ -316,10 +316,10 @@ cd examples/scripts/claude_code_hook
 ```bash
 # In your project
 claude
-> /ok:scan          # Analyze codebase
-> /ok:instrument    # Add tracing
-> /ok:run           # Execute with tracing
-> /ok:local-trace   # View traces
+> /ok-scan          # Analyze codebase
+> /ok-instrument    # Add tracing
+> /ok-run           # Execute with tracing
+> /ok-local-trace   # View traces
 ```
 
 ---

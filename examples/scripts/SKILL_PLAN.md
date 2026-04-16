@@ -24,28 +24,28 @@ A set of scripts and Claude CLI skills to analyze Python codebases and add monoc
 
 | Skill | Arguments | Description |
 |-------|-----------|-------------|
-| `/ok:scan` | `[folder]` optional | Full codebase analysis. Asks for folder if not provided. |
-| `/ok:find` | `[query]` optional | Find methods by search or `Class.method`. Asks if not provided. |
-| `/ok:instrument` | none | Add tracing - prompts **Zero-code** or **Code-based** |
-| `/ok:run` | `[command]` optional | Smart runner - auto-detects or prompts. See behavior below. |
-| `/ok:local-trace` | `[query]` optional | View local traces. Accepts natural language. Falls back to Okahu MCP if no local traces. |
-| `/ok:pause` | `[folder]` optional | Save conversation context to SESSION.md for cross-session continuity. |
-| `/ok:resume` | `[folder]` optional | Resume session with full context restoration. Finds SESSION.md automatically. |
-| `/ok:status` | `[folder]` optional | **[Deprecated]** Use `/ok:resume` instead. |
-| `/ok:add-framework` | `<framework>` | Add monocle instrumentation for a new AI/ML framework. |
+| `/ok-scan` | `[folder]` optional | Full codebase analysis. Asks for folder if not provided. |
+| `/ok-find` | `[query]` optional | Find methods by search or `Class.method`. Asks if not provided. |
+| `/ok-instrument` | none | Add tracing - prompts **Zero-code** or **Code-based** |
+| `/ok-run` | `[command]` optional | Smart runner - auto-detects or prompts. See behavior below. |
+| `/ok-local-trace` | `[query]` optional | View local traces. Accepts natural language. Falls back to Okahu MCP if no local traces. |
+| `/ok-pause` | `[folder]` optional | Save conversation context to SESSION.md for cross-session continuity. |
+| `/ok-resume` | `[folder]` optional | Resume session with full context restoration. Finds SESSION.md automatically. |
+| `/ok-status` | `[folder]` optional | **[Deprecated]** Use `/ok-resume` instead. |
+| `/ok-add-framework` | `<framework>` | Add monocle instrumentation for a new AI/ML framework. |
 
 ---
 
 ## Workflow
 
 ```
-/ok:scan or /ok:find → /ok:instrument → /ok:run → /ok:local-trace
+/ok-scan or /ok-find → /ok-instrument → /ok-run → /ok-local-trace
 ```
 
-### `/ok:run` Smart Behavior
+### `/ok-run` Smart Behavior
 
 ```
-/ok:run
+/ok-run
     │
     ├─ Command provided? → Use it
     │
@@ -68,14 +68,14 @@ Servers that listen on ports run in foreground (user can Ctrl+C to stop).
 ### Session Persistence
 
 ```
-/ok:scan              → Writes to SESSION.md
+/ok-scan              → Writes to SESSION.md
 chat about frameworks → In Claude's context window
 chat about entry pts  → In Claude's context window
-/ok:pause             → Gathers context + files → Appends to SESSION.md
+/ok-pause             → Gathers context + files → Appends to SESSION.md
 
 --- new session or /clear ---
 
-/ok:resume            → Reads SESSION.md → Restores context → Prompts next step
+/ok-resume            → Reads SESSION.md → Restores context → Prompts next step
 ```
 
 **SESSION.md** accumulates session blocks over time, preserving:
@@ -91,26 +91,26 @@ chat about entry pts  → In Claude's context window
 
 **Example 1: Full scan (zero-code)**
 ```bash
-/ok:scan                # Analyze codebase
-/ok:instrument          # Choose "Zero-code" → generates okahu.yaml
-/ok:run                 # Auto-detects or prompts for run command
-/ok:local-trace         # "show me recent errors"
+/ok-scan                # Analyze codebase
+/ok-instrument          # Choose "Zero-code" → generates okahu.yaml
+/ok-run                 # Auto-detects or prompts for run command
+/ok-local-trace         # "show me recent errors"
 ```
 
 **Example 2: Targeted tracing (code-based)**
 ```bash
-/ok:find payment flow   # Search for payment methods
-/ok:instrument          # Choose "Code-based" → injects setup code
+/ok-find payment flow   # Search for payment methods
+/ok-instrument          # Choose "Code-based" → injects setup code
 flask run               # Run normally - tracing enabled
-/ok:local-trace         # Debug
+/ok-local-trace         # Debug
 ```
 
 **Example 3: Direct method lookup**
 ```bash
-/ok:find db.UserRepo.save    # Direct mode - exact method
-/ok:instrument               # Set up tracing
-/ok:run uvicorn app:app      # Run with explicit command
-/ok:local-trace --errors     # Check for errors
+/ok-find db.UserRepo.save    # Direct mode - exact method
+/ok-instrument               # Set up tracing
+/ok-run uvicorn app:app      # Run with explicit command
+/ok-local-trace --errors     # Check for errors
 ```
 
 ---
@@ -121,15 +121,15 @@ flask run               # Run normally - tracing enabled
 .claude/
 ├── commands/
 │   └── ok/                             # Each command = separate .md file
-│       ├── scan.md                     # /ok:scan
-│       ├── find.md                     # /ok:find
-│       ├── instrument.md               # /ok:instrument
-│       ├── run.md                      # /ok:run
-│       ├── local-trace.md              # /ok:local-trace
-│       ├── pause.md                    # /ok:pause
-│       ├── resume.md                   # /ok:resume
-│       ├── status.md                   # /ok:status [deprecated]
-│       └── add-framework.md            # /ok:add-framework
+│       ├── scan.md                     # /ok-scan
+│       ├── find.md                     # /ok-find
+│       ├── instrument.md               # /ok-instrument
+│       ├── run.md                      # /ok-run
+│       ├── local-trace.md              # /ok-local-trace
+│       ├── pause.md                    # /ok-pause
+│       ├── resume.md                   # /ok-resume
+│       ├── status.md                   # /ok-status [deprecated]
+│       └── add-framework.md            # /ok-add-framework
 │
 └── scripts/                            # Helper scripts
     ├── ast_parser.py                   # Extract classes, methods, args
@@ -200,7 +200,7 @@ These frameworks are auto-instrumented by monocle - no custom YAML needed:
 
 ## Adding New Framework Support
 
-Use `/ok:add-framework` to add instrumentation for frameworks not yet supported by monocle.
+Use `/ok-add-framework` to add instrumentation for frameworks not yet supported by monocle.
 
 ### Workflow Overview
 
@@ -269,7 +269,7 @@ apptrace/src/monocle_apptrace/instrumentation/metamodel/<framework>/
 
 ```bash
 # Full workflow with workspace setup
-/ok:add-framework agno
+/ok-add-framework agno
   → Framework name: agno
   → Package name: agno
   → Entity types: [Agent, Team, Tool, Inference]
@@ -369,7 +369,7 @@ OKAHU_API_KEY             # Okahu API key
 ## KEY RULES (MUST FOLLOW)
 
 ### 1. Framework Priority
-**If `/ok:scan` detects monocle-supported frameworks (OpenAI, LangChain, Flask, etc.), PRIORITIZE using monocle's built-in auto-instrumentation.** Do NOT reinvent the wheel with custom tracing when monocle already supports it.
+**If `/ok-scan` detects monocle-supported frameworks (OpenAI, LangChain, Flask, etc.), PRIORITIZE using monocle's built-in auto-instrumentation.** Do NOT reinvent the wheel with custom tracing when monocle already supports it.
 
 ### 2. Dependencies - requirements.txt
 When instrumenting code or generating okahu.yaml that requires `monocle_apptrace`, **ALWAYS update requirements.txt**:

@@ -44,9 +44,9 @@ If multiple found, **USE AskUserQuestion** to select which session.
 
 ### Step 3: Gather Conversation Context
 
-**Review the conversation since last /ok:* command and collect:**
+**Review the conversation since last /ok-* command and collect:**
 
-1. **Commands run**: Which /ok:* commands were executed
+1. **Commands run**: Which /ok-* commands were executed
 2. **Findings**: What was discovered about the codebase
 3. **Decisions made**: Choices about instrumentation approach, frameworks, entry points
 4. **Issues encountered**: Errors, blockers, workarounds
@@ -113,9 +113,9 @@ Append a new session block to `.analyze/SESSION.md`:
 Current state:
 - Stage: {scan|instrument|run|trace}
 - Entry point: {entry_point or "not yet identified"}
-- Last command: {last /ok:* command}
+- Last command: {last /ok-* command}
 
-To resume: /ok:resume {app_folder}
+To resume: /ok-resume {app_folder}
 ```
 
 ## SESSION.md Structure
@@ -137,7 +137,7 @@ The file accumulates session blocks over time:
 - **Entry point**: my_app:main
 
 ### Completed This Session
-- /ok:scan - Found 3 entry points
+- /ok-scan - Found 3 entry points
 - Selected my_app:main as primary
 
 ### Findings
@@ -149,8 +149,8 @@ The file accumulates session blocks over time:
 - Focus on my_app:main entry point first
 
 ### Next Steps
-1. Run /ok:instrument to generate okahu.yaml
-2. Test with /ok:run
+1. Run /ok-instrument to generate okahu.yaml
+2. Test with /ok-run
 
 ---
 
@@ -164,12 +164,12 @@ The file accumulates session blocks over time:
 ## Usage Examples
 
 ```
-/ok:pause                     # Auto-find session, save context
-/ok:pause examples/           # Save session in examples folder
+/ok-pause                     # Auto-find session, save context
+/ok-pause examples/           # Save session in examples folder
 ```
 
 ## Related Commands
 
-- `/ok:resume` - Resume from saved session
-- `/ok:scan` - Start or continue codebase analysis
-- `/ok:instrument` - Add tracing configuration
+- `/ok-resume` - Resume from saved session
+- `/ok-scan` - Start or continue codebase analysis
+- `/ok-instrument` - Add tracing configuration

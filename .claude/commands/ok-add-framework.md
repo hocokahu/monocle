@@ -1406,9 +1406,9 @@ Check that spans are created with:
 
 ## Related Commands
 
-- `/ok:scan` - Analyze codebase for instrumentation points
-- `/ok:instrument` - Add tracing to your app
-- `/ok:run` - Execute app with tracing enabled
-- `/ok:local-trace` - View traces from `.monocle/` folder
-- `/ok:pause` - Save session before stopping work
-- `/ok:resume` - Resume from saved session
+- `/ok-scan` - Analyze codebase for instrumentation points
+- `/ok-instrument` - Add tracing to your app
+- `/ok-run` - Execute app with tracing enabled
+- `/ok-local-trace` - View traces from `.monocle/` folder
+- `/ok-pause` - Save session before stopping work
+- `/ok-resume` - Resume from saved session

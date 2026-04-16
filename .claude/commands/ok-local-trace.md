@@ -16,10 +16,10 @@ View local traces from `.monocle/` folder. Accepts natural language queries.
 
 ## When to Use This vs Okahu MCP
 
-| This skill (`/ok:local-trace`) | Okahu MCP |
+| This skill (`/ok-local-trace`) | Okahu MCP |
 |-------------------------------|-----------|
 | Local `.monocle/` folder traces | Remote Okahu cloud traces |
-| From `/ok:instrument` runs | From deployed apps with Okahu telemetry |
+| From `/ok-instrument` runs | From deployed apps with Okahu telemetry |
 | Local dev/debugging | Production monitoring |
 
 ## Natural Language Query Examples
@@ -114,7 +114,7 @@ When no local traces exist, offer to query Okahu Cloud:
     "multiSelect": false,
     "options": [
       {"label": "Yes, check Okahu Cloud", "description": "Query remote traces from deployed apps"},
-      {"label": "No, I'll run /ok:instrument first", "description": "Generate local traces first"}
+      {"label": "No, I'll run /ok-instrument first", "description": "Generate local traces first"}
     ]
   }]
 }
@@ -127,7 +127,7 @@ If user chooses Okahu Cloud, ask for app/workflow name and use `mcp__okahu-mcp-s
 Append to `.analyze/SESSION.md` if errors found or notable observations:
 
 ```markdown
-## Local Trace Review (/ok:local-trace)
+## Local Trace Review (/ok-local-trace)
 - **Query**: "show me errors from today"
 - **Interpreted as**: --errors-only --last 1440m
 - **Traces reviewed**: 3
@@ -140,10 +140,10 @@ Append to `.analyze/SESSION.md` if errors found or notable observations:
 
 ```bash
 # Natural language (preferred)
-/ok:local-trace show me recent errors
-/ok:local-trace what happened in the last hour
-/ok:local-trace find the slowest trace
-/ok:local-trace show trace abc123
+/ok-local-trace show me recent errors
+/ok-local-trace what happened in the last hour
+/ok-local-trace find the slowest trace
+/ok-local-trace show trace abc123
 
 # Interactive viewer (user runs directly)
 ! python .claude/scripts/trace_viewer.py
@@ -151,13 +151,13 @@ Append to `.analyze/SESSION.md` if errors found or notable observations:
 ! python .claude/scripts/trace_viewer.py --trace-id abc123
 
 # Inline output (works in Bash tool)
-/ok:local-trace --last 5m
-/ok:local-trace --errors-only
+/ok-local-trace --last 5m
+/ok-local-trace --errors-only
 ```
 
 ## Related Commands
 
-- `/ok:instrument` - Run app to generate local traces first
+- `/ok-instrument` - Run app to generate local traces first
 - Use Okahu MCP tools for production/cloud traces
-- `/ok:pause` - Save session before stopping work
-- `/ok:resume` - Resume from saved session
+- `/ok-pause` - Save session before stopping work
+- `/ok-resume` - Resume from saved session

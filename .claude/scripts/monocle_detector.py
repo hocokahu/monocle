@@ -399,7 +399,7 @@ def print_report(result: dict):
 
     if summary["needs_yaml"]:
         print()
-        print("Next step: Run /ok:scan to analyze custom code")
+        print("Next step: Run /ok-scan to analyze custom code")
     else:
         print()
         print("All frameworks supported! Just add setup code.")

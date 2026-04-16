@@ -76,11 +76,11 @@ If ALL code uses supported frameworks → just use `setup_monocle_telemetry()`, 
     }
     ```
 15. **Write/update `<path>/.analyze/SESSION.md`** with human-readable summary (see format below)
-16. Suggest running `/ok:instrument` to generate YAML
+16. Suggest running `/ok-instrument` to generate YAML
 
 ## SESSION.md Format - ALWAYS UPDATE
 
-After each /ok: command, write/append to `.analyze/SESSION.md`:
+After each /ok- command, write/append to `.analyze/SESSION.md`:
 
 ```markdown
 # Okahu Instrumentation Session
@@ -88,7 +88,7 @@ After each /ok: command, write/append to `.analyze/SESSION.md`:
 ## Last Updated
 YYYY-MM-DD HH:MM
 
-## Scan Results (/ok:scan)
+## Scan Results (/ok-scan)
 - **App folder**: examples/
 - **Existing instrumentation**: serve.py (or "None")
 - **Entry point selected**: my_app:main
@@ -105,13 +105,13 @@ YYYY-MM-DD HH:MM
 
 ### If existing instrumentation retained:
 - [x] Setup already in place (serve.py)
-- [ ] Run `/ok:run <command>` to execute with tracing
-- [ ] Run `/ok:local-trace` to check traces
+- [ ] Run `/ok-run <command>` to execute with tracing
+- [ ] Run `/ok-local-trace` to check traces
 
 ### If new instrumentation needed:
-- [ ] Run `/ok:instrument` to add tracing (zero-code or code-based)
-- [ ] Run `/ok:run <command>` to execute with tracing
-- [ ] Run `/ok:local-trace` to check traces
+- [ ] Run `/ok-instrument` to add tracing (zero-code or code-based)
+- [ ] Run `/ok-run <command>` to execute with tracing
+- [ ] Run `/ok-local-trace` to check traces
 ```
 
 This file persists across `/clear` and session exits.
@@ -138,7 +138,7 @@ When `setup_monocle_telemetry` is already in the codebase, use this question:
 When user selects "Keep as-is":
 - Show which files have `setup_monocle_telemetry`
 - List what frameworks are auto-traced
-- Suggest next steps: `/ok:run` and `/ok:local-trace`
+- Suggest next steps: `/ok-run` and `/ok-local-trace`
 - Update SESSION.md with "Existing instrumentation retained"
 
 When user selects "Scan for gaps":
@@ -224,6 +224,6 @@ Analysis output goes to `.analyze/` folder in the target directory.
 
 ## Related Commands
 
-- `/ok:instrument` - Generate okahu.yaml from scan results
-- `/ok:pause` - Save session before stopping work
-- `/ok:resume` - Resume from saved session
+- `/ok-instrument` - Generate okahu.yaml from scan results
+- `/ok-pause` - Save session before stopping work
+- `/ok-resume` - Resume from saved session

@@ -55,21 +55,21 @@
   <!-- ok:scan -->
   <g class="c-purple">
     <rect x="40" y="40" width="140" height="56" rx="8" stroke-width="0.5"/>
-    <text class="th" x="110" y="60" text-anchor="middle" dominant-baseline="central">/ok:scan</text>
+    <text class="th" x="110" y="60" text-anchor="middle" dominant-baseline="central">/ok-scan</text>
     <text class="ts" x="110" y="78" text-anchor="middle" dominant-baseline="central">Full codebase scan</text>
   </g>
 
   <!-- ok:find -->
   <g class="c-purple">
     <rect x="200" y="40" width="140" height="56" rx="8" stroke-width="0.5"/>
-    <text class="th" x="270" y="60" text-anchor="middle" dominant-baseline="central">/ok:find</text>
+    <text class="th" x="270" y="60" text-anchor="middle" dominant-baseline="central">/ok-find</text>
     <text class="ts" x="270" y="78" text-anchor="middle" dominant-baseline="central">Search methods</text>
   </g>
 
   <!-- ok:status -->
   <g class="c-gray">
     <rect x="500" y="40" width="140" height="56" rx="8" stroke-width="0.5"/>
-    <text class="th" x="570" y="60" text-anchor="middle" dominant-baseline="central">/ok:status</text>
+    <text class="th" x="570" y="60" text-anchor="middle" dominant-baseline="central">/ok-status</text>
     <text class="ts" x="570" y="78" text-anchor="middle" dominant-baseline="central">Resume session</text>
   </g>
 
@@ -157,7 +157,7 @@
   <!-- ok:instrument -->
   <g class="c-coral">
     <rect x="200" y="400" width="160" height="56" rx="8" stroke-width="0.5"/>
-    <text class="th" x="280" y="420" text-anchor="middle" dominant-baseline="central">/ok:instrument</text>
+    <text class="th" x="280" y="420" text-anchor="middle" dominant-baseline="central">/ok-instrument</text>
     <text class="ts" x="280" y="438" text-anchor="middle" dominant-baseline="central">Add tracing to app</text>
   </g>
 
@@ -205,7 +205,7 @@
   <!-- ok:run -->
   <g class="c-green">
     <rect x="200" y="640" width="160" height="56" rx="8" stroke-width="0.5"/>
-    <text class="th" x="280" y="660" text-anchor="middle" dominant-baseline="central">/ok:run</text>
+    <text class="th" x="280" y="660" text-anchor="middle" dominant-baseline="central">/ok-run</text>
     <text class="ts" x="280" y="678" text-anchor="middle" dominant-baseline="central">Execute with tracing</text>
   </g>
 
@@ -236,7 +236,7 @@
   <!-- ok:local-trace -->
   <g class="c-purple">
     <rect x="200" y="740" width="160" height="56" rx="8" stroke-width="0.5"/>
-    <text class="th" x="280" y="760" text-anchor="middle" dominant-baseline="central">/ok:local-trace</text>
+    <text class="th" x="280" y="760" text-anchor="middle" dominant-baseline="central">/ok-local-trace</text>
     <text class="ts" x="280" y="778" text-anchor="middle" dominant-baseline="central">View local traces</text>
   </g>
 

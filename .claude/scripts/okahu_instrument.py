@@ -293,7 +293,7 @@ def main():
     # Check config exists
     if not Path(config_path).exists():
         print(f"[okahu-instrument] ERROR: Config not found: {config_path}")
-        print(f"[okahu-instrument] Run /ok:instrument first to generate okahu.yaml")
+        print(f"[okahu-instrument] Run /ok-instrument first to generate okahu.yaml")
         sys.exit(1)
 
     # Environment flags

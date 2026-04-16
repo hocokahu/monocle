@@ -9,10 +9,10 @@
   "total_tasks": null,
   "status": "paused",
   "completed_tasks": [
-    {"id": 1, "name": "Update /ok:add-framework skill — agent.py template: add AGENT_REQUEST entity", "status": "done"},
-    {"id": 2, "name": "Update /ok:add-framework skill — methods.py template: output_processor_list", "status": "done"},
-    {"id": 3, "name": "Update /ok:add-framework skill — team.py template: add TEAM_REQUEST entity", "status": "done"},
-    {"id": 4, "name": "Update /ok:add-framework skill — quick reference tables", "status": "done"},
+    {"id": 1, "name": "Update /ok-add-framework skill — agent.py template: add AGENT_REQUEST entity", "status": "done"},
+    {"id": 2, "name": "Update /ok-add-framework skill — methods.py template: output_processor_list", "status": "done"},
+    {"id": 3, "name": "Update /ok-add-framework skill — team.py template: add TEAM_REQUEST entity", "status": "done"},
+    {"id": 4, "name": "Update /ok-add-framework skill — quick reference tables", "status": "done"},
     {"id": 5, "name": "Pull latest hoc/claude-skill (transcript_processor refactor from PR #1)", "status": "done"}
   ],
   "remaining_tasks": [
@@ -28,6 +28,6 @@
     {"decision": "AGENT_REQUEST uses TURN subtype, AGENT uses CONTENT_PROCESSING subtype", "rationale": "Consistent with all existing framework implementations in codebase", "phase": "skill-update"}
   ],
   "uncommitted_files": [".claude/commands/ok/add-framework.md"],
-  "next_action": "Commit the /ok:add-framework skill update, then verify traces or continue with other instrumentation work",
-  "context_notes": "Updated the /ok:add-framework skill to enforce the turn→invocation span hierarchy pattern. Pulled PR #1 which refactored transcript_processor with token aggregation and DELEGATES_TO telemetry. The skill file is the only uncommitted change."
+  "next_action": "Commit the /ok-add-framework skill update, then verify traces or continue with other instrumentation work",
+  "context_notes": "Updated the /ok-add-framework skill to enforce the turn→invocation span hierarchy pattern. Pulled PR #1 which refactored transcript_processor with token aggregation and DELEGATES_TO telemetry. The skill file is the only uncommitted change."
 }

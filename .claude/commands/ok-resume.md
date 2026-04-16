@@ -17,7 +17,7 @@ Resume an instrumentation session by loading `.analyze/SESSION.md` and restoring
 - Starting a new Claude session
 - After `/clear`
 - Returning to a project after a break
-- Picking up where `/ok:pause` left off
+- Picking up where `/ok-pause` left off
 
 ## Process
 
@@ -40,7 +40,7 @@ If multiple found, **USE AskUserQuestion**:
     "options": [
       {"label": "examples/.analyze/SESSION.md", "description": "Last updated: 2024-03-16 - my_app scanning"},
       {"label": "src/.analyze/SESSION.md", "description": "Last updated: 2024-03-15 - payment service"},
-      {"label": "Start new session", "description": "Run /ok:scan on a new folder"}
+      {"label": "Start new session", "description": "Run /ok-scan on a new folder"}
     ]
   }]
 }
@@ -109,10 +109,10 @@ From SESSION.md, extract the most recent session block:
     "multiSelect": false,
     "options": [
       {"label": "Continue from next steps", "description": "{first next step from SESSION.md}"},
-      {"label": "/ok:scan", "description": "Re-run or continue codebase scan"},
-      {"label": "/ok:instrument", "description": "Add tracing configuration"},
-      {"label": "/ok:run", "description": "Execute app with tracing"},
-      {"label": "/ok:local-trace", "description": "View collected traces"},
+      {"label": "/ok-scan", "description": "Re-run or continue codebase scan"},
+      {"label": "/ok-instrument", "description": "Add tracing configuration"},
+      {"label": "/ok-run", "description": "Execute app with tracing"},
+      {"label": "/ok-local-trace", "description": "View collected traces"},
       {"label": "View full SESSION.md", "description": "Show complete session history"}
     ]
   }]
@@ -127,21 +127,21 @@ If no SESSION.md exists:
 No saved session found in {searched_locations}.
 
 To start a new session:
-  /ok:scan {app_folder}    - Scan codebase for entry points
-  /ok:instrument           - Add tracing to existing project
+  /ok-scan {app_folder}    - Scan codebase for entry points
+  /ok-instrument           - Add tracing to existing project
 ```
 
 ## Usage Examples
 
 ```
-/ok:resume                    # Auto-find and resume session
-/ok:resume examples/          # Resume session in examples folder
-/ok:resume src/               # Resume session in src folder
+/ok-resume                    # Auto-find and resume session
+/ok-resume examples/          # Resume session in examples folder
+/ok-resume src/               # Resume session in src folder
 ```
 
 ## Related Commands
 
-- `/ok:pause` - Save current session before stopping
-- `/ok:scan` - Start new codebase analysis
-- `/ok:instrument` - Add tracing configuration
-- `/ok:run` - Execute with tracing enabled
+- `/ok-pause` - Save current session before stopping
+- `/ok-scan` - Start new codebase analysis
+- `/ok-instrument` - Add tracing configuration
+- `/ok-run` - Execute with tracing enabled

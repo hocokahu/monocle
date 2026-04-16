@@ -19,7 +19,7 @@ Add monocle tracing to your application. Supports two approaches.
 
 **FIRST, check if scan/find was run:**
 1. Look for `.analyze/choices.json` or `.analyze/ast_data.json`
-2. If NOT found → tell user: "No analysis found. Run `/ok:scan` or `/ok:find` first."
+2. If NOT found → tell user: "No analysis found. Run `/ok-scan` or `/ok-find` first."
 3. If found → continue
 
 ## Step 1: Ask User Which Approach
@@ -57,13 +57,13 @@ If user selects **Zero-code**:
 5. Write `okahu.yaml` to app folder
 6. **Update `.analyze/SESSION.md`**:
    ```markdown
-   ## Instrumentation (/ok:instrument)
+   ## Instrumentation (/ok-instrument)
    - **Approach**: Zero-code
    - **Config file**: okahu.yaml
    - **Methods instrumented**: 5
-   - **Next**: Run `/ok:run` to execute with tracing
+   - **Next**: Run `/ok-run` to execute with tracing
    ```
-7. Tell user: "Run `/ok:run <your command>` to execute with tracing"
+7. Tell user: "Run `/ok-run <your command>` to execute with tracing"
 
 ## Step 2B: Code-based Instrumentation
 
@@ -98,7 +98,7 @@ If user selects **Code-based**:
 5. **Check requirements.txt** - ensure `monocle_apptrace` is listed, add if missing
 6. **Update `.analyze/SESSION.md`**:
    ```markdown
-   ## Instrumentation (/ok:instrument)
+   ## Instrumentation (/ok-instrument)
    - **Approach**: Code-based
    - **File modified**: main.py
    - **Setup code added**: Lines 1-15
@@ -149,8 +149,8 @@ If you need to override this, use the `selected` field instead, but expect dupli
 
 ## Related Commands
 
-- `/ok:scan` or `/ok:find` - Run first to analyze codebase
-- `/ok:run` - Execute app with tracing (zero-code approach)
-- `/ok:local-trace` - View traces after running
-- `/ok:pause` - Save session before stopping work
-- `/ok:resume` - Resume from saved session
+- `/ok-scan` or `/ok-find` - Run first to analyze codebase
+- `/ok-run` - Execute app with tracing (zero-code approach)
+- `/ok-local-trace` - View traces after running
+- `/ok-pause` - Save session before stopping work
+- `/ok-resume` - Resume from saved session

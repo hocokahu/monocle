@@ -25,10 +25,10 @@ Automatically detect mode based on input:
 - Otherwise → **Search mode**
 
 ```
-/ok:find payment flow           → Search mode (natural language)
-/ok:find PaymentService.charge  → Direct mode (exact Class.method)
-/ok:find db.UserRepo.save       → Direct mode (exact Class.method)
-/ok:find database operations    → Search mode (natural language)
+/ok-find payment flow           → Search mode (natural language)
+/ok-find PaymentService.charge  → Direct mode (exact Class.method)
+/ok-find db.UserRepo.save       → Direct mode (exact Class.method)
+/ok-find database operations    → Search mode (natural language)
 ```
 
 ## SKIP PATTERNS - DO NOT INCLUDE
@@ -59,21 +59,21 @@ Automatically detect mode based on input:
 13. **USE AskUserQuestion** to select which path(s) to instrument
 14. Save to `.analyze/choices.json`
 15. **Write/update `.analyze/SESSION.md`** with human-readable summary
-16. Suggest `/ok:instrument`
+16. Suggest `/ok-instrument`
 
 ## SESSION.md - ALWAYS UPDATE
 
 Append to `.analyze/SESSION.md` after running:
 
 ```markdown
-## Find Results (/ok:find)
+## Find Results (/ok-find)
 - **Query**: "payment processing" (search mode) OR "PaymentService.charge" (direct mode)
 - **Methods found**:
   - billing.Processor.charge
   - orders.Order.process_payment
 - **Paths selected**:
   - Path A: main → cli.import_users → [target]
-- **Next**: Run `/ok:instrument` to generate okahu.yaml
+- **Next**: Run `/ok-instrument` to generate okahu.yaml
 ```
 
 ## Interactive Questions - USE AskUserQuestion TOOL
@@ -133,21 +133,21 @@ Append to `.analyze/SESSION.md` after running:
 
 ```
 # Search mode - find by description
-/ok:find payment flow
-/ok:find database operations
-/ok:find user authentication
-/ok:find error handling
+/ok-find payment flow
+/ok-find database operations
+/ok-find user authentication
+/ok-find error handling
 
 # Direct mode - trace exact method
-/ok:find PaymentService.charge
-/ok:find db.UserRepo.save
-/ok:find auth.TokenValidator.validate
+/ok-find PaymentService.charge
+/ok-find db.UserRepo.save
+/ok-find auth.TokenValidator.validate
 ```
 
 ## Related Commands
 
-- `/ok:scan` - Full codebase analysis
-- `/ok:instrument` - Add tracing (zero-code or code-based)
-- `/ok:run` - Run app with tracing
-- `/ok:pause` - Save session before stopping work
-- `/ok:resume` - Resume from saved session
+- `/ok-scan` - Full codebase analysis
+- `/ok-instrument` - Add tracing (zero-code or code-based)
+- `/ok-run` - Run app with tracing
+- `/ok-pause` - Save session before stopping work
+- `/ok-resume` - Resume from saved session

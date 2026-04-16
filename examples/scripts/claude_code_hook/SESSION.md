@@ -18,7 +18,7 @@
 ### 3. Okahu Export - VERIFIED (original)
 14 traces confirmed in Okahu for `claude-cli` workflow.
 
-### 4. /ok:add-framework - COMPLETED
+### 4. /ok-add-framework - COMPLETED
 Claude Code added as a proper Monocle framework in the metamodel.
 
 #### What was created
