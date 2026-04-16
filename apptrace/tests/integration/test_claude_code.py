@@ -190,7 +190,9 @@ def test_prompt_response_inference(setup):
             for event in span.events:
                 if event.name == "metadata":
                     assert event.attributes["completion_tokens"] == 42
-                    assert event.attributes["prompt_tokens"] == 150
+                    # prompt_tokens = input_tokens + cache_read + cache_creation (full context)
+                    assert event.attributes["prompt_tokens"] == 285  # 150 + 120 + 15
+                    assert event.attributes["total_tokens"] == 327   # 285 + 42
                     assert event.attributes["cache_read_tokens"] == 120
                     assert event.attributes["cache_creation_tokens"] == 15
 
@@ -326,13 +328,20 @@ def test_subagent_call(setup):
     for span in spans:
         attrs = span.attributes
 
-        if attrs.get("span.type") == "agentic.invocation":
+        # Match the Agent subagent span specifically (not the "Claude Invocation" span,
+        # which also has span.type="agentic.invocation" but entity.1.name="Claude")
+        if attrs.get("span.type") == "agentic.invocation" and attrs.get("entity.1.name") == "Explore":
             found_agent = True
             assert attrs["entity.1.type"] == "agent.claude_code"
-            assert attrs["entity.1.name"] == "Explore"
             assert attrs["scope.agentic.session"] == SESSION_ID
+            # Delegation link: enables DELEGATES_TO edge in NarrativeGraph
+            assert attrs["entity.1.from_agent"] == "Claude"
+            assert attrs["entity.1.from_agent_span_id"]  # non-empty hex span id
+            # Each Agent span gets its own invocation scope so the graph builder
+            # doesn't re-process the parent Claude's tool spans under this anchor.
+            assert attrs["scope.agentic.invocation"] != attrs["scope.agentic.turn"]
 
-    assert found_agent, "agentic.invocation span not found"
+    assert found_agent, "agentic.invocation span for 'Explore' subagent not found"
 
 
 # =============================================================================

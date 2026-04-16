@@ -43,6 +43,34 @@ class Turn:
     user_msg: Dict[str, Any]
     assistant_msgs: List[Dict[str, Any]]
     tool_results_by_id: Dict[str, Any]
+    start_time: Optional[str] = None                                    # ISO8601 from user message
+    end_time: Optional[str] = None                                      # ISO8601 from last assistant message
+    tool_result_times_by_id: Dict[str, str] = field(default_factory=dict)  # tool_use_id -> ISO8601
+
+
+def get_timestamp(msg: Dict[str, Any]) -> Optional[str]:
+    """Return the ISO8601 timestamp from a transcript message, if present."""
+    return msg.get("timestamp")
+
+
+def aggregate_usage(assistant_msgs: List[Dict[str, Any]]) -> Dict[str, int]:
+    """Sum token usage across ALL assistant messages in a turn.
+
+    Claude makes one LLM call per round of tool use, so a turn with N rounds
+    of parallel tool calls has N inference calls. Summing all of them gives the
+    true total token count for the turn.
+    """
+    total: Dict[str, int] = {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cache_read_tokens": 0,
+        "cache_creation_tokens": 0,
+    }
+    for msg in assistant_msgs:
+        u = get_usage(msg)
+        for k in total:
+            total[k] += u.get(k, 0)
+    return total
 
 
 def get_content(msg: Dict[str, Any]) -> Any:
@@ -183,32 +211,86 @@ def read_new_jsonl(transcript_path: Path, ss: SessionState) -> Tuple[List[Dict[s
 
 
 def build_turns(messages: List[Dict[str, Any]]) -> List[Turn]:
-    """Group messages into turns (user -> assistant with tools)."""
+    """Group messages into turns (user -> assistant with tools).
+
+    Extracts timestamps from each message so spans can be emitted with accurate
+    start/end times rather than hook-execution time.
+
+    Claude Code writes each parallel tool_use as a separate streaming snapshot of
+    the same message ID, with only ONE tool_use block per snapshot. A naive
+    assistant_latest[mid] = msg would keep only the last snapshot, losing all
+    earlier tool calls. We fix this by accumulating every tool_use block seen
+    across ALL snapshots of the same message ID and merging them back before
+    building the Turn.
+    """
     turns: List[Turn] = []
     current_user: Optional[Dict[str, Any]] = None
     assistant_order: List[str] = []
     assistant_latest: Dict[str, Dict[str, Any]] = {}
+    # Accumulates all tool_use blocks across streaming snapshots: mid -> {tu_id -> block}
+    assistant_all_tool_uses: Dict[str, Dict[str, Any]] = {}
+    # Best text blocks seen for each message ID (text appears in early snapshots,
+    # gets dropped once tool_use snapshots start replacing content)
+    assistant_best_text: Dict[str, List[Dict[str, Any]]] = {}
     tool_results_by_id: Dict[str, Any] = {}
+    tool_result_times: Dict[str, str] = {}  # tool_use_id -> ISO8601 timestamp
+
+    def _merge_content(msg: Dict[str, Any], mid: str) -> Dict[str, Any]:
+        """Return a copy of msg with accumulated text blocks + all tool_use blocks merged.
+
+        Claude Code streams text first, then writes each parallel tool_use as a
+        separate snapshot that REPLACES the content (not appends). This means the
+        last snapshot only has the final tool_use with no text. We reconstruct the
+        full content from the best text seen + all tool_uses seen.
+        """
+        all_tu = list(assistant_all_tool_uses.get(mid, {}).values())
+        best_text = assistant_best_text.get(mid, [])
+        if not all_tu and not best_text:
+            return msg
+        # Use accumulated text blocks (from when Claude was streaming its reasoning)
+        # plus all tool_use blocks seen across all snapshots.
+        merged_content = best_text + all_tu
+        if "message" in msg and isinstance(msg.get("message"), dict):
+            new_inner = dict(msg["message"])
+            new_inner["content"] = merged_content
+            merged_msg = dict(msg)
+            merged_msg["message"] = new_inner
+        else:
+            merged_msg = dict(msg)
+            merged_msg["content"] = merged_content
+        return merged_msg
 
     def flush_turn():
-        nonlocal current_user, assistant_order, assistant_latest, tool_results_by_id
+        nonlocal current_user, assistant_order, assistant_latest, assistant_all_tool_uses
+        nonlocal assistant_best_text, tool_results_by_id, tool_result_times
         if current_user is None or not assistant_latest:
             return
-        assistants = [assistant_latest[mid] for mid in assistant_order if mid in assistant_latest]
+        assistants = [
+            _merge_content(assistant_latest[mid], mid)
+            for mid in assistant_order if mid in assistant_latest
+        ]
+        if not assistants:
+            return
         turns.append(Turn(
             user_msg=current_user,
             assistant_msgs=assistants,
             tool_results_by_id=dict(tool_results_by_id),
+            start_time=get_timestamp(current_user),
+            end_time=get_timestamp(assistants[-1]) if assistants else None,
+            tool_result_times_by_id=dict(tool_result_times),
         ))
 
     for msg in messages:
         role = get_role(msg)
 
         if is_tool_result(msg):
+            ts = get_timestamp(msg)
             for tr in iter_tool_results(get_content(msg)):
                 tid = tr.get("tool_use_id")
                 if tid:
                     tool_results_by_id[str(tid)] = tr.get("content")
+                    if ts:
+                        tool_result_times[str(tid)] = ts
             continue
 
         if role == "user":
@@ -216,7 +298,10 @@ def build_turns(messages: List[Dict[str, Any]]) -> List[Turn]:
             current_user = msg
             assistant_order = []
             assistant_latest = {}
+            assistant_all_tool_uses = {}
+            assistant_best_text = {}
             tool_results_by_id = {}
+            tool_result_times = {}
             continue
 
         if role == "assistant":
@@ -225,6 +310,25 @@ def build_turns(messages: List[Dict[str, Any]]) -> List[Turn]:
             mid = get_message_id(msg) or f"noid:{len(assistant_order)}"
             if mid not in assistant_latest:
                 assistant_order.append(mid)
+                assistant_all_tool_uses[mid] = {}
+                assistant_best_text[mid] = []
+            content = get_content(msg)
+            if isinstance(content, list):
+                text_blocks = [b for b in content if isinstance(b, dict) and b.get("type") == "text"]
+                tool_use_blocks = [b for b in content if isinstance(b, dict) and b.get("type") == "tool_use"]
+                # Accumulate tool_use blocks (each snapshot has one new tool_use)
+                for block in tool_use_blocks:
+                    tu_id = block.get("id", "")
+                    if tu_id:
+                        assistant_all_tool_uses[mid][tu_id] = block
+                # Keep the richest text seen — text appears in early snapshots before
+                # tool_use snapshots replace the content. Once we have text, keep it.
+                if text_blocks:
+                    total_len = sum(len(b.get("text", "")) for b in text_blocks)
+                    best_len = sum(len(b.get("text", "")) for b in assistant_best_text[mid])
+                    if total_len >= best_len:
+                        assistant_best_text[mid] = text_blocks
+            # Always update with the latest snapshot (captures usage, timestamps, stop_reason)
             assistant_latest[mid] = msg
             continue
 
@@ -283,11 +387,10 @@ def classify_tool(tool_name: str) -> str:
     """Return span type based on tool name."""
     if tool_name == "Agent":
         return "agentic.invocation"
-    elif tool_name == "Skill":
-        return "agentic.skill.invocation"
     elif tool_name.startswith("mcp__"):
         return "agentic.mcp.invocation"
     else:
+        # Skill, Bash, Read, Grep, Glob, Edit, Write, ToolSearch, TaskCreate, etc.
         return "agentic.tool.invocation"
 
 
@@ -295,8 +398,6 @@ def classify_tool_entity_type(tool_name: str) -> str:
     """Return entity type key based on tool name."""
     if tool_name == "Agent":
         return CLAUDE_CODE_AGENT_TYPE_KEY
-    elif tool_name == "Skill":
-        return CLAUDE_CODE_SKILL_TYPE_KEY
     elif tool_name.startswith("mcp__"):
         return CLAUDE_CODE_MCP_TOOL_TYPE_KEY
     else:

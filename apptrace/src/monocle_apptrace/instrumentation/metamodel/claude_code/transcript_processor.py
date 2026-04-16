@@ -11,14 +11,17 @@ since Claude Code is a CLI binary, not a Python library).
 import json
 import logging
 import uuid
+from contextlib import contextmanager
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Generator, List, Optional
 
-from opentelemetry import trace
+from opentelemetry import context as otel_context, trace
 from opentelemetry.trace import StatusCode
 
 from monocle_apptrace.instrumentation.metamodel.claude_code._helper import (
     Turn,
+    aggregate_usage,
     build_turns,
     classify_tool,
     classify_tool_entity_type,
@@ -27,6 +30,7 @@ from monocle_apptrace.instrumentation.metamodel.claude_code._helper import (
     get_message_id,
     get_model,
     get_stop_reason,
+    get_timestamp,
     get_usage,
     iter_tool_uses,
     parse_command_skill,
@@ -41,7 +45,57 @@ logger = logging.getLogger(__name__)
 SERVICE_NAME = "claude-cli"
 
 
-def _build_full_response(turn):
+# ---------------------------------------------------------------------------
+# Timing helpers
+# ---------------------------------------------------------------------------
+
+def _parse_timestamp_ns(ts: Optional[str]) -> Optional[int]:
+    """Convert an ISO8601 timestamp string to nanoseconds since epoch for OTel.
+
+    Returns None if ts is absent or unparseable — callers fall back to OTel's
+    default (current wall-clock time), preserving the previous behaviour.
+    """
+    if not ts:
+        return None
+    try:
+        if ts.endswith("Z"):
+            ts = ts[:-1] + "+00:00"
+        dt = datetime.fromisoformat(ts)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return int(dt.timestamp() * 1_000_000_000)
+    except Exception:
+        return None
+
+
+@contextmanager
+def _timed_span(
+    tracer: trace.Tracer,
+    name: str,
+    attributes: Dict[str, Any],
+    start_ns: Optional[int],
+    end_ns: Optional[int],
+) -> Generator:
+    """Start a span with explicit start/end timestamps while keeping proper OTel context nesting.
+
+    Using tracer.start_span() instead of start_as_current_span() lets us pass
+    an end_time to span.end() — necessary because spans are emitted AFTER the
+    turn finishes, so we must replay the real event times from the transcript.
+    """
+    span = tracer.start_span(name=name, start_time=start_ns, attributes=attributes)
+    token = otel_context.attach(trace.set_span_in_context(span))
+    try:
+        yield span
+    finally:
+        otel_context.detach(token)
+        span.end(end_time=end_ns)
+
+
+# ---------------------------------------------------------------------------
+# Response builder
+# ---------------------------------------------------------------------------
+
+def _build_full_response(turn: Turn) -> str:
     """Build the complete turn response: assistant text + all tool outputs."""
     parts = []
     for assistant_msg in turn.assistant_msgs:
@@ -55,68 +109,271 @@ def _build_full_response(turn):
     return "\n".join(parts)
 
 
-def _emit_turn(tracer, turn, turn_num, session_id, sdk_version, service_name, user_name=None):
-    """Emit spans for a single turn: agentic.turn -> agentic.invocation -> inference + tool spans."""
+# ---------------------------------------------------------------------------
+# Tool description helper
+# ---------------------------------------------------------------------------
+
+def _make_tool_description(tool_name: str, tool_input: Any) -> Optional[str]:
+    """Generate a concise description for a tool call from its input parameters.
+
+    The NarrativeGraph requires entity.1.description on tool spans to build
+    edges. This function derives that description from the tool's input so we
+    don't have to store it separately.
+    """
+    if not isinstance(tool_input, dict):
+        return None
+
+    if tool_name == "Bash":
+        # Use the explicit description field if provided; otherwise truncate the command
+        desc = tool_input.get("description") or tool_input.get("command", "")
+        return str(desc)[:120] if desc else None
+
+    if tool_name in ("Read", "Edit", "Write", "NotebookEdit"):
+        return tool_input.get("file_path") or None
+
+    if tool_name in ("Grep",):
+        pat = tool_input.get("pattern", "")
+        path = tool_input.get("path", "")
+        return f"{pat} in {path}" if path else pat or None
+
+    if tool_name == "Glob":
+        return tool_input.get("pattern") or None
+
+    if tool_name in ("WebFetch", "WebSearch"):
+        return (tool_input.get("url") or tool_input.get("query") or "")[:120] or None
+
+    if tool_name == "ToolSearch":
+        return tool_input.get("query", "")[:80] or None
+
+    if tool_name == "Skill":
+        skill = tool_input.get("skill", "")
+        args = tool_input.get("args", "")
+        return f"{skill}: {args}" if args else skill or None
+
+    if tool_name.startswith("mcp__"):
+        # e.g. "mcp__okahu__get_traces" → "okahu / get_traces"
+        parts = tool_name.split("__", 2)
+        return f"{parts[1]} / {parts[2]}" if len(parts) == 3 else tool_name
+
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Turn emitter
+# ---------------------------------------------------------------------------
+
+def _emit_turn(
+    tracer: trace.Tracer,
+    turn: Turn,
+    turn_num: int,
+    session_id: str,
+    sdk_version: str,
+    service_name: str,
+    user_name: Optional[str] = None,
+) -> bool:
+    """Emit spans for one turn: agentic.turn -> agentic.invocation -> per-round inference + tools.
+
+    Structure mirrors Claude's actual execution flow:
+      agentic.turn
+      └── agentic.invocation  (Claude as the orchestrating agent)
+          ├── inference  (round 1: Claude thinks)
+          ├── tool/agent (round 1: Claude acts — one span per tool_use)
+          ├── inference  (round 2: Claude processes results and thinks again)
+          ├── tool/agent (round 2: …)
+          └── inference  (final round: Claude generates the answer)
+
+    Each inference span carries that round's own token counts and timing.
+    Tool spans are emitted immediately after the inference span that produced them.
+    """
     user_text = extract_text(get_content(turn.user_msg))
 
     if not turn.assistant_msgs:
         return False
 
     last_assistant = turn.assistant_msgs[-1]
-    assistant_text = extract_text(get_content(last_assistant))
     full_response = _build_full_response(turn)
     model = get_model(turn.assistant_msgs[0])
-    usage = get_usage(last_assistant)
+
+    turn_start_ns = _parse_timestamp_ns(turn.start_time)
+    turn_end_ns = _parse_timestamp_ns(turn.end_time)
 
     # Stable IDs scoped to this turn — required by NarrativeGraph builder
     turn_id = str(uuid.uuid4())
     invocation_id = str(uuid.uuid4())
 
-    turn_attrs = {
-            "span.type": "agentic.turn",
-            "span.subtype": "turn",
-            "scope.agentic.session": session_id,
-            "scope.agentic.turn": turn_id,
-            "turn.number": turn_num,
-            "entity.1.type": CLAUDE_CODE_AGENT_TYPE_KEY,
-            "entity.1.name": "Claude",
-            "workflow.name": service_name,
-            "monocle_apptrace.version": sdk_version,
-            "monocle.service.name": service_name,
+    turn_attrs: Dict[str, Any] = {
+        "span.type": "agentic.turn",
+        "span.subtype": "turn",
+        "scope.agentic.session": session_id,
+        "scope.agentic.turn": turn_id,
+        "turn.number": turn_num,
+        "entity.1.type": CLAUDE_CODE_AGENT_TYPE_KEY,
+        "entity.1.name": "Claude",
+        "workflow.name": service_name,
+        "monocle_apptrace.version": sdk_version,
+        "monocle.service.name": service_name,
     }
     if user_name:
         turn_attrs["user.name"] = user_name
 
-    with tracer.start_as_current_span(
-        name=f"Claude Code - Turn {turn_num}",
-        attributes=turn_attrs,
-    ) as turn_span:
+    with _timed_span(tracer, f"Claude Code - Turn {turn_num}", turn_attrs, turn_start_ns, turn_end_ns) as turn_span:
         turn_span.set_status(StatusCode.OK)
         turn_span.add_event("data.input", {"input": user_text})
         turn_span.add_event("data.output", {"response": full_response})
 
-        # Invocation span — required by NarrativeGraph to create AgentNode + INVOKES edge
-        with tracer.start_as_current_span(
-            name="Claude Invocation",
-            attributes={
-                "span.type": "agentic.invocation",
-                "scope.agentic.session": session_id,
-                "scope.agentic.turn": turn_id,
-                "scope.agentic.invocation": invocation_id,
-                "entity.1.type": CLAUDE_CODE_AGENT_TYPE_KEY,
-                "entity.1.name": "Claude",
-                "workflow.name": service_name,
-                "monocle_apptrace.version": sdk_version,
-            }
-        ) as invocation_span:
+        # Invocation span wraps all rounds — creates AgentNode + INVOKES edge in NarrativeGraph
+        invocation_attrs: Dict[str, Any] = {
+            "span.type": "agentic.invocation",
+            "scope.agentic.session": session_id,
+            "scope.agentic.turn": turn_id,
+            "scope.agentic.invocation": invocation_id,
+            "entity.1.type": CLAUDE_CODE_AGENT_TYPE_KEY,
+            "entity.1.name": "Claude",
+            "workflow.name": service_name,
+            "monocle_apptrace.version": sdk_version,
+        }
+        with _timed_span(tracer, "Claude Invocation", invocation_attrs, turn_start_ns, turn_end_ns) as invocation_span:
             invocation_span.set_status(StatusCode.OK)
             invocation_span.add_event("data.input", {"input": user_text})
             invocation_span.add_event("data.output", {"response": full_response})
 
-            # Inference span
-            with tracer.start_as_current_span(
-                name="Claude Inference",
-                attributes={
+            # Detect harness-injected skill once per turn (before per-round loop)
+            cmd_skill = parse_command_skill(user_text)
+            has_explicit_skill = any(
+                tu.get("name") == "Skill"
+                for am in turn.assistant_msgs
+                for tu in iter_tool_uses(get_content(am))
+            )
+            if cmd_skill and not has_explicit_skill:
+                skill_name = cmd_skill["skill_name"]
+                skill_input: Dict[str, Any] = {"skill": skill_name}
+                if cmd_skill["args"]:
+                    skill_input["args"] = cmd_skill["args"]
+                if cmd_skill["plugin_name"]:
+                    skill_input["plugin"] = cmd_skill["plugin_name"]
+                skill_attrs: Dict[str, Any] = {
+                    "span.type": "agentic.skill.invocation",
+                    "scope.agentic.session": session_id,
+                    "scope.agentic.turn": turn_id,
+                    "scope.agentic.invocation": invocation_id,
+                    "entity.1.type": CLAUDE_CODE_SKILL_TYPE_KEY,
+                    "entity.1.name": skill_name,
+                    "entity.1.skill_name": skill_name,
+                    "entity.1.invocation": "harness",
+                    "monocle_apptrace.version": sdk_version,
+                    "workflow.name": service_name,
+                }
+                if cmd_skill["args"]:
+                    skill_attrs["entity.1.skill_args"] = cmd_skill["args"]
+                if cmd_skill["plugin_name"]:
+                    skill_attrs["entity.1.plugin_name"] = cmd_skill["plugin_name"]
+                with _timed_span(tracer, f"Skill: {skill_name}", skill_attrs, turn_start_ns, turn_end_ns) as skill_span:
+                    skill_span.set_status(StatusCode.OK)
+                    skill_span.add_event("data.input", {"input": json.dumps(skill_input)})
+                    skill_span.add_event("data.output", {"response": f"/{cmd_skill['command_name']}"})
+
+            # ---------------------------------------------------------------
+            # Per-round loop: one inference span + tool spans per LLM round.
+            # This faithfully mirrors Claude's actual execution:
+            #   inference → tool calls → (results arrive) → inference → …
+            # ---------------------------------------------------------------
+            total_tool_spans = 0
+            num_rounds = len(turn.assistant_msgs)
+            for i, assistant_msg in enumerate(turn.assistant_msgs):
+                round_usage = get_usage(assistant_msg)
+                round_stop_reason = get_stop_reason(assistant_msg) or "end_turn"
+                round_finish_type = "tool_call" if round_stop_reason == "tool_use" else "success"
+                round_text = extract_text(get_content(assistant_msg))
+                round_msg_id = get_message_id(assistant_msg) or ""
+
+                # Inference span timing:
+                #   start = user message time (round 0) or when all previous tools finished
+                #   end   = this assistant message timestamp (when LLM finished generating)
+                round_inf_end_ns = _parse_timestamp_ns(get_timestamp(assistant_msg))
+                if i == 0:
+                    round_inf_start_ns = turn_start_ns
+                else:
+                    prev_tool_ids = [
+                        tu.get("id") for tu in iter_tool_uses(get_content(turn.assistant_msgs[i - 1]))
+                    ]
+                    prev_result_times = [
+                        _parse_timestamp_ns(turn.tool_result_times_by_id.get(tid))
+                        for tid in prev_tool_ids if tid
+                    ]
+                    prev_result_times = [t for t in prev_result_times if t]
+                    round_inf_start_ns = (
+                        max(prev_result_times) if prev_result_times
+                        else _parse_timestamp_ns(get_timestamp(turn.assistant_msgs[i - 1]))
+                    )
+
+                # Token metadata — what we report depends on whether this is an
+                # intermediate round (Claude decided to call tools) or the final round.
+                #
+                # Intermediate rounds: prompt_tokens is nearly identical across all
+                # rounds due to Anthropic prompt caching (the whole conversation is
+                # cached). Only completion_tokens is meaningfully different per round,
+                # so that's all we emit for intermediate rounds to avoid noise.
+                #
+                # Final round: emit the full breakdown (prompt, completion, cache stats)
+                # plus an estimated cost in USD. Cost is always emitted on the final round
+                # because that's where we have the full picture.
+                #
+                # Anthropic pricing (all four token types cost money at different rates):
+                #   input_tokens            standard input price  (varies by model)
+                #   cache_creation_tokens   1.25× input price     (costs more to write cache)
+                #   cache_read_tokens       0.10× input price     (90% discount for cache hits)
+                #   output_tokens           ~5× input price       (generation is most expensive)
+                cache_read_t = round_usage.get("cache_read_tokens") or 0
+                cache_creation_t = round_usage.get("cache_creation_tokens") or 0
+                raw_input_t = round_usage.get("input_tokens") or 0
+                output_t = round_usage.get("output_tokens") or 0
+                prompt_t = raw_input_t + cache_read_t + cache_creation_t
+                is_final_round = (i == num_rounds - 1)
+                round_metadata: Dict[str, Any] = {
+                    "finish_reason": round_stop_reason,
+                    "finish_type": round_finish_type,
+                }
+                if output_t:
+                    round_metadata["completion_tokens"] = output_t
+                if is_final_round:
+                    # Full token breakdown on the last round only
+                    if prompt_t:
+                        round_metadata["prompt_tokens"] = prompt_t
+                    if prompt_t or output_t:
+                        round_metadata["total_tokens"] = prompt_t + output_t
+                    if cache_read_t:
+                        round_metadata["cache_read_tokens"] = cache_read_t
+                    if cache_creation_t:
+                        round_metadata["cache_creation_tokens"] = cache_creation_t
+                    # Estimated cost in USD using per-model Anthropic pricing.
+                    # Prices per 1M tokens (input / cache_write / cache_read / output).
+                    # Falls back to Sonnet pricing for unknown models.
+                    _PRICING: Dict[str, tuple] = {
+                        "claude-opus-4":    (15.00, 18.75, 1.50, 75.00),
+                        "claude-opus":      (15.00, 18.75, 1.50, 75.00),
+                        "claude-sonnet-4":  ( 3.00,  3.75, 0.30, 15.00),
+                        "claude-sonnet":    ( 3.00,  3.75, 0.30, 15.00),
+                        "claude-haiku-4":   ( 0.80,  1.00, 0.08,  4.00),
+                        "claude-haiku":     ( 0.80,  1.00, 0.08,  4.00),
+                    }
+                    inp_p, cw_p, cr_p, out_p = next(
+                        (v for k, v in _PRICING.items() if model.startswith(k)),
+                        (3.00, 3.75, 0.30, 15.00),  # default: Sonnet
+                    )
+                    cost_usd = (
+                        raw_input_t   * inp_p / 1_000_000 +
+                        cache_creation_t * cw_p  / 1_000_000 +
+                        cache_read_t  * cr_p  / 1_000_000 +
+                        output_t      * out_p / 1_000_000
+                    )
+                    if cost_usd > 0:
+                        round_metadata["estimated_cost_usd"] = round(cost_usd, 6)
+
+                inf_name = (
+                    "Claude Inference" if num_rounds == 1
+                    else f"Claude Inference ({i + 1}/{num_rounds})"
+                )
+                round_inf_attrs: Dict[str, Any] = {
                     "span.type": "inference",
                     "scope.agentic.session": session_id,
                     "scope.agentic.turn": turn_id,
@@ -127,86 +384,55 @@ def _emit_turn(tracer, turn, turn_num, session_id, sdk_version, service_name, us
                     "entity.2.type": f"model.llm.{model}",
                     "gen_ai.system": "anthropic",
                     "gen_ai.request.model": model,
-                    "gen_ai.response.id": get_message_id(last_assistant) or "",
+                    "gen_ai.response.id": round_msg_id,
                     "monocle_apptrace.version": sdk_version,
                     "workflow.name": service_name,
                 }
-            ) as inference_span:
-                inference_span.set_status(StatusCode.OK)
-                inference_span.add_event("data.input", {"input": user_text})
-                inference_span.add_event("data.output", {"response": assistant_text})
-                stop_reason = get_stop_reason(last_assistant) or "end_turn"
-                finish_type = "tool_call" if stop_reason == "tool_use" else "success"
-                metadata_attrs = {
-                    "finish_reason": stop_reason,
-                    "finish_type": finish_type,
-                }
-                if usage.get("output_tokens"):
-                    metadata_attrs["completion_tokens"] = usage["output_tokens"]
-                if usage.get("input_tokens"):
-                    metadata_attrs["prompt_tokens"] = usage["input_tokens"]
-                input_t = usage.get("input_tokens") or 0
-                output_t = usage.get("output_tokens") or 0
-                if input_t or output_t:
-                    metadata_attrs["total_tokens"] = input_t + output_t
-                if usage.get("cache_read_tokens"):
-                    metadata_attrs["cache_read_tokens"] = usage["cache_read_tokens"]
-                if usage.get("cache_creation_tokens"):
-                    metadata_attrs["cache_creation_tokens"] = usage["cache_creation_tokens"]
-                inference_span.add_event("metadata", metadata_attrs)
+                # If Claude produced no text in this round (pure tool dispatch),
+                # summarise what it decided to do so the span output isn't empty.
+                if not round_text:
+                    tool_uses_here = iter_tool_uses(get_content(assistant_msg))
+                    dispatched = []
+                    for tu in tool_uses_here:
+                        name = tu.get("name", "unknown")
+                        if name == "Agent":
+                            subtype = tu.get("input", {}).get("subagent_type", "agent")
+                            dispatched.append(f"Agent({subtype})")
+                        else:
+                            dispatched.append(name)
+                    round_text = f"[Dispatched: {', '.join(dispatched)}]" if dispatched else "[tool dispatch]"
 
-            # Detect harness-injected skill (slash command like /internal-comms)
-            # These bypass Tool: Skill — the harness injects content via <command-name> tags
-            cmd_skill = parse_command_skill(user_text)
-            has_explicit_skill = any(
-                tu.get("name") == "Skill"
-                for am in turn.assistant_msgs
-                for tu in iter_tool_uses(get_content(am))
-            )
-            if cmd_skill and not has_explicit_skill:
-                skill_name = cmd_skill["skill_name"]
-                skill_input = {"skill": skill_name}
-                if cmd_skill["args"]:
-                    skill_input["args"] = cmd_skill["args"]
-                if cmd_skill["plugin_name"]:
-                    skill_input["plugin"] = cmd_skill["plugin_name"]
+                with _timed_span(tracer, inf_name, round_inf_attrs, round_inf_start_ns, round_inf_end_ns) as inf_span:
+                    inf_span.set_status(StatusCode.OK)
+                    inf_span.add_event("data.input", {"input": user_text})
+                    inf_span.add_event("data.output", {"response": round_text})
+                    inf_span.add_event("metadata", round_metadata)
 
-                with tracer.start_as_current_span(
-                    name=f"Skill: {skill_name}",
-                    attributes={
-                        "span.type": "agentic.skill.invocation",
-                        "scope.agentic.session": session_id,
-                        "scope.agentic.turn": turn_id,
-                        "scope.agentic.invocation": invocation_id,
-                        "entity.1.type": CLAUDE_CODE_SKILL_TYPE_KEY,
-                        "entity.1.name": skill_name,
-                        "entity.1.skill_name": skill_name,
-                        **({"entity.1.skill_args": cmd_skill["args"]} if cmd_skill["args"] else {}),
-                        **({"entity.1.plugin_name": cmd_skill["plugin_name"]} if cmd_skill["plugin_name"] else {}),
-                        "entity.1.invocation": "harness",
-                        "monocle_apptrace.version": sdk_version,
-                        "workflow.name": service_name,
-                    },
-                ) as skill_span:
-                    skill_span.set_status(StatusCode.OK)
-                    skill_span.add_event("data.input", {"input": json.dumps(skill_input)})
-                    skill_span.add_event("data.output", {"response": f"/{cmd_skill['command_name']}"})
-
-            # Tool spans
-            for assistant_msg in turn.assistant_msgs:
+                # Tool/agent spans for this round — emitted right after the inference
+                # that triggered them. Parallel tools share the same start time (when
+                # the LLM finished) and each ends when its own result arrived.
+                tool_call_start_ns = round_inf_end_ns
                 for tool_use in iter_tool_uses(get_content(assistant_msg)):
                     tool_id = tool_use.get("id", "")
                     tool_name = tool_use.get("name", "unknown")
                     tool_input = tool_use.get("input", {})
                     tool_output = turn.tool_results_by_id.get(tool_id, "")
 
+                    tool_result_ts = turn.tool_result_times_by_id.get(tool_id)
+                    tool_call_end_ns = _parse_timestamp_ns(tool_result_ts) or turn_end_ns
+
                     span_type = classify_tool(tool_name)
                     entity_type = classify_tool_entity_type(tool_name)
 
                     input_str = json.dumps(tool_input) if isinstance(tool_input, dict) else str(tool_input)
-                    output_str = tool_output if isinstance(tool_output, str) else json.dumps(tool_output) if tool_output else ""
+                    output_str = (
+                        tool_output if isinstance(tool_output, str)
+                        else json.dumps(tool_output) if tool_output
+                        else ""
+                    )
 
-                    span_attrs = {
+                    tool_description = _make_tool_description(tool_name, tool_input)
+                    span_attrs: Dict[str, Any] = {
                         "span.type": span_type,
                         "scope.agentic.session": session_id,
                         "scope.agentic.turn": turn_id,
@@ -216,31 +442,48 @@ def _emit_turn(tracer, turn, turn_num, session_id, sdk_version, service_name, us
                         "monocle_apptrace.version": sdk_version,
                         "workflow.name": service_name,
                     }
-
+                    if tool_description:
+                        span_attrs["entity.1.description"] = tool_description
+                    span_name = f"Tool: {tool_name}"
                     if tool_name == "Agent" and isinstance(tool_input, dict):
                         subagent_type = tool_input.get("subagent_type", "general-purpose")
                         span_attrs["entity.1.name"] = subagent_type
                         span_attrs["entity.1.description"] = tool_input.get("description", "")
-
-                    span_name = f"Tool: {tool_name}"
-                    if tool_name == "Skill" and isinstance(tool_input, dict):
-                        skill_name = tool_input.get("skill", "unknown")
-                        span_attrs["entity.1.name"] = skill_name
-                        span_attrs["entity.1.skill_name"] = skill_name
+                        # Link subagent back to the delegating Claude invocation span so
+                        # the NarrativeGraph builder can create a DELEGATES_TO edge.
+                        # Also give this subagent its own invocation_id so the graph
+                        # builder does not re-process Claude's tool spans under this anchor.
+                        span_attrs["entity.1.from_agent"] = "Claude"
+                        span_attrs["entity.1.from_agent_span_id"] = format(
+                            invocation_span.get_span_context().span_id, "016x"
+                        )
+                        span_attrs["scope.agentic.invocation"] = str(uuid.uuid4())
+                    elif tool_name == "Skill" and isinstance(tool_input, dict):
+                        skill_nm = tool_input.get("skill", "unknown")
+                        span_attrs["entity.1.name"] = skill_nm
+                        span_attrs["entity.1.skill_name"] = skill_nm
                         if tool_input.get("args"):
                             span_attrs["entity.1.skill_args"] = tool_input.get("args")
-                        span_name = f"Skill: {skill_name}"
+                        span_name = f"Skill: {skill_nm}"
 
-                    with tracer.start_as_current_span(
-                        name=span_name,
-                        attributes=span_attrs,
-                    ) as tool_span:
+                    with _timed_span(tracer, span_name, span_attrs, tool_call_start_ns, tool_call_end_ns) as tool_span:
                         tool_span.set_status(StatusCode.OK)
                         tool_span.add_event("data.input", {"input": input_str})
                         tool_span.add_event("data.output", {"response": output_str})
 
+                    total_tool_spans += 1
+
+            logger.debug(
+                "turn %d: %d LLM rounds, %d tool spans",
+                turn_num, num_rounds, total_tool_spans,
+            )
+
     return True
 
+
+# ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
 
 def process_transcript(
     session_id: str,
@@ -251,8 +494,7 @@ def process_transcript(
     start_turn: int = 0,
     user_name: Optional[str] = None,
 ) -> int:
-    """
-    Emit Monocle-compatible spans for a list of turns.
+    """Emit Monocle-compatible spans for a list of turns.
 
     Creates a workflow root span wrapping all turn spans.
     Okahu requires this workflow span for span detail retrieval.
@@ -264,23 +506,25 @@ def process_transcript(
 
     emitted = 0
 
-    workflow_attrs = {
-            "span.type": "workflow",
-            "entity.1.name": service_name,
-            "entity.1.type": "workflow.claude_code",
-            "entity.2.type": "app_hosting.generic",
-            "entity.2.name": "generic",
-            "monocle_apptrace.version": sdk_version,
-            "monocle_apptrace.language": "python",
-            "workflow.name": service_name,
+    # Workflow timing: first turn start → last turn end
+    workflow_start_ns = _parse_timestamp_ns(turns[0].start_time)
+    workflow_end_ns = _parse_timestamp_ns(turns[-1].end_time)
+
+    workflow_attrs: Dict[str, Any] = {
+        "span.type": "workflow",
+        "scope.agentic.session": session_id,
+        "entity.1.name": service_name,
+        "entity.1.type": "workflow.claude_code",
+        "entity.2.type": "app_hosting.generic",
+        "entity.2.name": "generic",
+        "monocle_apptrace.version": sdk_version,
+        "monocle_apptrace.language": "python",
+        "workflow.name": service_name,
     }
     if user_name:
         workflow_attrs["user.name"] = user_name
 
-    with tracer.start_as_current_span(
-        name="workflow",
-        attributes=workflow_attrs,
-    ) as workflow_span:
+    with _timed_span(tracer, "workflow", workflow_attrs, workflow_start_ns, workflow_end_ns) as workflow_span:
         workflow_span.set_status(StatusCode.OK)
         for i, turn in enumerate(turns):
             turn_num = start_turn + i + 1
@@ -299,8 +543,7 @@ def process_transcript_file(
     session_state: Optional[SessionState] = None,
     user_name: Optional[str] = None,
 ) -> tuple:
-    """
-    Higher-level API: read new JSONL from a transcript file, build turns, emit spans.
+    """Higher-level API: read new JSONL from a transcript file, build turns, emit spans.
 
     Returns (emitted_count, updated_session_state).
     """
