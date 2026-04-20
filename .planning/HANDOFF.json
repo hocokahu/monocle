@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "timestamp": "2026-04-20T09:30:00.000Z",
+  "timestamp": "2026-04-20T18:22:07.432Z",
   "phase": null,
   "phase_name": null,
   "phase_dir": null,
@@ -15,21 +15,31 @@
     {"id": 4, "name": "Rename Tool: Agent to Sub-Agent: {type}, add entity.1.model", "status": "done", "commit": "5f7a1209"},
     {"id": 5, "name": "Update HOOK_PLAN.md Phase 2 checklist and Agent span table", "status": "done", "commit": "5f7a1209"},
     {"id": 6, "name": "Investigate mid-turn queue-operation visibility", "status": "done"},
-    {"id": 7, "name": "Investigate sub-agent JSONL file structure and linkage", "status": "done"}
+    {"id": 7, "name": "Investigate sub-agent JSONL file structure and linkage", "status": "done"},
+    {"id": 8, "name": "Remove workflow.claude_code.subagent — subagent spans are children of parent workflow", "status": "done"},
+    {"id": 9, "name": "Change entity.name default from 'general-purpose' to 'sub-agent'", "status": "done"},
+    {"id": 10, "name": "Add HOOK_PLAN.md Table of Contents", "status": "done"},
+    {"id": 11, "name": "Add 'What Do We Want Answered' section to HOOK_PLAN.md (21 questions, 6 categories)", "status": "done"},
+    {"id": 12, "name": "Add Line 252 full JSON example to HOOK_PLAN.md", "status": "done"}
   ],
   "remaining_tasks": [
-    {"id": 8, "name": "Correlate subagent→parent via parentToolUseID (explicit span link)", "status": "not_started"},
-    {"id": 9, "name": "Verify monocle_apptrace.version 0.7.7+claudecli in traces", "status": "not_started"},
-    {"id": 10, "name": "Capture mid-turn queue-operation messages in spans", "status": "not_started"}
+    {"id": 13, "name": "Correlate subagent→parent via parentToolUseID (explicit span link)", "status": "not_started"},
+    {"id": 14, "name": "Verify monocle_apptrace.version 0.7.7+claudecli in traces", "status": "not_started"},
+    {"id": 15, "name": "Capture mid-turn queue-operation messages in spans", "status": "not_started"}
   ],
   "blockers": [],
   "human_actions_pending": [],
   "decisions": [
+    {"decision": "Removed workflow.claude_code.subagent span type entirely", "rationale": "No separate workflow span for subagents — internal spans (turns, inference, tools) are children of parent workflow span, distinguishable by scope.agentic.session", "phase": "subagent-support"},
+    {"decision": "entity.1.name defaults to 'sub-agent' when subagent_type not explicitly provided", "rationale": "Don't use 'general-purpose' unless it's explicitly in the JSONL — it was just a code default, not meaningful metadata", "phase": "subagent-support"},
     {"decision": "Sub-agent workflow spans are children of parent workflow span via OTel context nesting", "rationale": "Shared trace_id without needing explicit parentToolUseID correlation", "phase": "subagent-support"},
     {"decision": "Agent span renamed from Tool: Agent to Sub-Agent: {type}", "rationale": "span.type is agentic.invocation not agentic.tool.invocation — naming should reflect delegation not tool call", "phase": "subagent-support"},
     {"decision": "Mid-turn queue-operation messages have no hook event", "rationale": "Only discoverable by scanning JSONL for type=queue-operation in Stop hook", "phase": "investigation"}
   ],
-  "uncommitted_files": [".continue-here.md", ".planning/HANDOFF.json"],
-  "next_action": "Correlate subagent spans to parent Agent tool_use via parentToolUseID, or verify traces on staging/prod",
-  "context_notes": "All sub-agent processing code is implemented and tested (4/4 tests pass). The subagent spans share the parent trace_id but lack an explicit link back to the specific Agent tool_use span that spawned them. The parentToolUseID field in progress lines provides this linkage but is not yet used."
+  "uncommitted_files": [
+    "apptrace/src/monocle_apptrace/instrumentation/metamodel/claude_code/transcript_processor.py",
+    "examples/scripts/HOOK_PLAN.md"
+  ],
+  "next_action": "Commit current changes (remove subagent workflow span, entity.name default, HOOK_PLAN updates), then implement parentToolUseID correlation or verify traces in production",
+  "context_notes": "This session: removed the workflow.claude_code.subagent wrapper span, changed entity.1.name default to 'sub-agent', added ToC + 21-question motivation section + Line 252 JSON example to HOOK_PLAN.md. All 4 tests pass. The subagent internal spans now nest directly under the parent workflow span with no intermediate wrapper."
 }

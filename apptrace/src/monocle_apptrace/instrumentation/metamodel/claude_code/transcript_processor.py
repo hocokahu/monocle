@@ -413,12 +413,12 @@ def _emit_turn(
                         span_attrs["entity.1.description"] = tool_description
                     span_name = f"Tool: {tool_name}"
                     if tool_name == "Agent" and isinstance(tool_input, dict):
-                        subagent_type = tool_input.get("subagent_type", "general-purpose")
-                        span_attrs["entity.1.name"] = subagent_type
+                        subagent_type = tool_input.get("subagent_type")
+                        span_attrs["entity.1.name"] = subagent_type or "sub-agent"
                         span_attrs["entity.1.description"] = tool_input.get("description", "")
                         if tool_input.get("model"):
                             span_attrs["entity.1.model"] = tool_input["model"]
-                        span_name = f"Sub-Agent: {subagent_type}"
+                        span_name = f"Sub-Agent: {subagent_type}" if subagent_type else "Sub-Agent"
                         # Link subagent back to the delegating Claude invocation span so
                         # the NarrativeGraph builder can create a DELEGATES_TO edge.
                         # Also give this subagent its own invocation_id so the graph
@@ -514,10 +514,11 @@ def process_subagents(
 ) -> int:
     """Process subagent JSONL files and emit spans for their work.
 
-    Each subagent gets its own workflow→turn→invocation→inference+tool hierarchy,
-    using the subagent's agent_id as its session scope. The spans are emitted
-    under the current OTel context (which should be inside the parent's workflow
-    span) so they share the same trace_id as the parent.
+    Subagent turns are emitted directly under the current OTel context (the
+    parent workflow span), using the subagent's agent_id as session scope.
+    No separate workflow span is created — subagent internal spans (turns,
+    inference, tools) are children of the parent workflow, distinguishable
+    by their scope.agentic.session being the subagent's agent_id.
 
     Returns the total number of subagent turns emitted.
     """
@@ -534,41 +535,14 @@ def process_subagents(
             logger.debug("subagent %s: no complete turns", sa.agent_id)
             continue
 
-        # Use agent_id as the session scope for subagent spans
         subagent_session_id = sa.agent_id
 
-        # Subagent gets its own workflow span as a child of the parent workflow
-        sa_workflow_start_ns = _parse_timestamp_ns(turns[0].start_time)
-        sa_workflow_end_ns = _parse_timestamp_ns(turns[-1].end_time)
-
-        sa_workflow_attrs: Dict[str, Any] = {
-            "span.type": "workflow",
-            "span.subtype": "subagent",
-            "scope.agentic.session": subagent_session_id,
-            "scope.agentic.parent_session": parent_session_id,
-            "entity.1.name": sa.agent_type,
-            "entity.1.type": "workflow.claude_code.subagent",
-            "entity.1.description": sa.description,
-            "monocle_apptrace.version": sdk_version,
-            "workflow.name": service_name,
-        }
-        if user_name:
-            sa_workflow_attrs["user.name"] = user_name
-
-        with _timed_span(
-            tracer,
-            f"Sub-Agent Workflow: {sa.agent_type}",
-            sa_workflow_attrs,
-            sa_workflow_start_ns,
-            sa_workflow_end_ns,
-        ) as sa_workflow_span:
-            sa_workflow_span.set_status(StatusCode.OK)
-            for i, turn in enumerate(turns):
-                if _emit_turn(
-                    tracer, turn, i + 1,
-                    subagent_session_id, sdk_version, service_name, user_name,
-                ):
-                    total_emitted += 1
+        for i, turn in enumerate(turns):
+            if _emit_turn(
+                tracer, turn, i + 1,
+                subagent_session_id, sdk_version, service_name, user_name,
+            ):
+                total_emitted += 1
 
     return total_emitted
 

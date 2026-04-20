@@ -1,5 +1,95 @@
 # Monocle Claude Code Hook - Design Document
 
+## Table of Contents
+
+- [Overview](#overview)
+- [What Do We Want Answered by Instrumenting Claude CLI?](#what-do-we-want-answered-by-instrumenting-claude-cli)
+- [Claude Code Hook System](#claude-code-hook-system)
+  - [Available Hooks](#available-hooks)
+  - [Hook Payload (Stop)](#hook-payload-stop)
+  - [Configuration](#configuration)
+- [Transcript File Structure](#transcript-file-structure)
+  - [Locations](#locations)
+  - [JSONL Record Types](#jsonl-record-types)
+- [Monocle Span Mapping](#monocle-span-mapping)
+  - [Transcript JSON → Monocle Span Mapping](#transcript-json--monocle-span-mapping)
+  - [Tool Classification Logic](#tool-classification-logic)
+  - [JSON-to-Span ID Linkage](#json-to-span-id-linkage)
+- [Real Example: JSONL to Spans](#real-example-jsonl-to-spans)
+  - [Source JSONL Lines (Round 1)](#source-jsonl-lines-round-1-msg_01nusabygsi6hgenpY8wumMw)
+  - [How `build_turns` Merges Streaming Snapshots](#how-build_turns-merges-streaming-snapshots)
+  - [3 Spans Produced](#3-spans-produced)
+  - [Key Observations](#key-observations)
+- [Why the Hook Does Not Use `setup_monocle_telemetry()`](#why-the-hook-does-not-use-setup_monocle_telemetry)
+- [Architecture](#architecture)
+  - [Span Hierarchy](#span-hierarchy)
+- [Implementation Plan](#implementation-plan)
+  - [Phase 1: Core Hook (MVP)](#phase-1-core-hook-mvp)
+  - [Phase 2: Subagent Support](#phase-2-subagent-support)
+  - [Phase 3: Rich Attributes](#phase-3-rich-attributes)
+  - [Phase 4: Production Hardening](#phase-4-production-hardening)
+- [Configuration](#configuration-1)
+  - [Environment Variables](#environment-variables)
+  - [State File](#state-file)
+- [Advantages Over Langfuse](#advantages-over-langfuse)
+- [File Structure](#file-structure)
+  - [Installation Script](#installation-script)
+- [Testing](#testing)
+- [Open Questions](#open-questions)
+- [References](#references)
+
+---
+
+## What Do We Want Answered by Instrumenting Claude CLI?
+
+Instrumenting Claude Code sessions isn't just about collecting telemetry — it's about answering
+concrete questions that help teams ship better software with AI coding agents. These questions
+drive which spans, attributes, and aggregations the hook needs to capture.
+
+### Model Selection & Switching
+
+1. **Why was the model changed mid-session?** Did the developer switch manually, or did Claude Code auto-select? Was it a cost decision, a capability gap, or a latency issue? Correlate model changes with the task context (e.g., switched to Opus for a complex refactor, back to Sonnet for simple edits).
+2. **Which model performs best for which task type?** Compare inference quality, token usage, and retry rates across models for categories like debugging, code generation, refactoring, and code review.
+3. **Are developers using the right model for the job?** Detect patterns where Opus is used for trivial tasks (wasted cost) or Haiku for complex reasoning (wasted time on retries).
+
+### Developer Productivity & Knowledge Transfer
+
+4. **How can developer B be as good as developer A?** Compare session patterns: which skills, tools, and prompting strategies do high-performers use? What's their tool-call-to-result ratio? How do they structure multi-step tasks?
+5. **What distinguishes a productive session from a thrashing one?** Identify markers: ratio of successful tool calls to retries, number of course corrections, time-to-first-useful-output, session duration vs. commits produced.
+6. **Where do developers get stuck?** Detect repeated failed tool calls, long thinking times with no output, or sessions that end without commits — these signal areas where better prompts, skills, or documentation would help.
+
+### Skills & Tools Effectiveness
+
+7. **What skill or tool is bad or very good — and should the team be educated on it?** Rank tools and skills by success rate, time saved, and frequency of use. Surface underused high-value tools and overused low-value ones.
+8. **Which custom skills have the highest ROI?** Track skill invocation frequency, success rate, and downstream outcomes (did the skill lead to a commit? a passing test?).
+9. **Are there tools that consistently fail or produce poor results?** Detect tools with high error rates or results that get immediately discarded (tool output never referenced in subsequent turns).
+
+### MCP Server Usage
+
+10. **For what scenarios is a specific MCP a must?** (e.g., debugging database queries → BigQuery MCP, investigating API issues → Chrome DevTools MCP). Build a recommendation matrix from observed usage patterns.
+11. **When should MCP be disabled?** Detect MCP servers that add noise — high invocation count but low signal (results rarely used), slow response times that block the session, or MCP calls that consistently return errors.
+12. **Which MCP servers have the best cost-to-value ratio?** Compare MCP call latency and token overhead against how often their results influence the final output.
+
+### Testing & Quality
+
+13. **How to create test cases for a feature — manually first, then automatically?** Track which testing patterns lead to passing CI: does TDD (test-first) produce fewer regressions than test-after? Which test generation skills or prompts yield the most useful tests?
+14. **What's the relationship between session instrumentation coverage and bug rates?** Do well-instrumented sessions (more tool calls, more verification steps) correlate with fewer post-merge bugs?
+15. **Are developers verifying their changes before committing?** Detect sessions where code is committed without running tests, linting, or build checks.
+
+### Cost & Efficiency
+
+16. **What's the token cost per commit?** Track total input/output tokens across a session and correlate with git commits produced — identify sessions with high cost but low output.
+17. **How much prompt cache hit rate are we getting?** Monitor `cache_read_input_tokens` vs `cache_creation_input_tokens` to detect inefficient prompt patterns (too many cache misses = context not being reused).
+18. **Are sessions too long?** Detect sessions where context window compression kicks in frequently — a signal that the task should have been broken into smaller pieces.
+
+### Organizational Patterns
+
+19. **What types of tasks take the longest?** Categorize sessions by outcome (bug fix, new feature, refactor, documentation) and compare duration, token usage, and tool patterns.
+20. **How does team usage evolve over time?** Track adoption curves for new skills, tools, and MCP servers across the team.
+21. **What's the team's overall AI coding maturity?** Aggregate metrics: tool diversity, skill usage, success rates, and session efficiency trends over weeks/months.
+
+---
+
 ## Overview
 
 This document outlines the design for a Monocle hook that observes Claude Code CLI sessions, capturing traces with proper span hierarchy, session correlation, and subagent tracking.
@@ -292,7 +382,7 @@ them into one logical assistant message before emitting spans.
 | Line | Role | Content | Key Fields |
 |------|------|---------|------------|
 | 251 | user | `"i m not asking the id itself..."` (user prompt) | — |
-| 252 | assistant | `thinking` block (streaming snapshot 1) | `id: msg_01NusA...`, `output_tokens: 39` |
+| 252 | assistant | `thinking` block (streaming snapshot 1) — see full JSON below | `id: msg_01NusA...`, `output_tokens: 39` |
 | 253 | assistant | `text`: "You're right — I need to look at..." (snapshot 2) | same `id`, same `output_tokens: 39` |
 | 254 | assistant | `tool_use`: Bash `wc -l` (snapshot 3) | same `id`, `tool_id: toolu_01LN8G...` |
 | 257 | user | `tool_result` for `toolu_01LN8G...` | Bash output: `253 ...jsonl` |
@@ -301,6 +391,64 @@ them into one logical assistant message before emitting spans.
 
 > **Lines 255–256, 259 are unrelated** (other message types); line numbers are not contiguous
 > because the JSONL file interleaves all session activity.
+
+#### Line 252: First Streaming Snapshot (the Inference Call)
+
+This is the first assistant JSONL line for this round — the LLM inference response arriving
+as a streaming snapshot. It carries the full `message` envelope (model, id, usage, stop_reason)
+plus a single `thinking` content block. Note that `thinking` is an **empty string** — the
+actual thinking content is not exposed in the transcript; only the cryptographic `signature`
+is recorded. The `stop_reason: null` confirms this is a partial snapshot, not the final message.
+
+```json
+{
+  "parentUuid": "a22cd9d1-be07-472c-bc00-f3b6ae3005cd",
+  "isSidechain": false,
+  "type": "assistant",
+  "message": {
+    "model": "claude-opus-4-6",
+    "id": "msg_01NusABygsi6HGenpY8WUMmw",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+      {
+        "type": "thinking",
+        "thinking": "",
+        "signature": "EugfClkIDBgCKkCOT3114blG...<truncated>...CJ/S3WRj+UYOULfcQBZdd32JpWykp318ptSLQ"
+      }
+    ],
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+      "input_tokens": 3,
+      "cache_creation_input_tokens": 86909,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 86909,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 39,
+      "service_tier": "standard",
+      "inference_geo": "global"
+    }
+  },
+  "requestId": "req_011Ca7wuagpzMrqG58iQuZQn",
+  "uuid": "b2ddcc48-5ad6-4c42-b546-ebc37d337f5c",
+  "timestamp": "2026-04-16T18:47:07.851Z",
+  "sessionId": "3bd7efcf-bf2f-4a1a-a9e2-85e96961d25f",
+  "version": "2.1.84",
+  "gitBranch": "hoc/claude-skill"
+}
+```
+
+Key observations:
+- **This is the inference call**: `message.model`, `message.id`, and `message.usage` identify it as an LLM response
+- **`thinking` is empty**: Claude Code redacts thinking content from the transcript — only the `signature` (a cryptographic proof the thinking happened) is persisted
+- **`output_tokens: 39`**: low token count because this is the first snapshot (thinking only); the final snapshot (line 258) reports `output_tokens: 1259` for the complete response
+- **`stop_reason: null`**: streaming is still in progress; subsequent snapshots (lines 253, 254, 258) add `text` and `tool_use` blocks
+- **`cache_creation_input_tokens: 86909`**: the prompt was written to Anthropic's ephemeral 5-minute cache on this call
+- **`parentUuid`** links back to the user message (line 251's `uuid`)
 
 ### How `build_turns` Merges Streaming Snapshots
 
