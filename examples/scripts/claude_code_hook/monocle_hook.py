@@ -222,7 +222,7 @@ def main() -> int:
             SessionState, build_turns, discover_subagents, read_new_jsonl,
         )
         from monocle_apptrace.instrumentation.metamodel.claude_code.transcript_processor import (
-            process_subagents, process_transcript,
+            process_transcript,
         )
     except ImportError as e:
         error(f"Missing dependency: {e}")
@@ -244,33 +244,27 @@ def main() -> int:
             ss = SessionState(
                 offset=int(s.get("offset", 0)),
                 buffer=str(s.get("buffer", "")),
-                turn_count=int(s.get("turn_count", 0)),
                 subagents_processed=list(s.get("subagents_processed", [])),
             )
 
             # Read new messages
             msgs, ss = read_new_jsonl(transcript_path, ss)
-            if not msgs:
-                state[key] = {
-                    "offset": ss.offset, "buffer": ss.buffer,
-                    "turn_count": ss.turn_count,
-                    "subagents_processed": ss.subagents_processed,
-                    "updated": datetime.now(timezone.utc).isoformat(),
-                }
-                save_state(state)
-                debug("No new messages")
-                return 0
+            turns = build_turns(msgs) if msgs else []
 
-            turns = build_turns(msgs)
-            if not turns:
+            # Discover subagents early so they can be emitted inside the
+            # workflow span (sharing the parent trace_id).
+            subagents = discover_subagents(transcript_path, ss.subagents_processed)
+            if subagents:
+                debug(f"Found {len(subagents)} new subagent(s): {[sa.agent_id for sa in subagents]}")
+
+            if not turns and not subagents:
                 state[key] = {
                     "offset": ss.offset, "buffer": ss.buffer,
-                    "turn_count": ss.turn_count,
                     "subagents_processed": ss.subagents_processed,
                     "updated": datetime.now(timezone.utc).isoformat(),
                 }
                 save_state(state)
-                debug("No complete turns")
+                debug("No new turns or subagents")
                 return 0
 
             # Set up TracerProvider with Okahu exporters
@@ -287,37 +281,22 @@ def main() -> int:
 
             tracer = trace.get_tracer("monocle.claude-code", "1.0.0")
 
-            # Emit spans using the transcript processor
+            # Emit turns and subagents inside the same workflow span
             emitted = process_transcript(
                 session_id=session_id,
                 turns=turns,
                 tracer=tracer,
                 sdk_version=sdk_version,
                 service_name=WORKFLOW_NAME,
-                start_turn=ss.turn_count,
                 user_name=GIT_USER_NAME,
+                subagents=subagents,
             )
-            ss.turn_count += len(turns)
-
-            # Process subagent JSONL files (if any)
-            subagents = discover_subagents(transcript_path, ss.subagents_processed)
             if subagents:
-                debug(f"Found {len(subagents)} new subagent(s): {[sa.agent_id for sa in subagents]}")
-                sa_emitted = process_subagents(
-                    subagents=subagents,
-                    tracer=tracer,
-                    parent_session_id=session_id,
-                    sdk_version=sdk_version,
-                    service_name=WORKFLOW_NAME,
-                    user_name=GIT_USER_NAME,
-                )
-                debug(f"Subagent spans emitted: {sa_emitted}")
                 ss.subagents_processed.extend(sa.agent_id for sa in subagents)
 
             # Save state
             state[key] = {
                 "offset": ss.offset, "buffer": ss.buffer,
-                "turn_count": ss.turn_count,
                 "subagents_processed": ss.subagents_processed,
                 "updated": datetime.now(timezone.utc).isoformat(),
             }

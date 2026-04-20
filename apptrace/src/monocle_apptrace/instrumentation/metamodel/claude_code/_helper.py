@@ -33,7 +33,6 @@ class SessionState:
     """Tracks incremental parsing position in a transcript file."""
     offset: int = 0
     buffer: str = ""
-    turn_count: int = 0
     subagents_processed: List[str] = field(default_factory=list)
 
 

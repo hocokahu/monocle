@@ -168,11 +168,11 @@ def _make_tool_description(tool_name: str, tool_input: Any) -> Optional[str]:
 def _emit_turn(
     tracer: trace.Tracer,
     turn: Turn,
-    turn_num: int,
     session_id: str,
     sdk_version: str,
     service_name: str,
     user_name: Optional[str] = None,
+    span_name_prefix: str = "Claude Code",
 ) -> bool:
     """Emit spans for one turn: agentic.turn -> agentic.invocation -> per-round inference + tools.
 
@@ -209,7 +209,6 @@ def _emit_turn(
         "span.subtype": "turn",
         "scope.agentic.session": session_id,
         "scope.agentic.turn": turn_id,
-        "turn.number": turn_num,
         "entity.1.type": CLAUDE_CODE_AGENT_TYPE_KEY,
         "entity.1.name": "Claude",
         "workflow.name": service_name,
@@ -219,7 +218,7 @@ def _emit_turn(
     if user_name:
         turn_attrs["user.name"] = user_name
 
-    with _timed_span(tracer, f"Claude Code - Turn {turn_num}", turn_attrs, turn_start_ns, turn_end_ns) as turn_span:
+    with _timed_span(tracer, span_name_prefix, turn_attrs, turn_start_ns, turn_end_ns) as turn_span:
         turn_span.set_status(StatusCode.OK)
         turn_span.add_event("data.input", {"input": user_text})
         turn_span.add_event("data.output", {"response": full_response})
@@ -444,8 +443,8 @@ def _emit_turn(
                     total_tool_spans += 1
 
             logger.debug(
-                "turn %d: %d LLM rounds, %d tool spans",
-                turn_num, num_rounds, total_tool_spans,
+                "%s: %d LLM rounds, %d tool spans",
+                span_name_prefix, num_rounds, total_tool_spans,
             )
 
     return True
@@ -461,24 +460,31 @@ def process_transcript(
     tracer: trace.Tracer,
     sdk_version: str,
     service_name: str = SERVICE_NAME,
-    start_turn: int = 0,
     user_name: Optional[str] = None,
+    subagents: Optional[List[SubagentInfo]] = None,
 ) -> int:
     """Emit Monocle-compatible spans for a list of turns.
 
     Creates a workflow root span wrapping all turn spans.
     Okahu requires this workflow span for span detail retrieval.
 
-    Returns the number of turns emitted.
+    Subagents, if provided, are emitted inside the same workflow span so they
+    share the parent trace_id.
+
+    Returns the number of turns emitted (excludes subagent turns).
     """
-    if not turns:
+    if not turns and not subagents:
         return 0
 
     emitted = 0
 
     # Workflow timing: first turn start → last turn end
-    workflow_start_ns = _parse_timestamp_ns(turns[0].start_time)
-    workflow_end_ns = _parse_timestamp_ns(turns[-1].end_time)
+    if turns:
+        workflow_start_ns = _parse_timestamp_ns(turns[0].start_time)
+        workflow_end_ns = _parse_timestamp_ns(turns[-1].end_time)
+    else:
+        workflow_start_ns = None
+        workflow_end_ns = None
 
     workflow_attrs: Dict[str, Any] = {
         "span.type": "workflow",
@@ -496,10 +502,19 @@ def process_transcript(
 
     with _timed_span(tracer, "workflow", workflow_attrs, workflow_start_ns, workflow_end_ns) as workflow_span:
         workflow_span.set_status(StatusCode.OK)
-        for i, turn in enumerate(turns):
-            turn_num = start_turn + i + 1
-            if _emit_turn(tracer, turn, turn_num, session_id, sdk_version, service_name, user_name):
+        for turn in turns:
+            if _emit_turn(tracer, turn, session_id, sdk_version, service_name, user_name):
                 emitted += 1
+
+        if subagents:
+            process_subagents(
+                subagents=subagents,
+                tracer=tracer,
+                parent_session_id=session_id,
+                sdk_version=sdk_version,
+                service_name=service_name,
+                user_name=user_name,
+            )
 
     return emitted
 
@@ -536,11 +551,13 @@ def process_subagents(
             continue
 
         subagent_session_id = sa.agent_id
+        prefix = f"Sub-Agent: {sa.agent_type}" if sa.agent_type != "sub-agent" else "Sub-Agent"
 
         for i, turn in enumerate(turns):
             if _emit_turn(
-                tracer, turn, i + 1,
+                tracer, turn,
                 subagent_session_id, sdk_version, service_name, user_name,
+                span_name_prefix=prefix,
             ):
                 total_emitted += 1
 
@@ -577,9 +594,7 @@ def process_transcript_file(
         tracer=tracer,
         sdk_version=sdk_version,
         service_name=service_name,
-        start_turn=session_state.turn_count,
         user_name=user_name,
     )
-    session_state.turn_count += len(turns)
 
     return emitted, session_state

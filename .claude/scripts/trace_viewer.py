@@ -25,6 +25,7 @@ import curses
 import json
 import os
 import sys
+import textwrap
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -59,9 +60,33 @@ def get_trace_files(
 
 def load_trace(file_path: Path) -> List[Dict]:
     content = file_path.read_text().strip()
-    if content.startswith("["):
-        return json.loads(content)
-    return [json.loads(content)]
+    if not content:
+        return []
+    try:
+        data = json.loads(content)
+        return data if isinstance(data, list) else [data]
+    except json.JSONDecodeError:
+        pass
+    # File may be a partial/live array missing the trailing ']',
+    # or concatenated JSON objects.  Try fixups:
+    if content.startswith("[") and not content.endswith("]"):
+        # Truncated array — strip any trailing comma and close it
+        fixed = content.rstrip().rstrip(",") + "]"
+        try:
+            return json.loads(fixed)
+        except json.JSONDecodeError:
+            pass
+    # JSONL: one JSON object per line
+    spans = []
+    for line in content.splitlines():
+        line = line.strip().rstrip(",")
+        if not line or line in ("[", "]"):
+            continue
+        try:
+            spans.append(json.loads(line))
+        except json.JSONDecodeError:
+            continue
+    return spans
 
 
 # ── Span model ──────────────────────────────────────────────────────
@@ -100,7 +125,8 @@ class Span:
             self.start_time = datetime.min
 
         self.attributes: Dict[str, Any] = {
-            k: v for k, v in attrs.items() if not k.startswith("entity.")
+            k: v for k, v in attrs.items()
+            if not k.startswith("entity.") and k != "turn.number"
         }
         # Entity info
         for k, v in attrs.items():
@@ -126,6 +152,8 @@ class Span:
         self.children: List["Span"] = []
         self.depth: int = 0
         self.collapsed: bool = False
+        self.is_last_child: bool = False
+        self._ancestor_is_last: List[bool] = []
 
     def flat_visible(self) -> List["Span"]:
         result = [self]
@@ -146,17 +174,47 @@ def build_tree(raw_spans: List[Dict]) -> Tuple[List[Span], float]:
             roots.append(s)
 
     total_ms = max((s.duration_ms for s in spans), default=1) or 1
-    earliest = min((s.start_time for s in spans if s.start_time != datetime.min), default=datetime.min)
 
-    def set_depth(span, d):
+    def set_depth(span, d, ancestor_last):
         span.depth = d
-        for c in span.children:
-            set_depth(c, d + 1)
+        span._ancestor_is_last = list(ancestor_last)
+        for i, c in enumerate(span.children):
+            c.is_last_child = (i == len(span.children) - 1)
+            set_depth(c, d + 1, ancestor_last + [c.is_last_child])
 
     for r in roots:
-        set_depth(r, 0)
+        r.is_last_child = True
+        set_depth(r, 0, [])
 
     return roots, total_ms
+
+
+def tree_prefix(span: "Span") -> str:
+    """Build tree connector lines like: │ ├─ or │ └─"""
+    if span.depth == 0:
+        return ""
+    parts = []
+    for is_last in span._ancestor_is_last[:-1]:
+        parts.append("  " if is_last else "│ ")
+    parts.append("└─" if span.is_last_child else "├─")
+    return "".join(parts)
+
+
+# ── Word-aware text wrapping ───────────────────────────────────────
+
+def word_wrap(text: str, width: int, indent: int = 4) -> List[str]:
+    """Wrap text at word boundaries, never splitting a word."""
+    if width <= indent + 5:
+        return [text[:width]]
+    lines = textwrap.wrap(text, width=width - indent,
+                          break_long_words=True,
+                          break_on_hyphens=False)
+    if not lines:
+        return [""]
+    result = [" " * indent + lines[0]]
+    for line in lines[1:]:
+        result.append(" " * indent + line)
+    return result
 
 
 # ── Color setup ─────────────────────────────────────────────────────
@@ -179,6 +237,7 @@ C_MCP = 15
 C_NEW_BRIGHT = 16
 C_NEW_MID = 17
 C_NEW_DIM = 18
+C_TREE = 19
 
 
 def init_colors():
@@ -201,7 +260,8 @@ def init_colors():
     curses.init_pair(C_MCP, curses.COLOR_BLACK, curses.COLOR_WHITE)
     curses.init_pair(C_NEW_BRIGHT, curses.COLOR_BLACK, curses.COLOR_GREEN)
     curses.init_pair(C_NEW_MID, curses.COLOR_GREEN, -1)
-    curses.init_pair(C_NEW_DIM, 8, -1)  # same as C_DIM, final fade stage
+    curses.init_pair(C_NEW_DIM, 8, -1)
+    curses.init_pair(C_TREE, 8, -1)
 
 
 def bar_color(span_type: str) -> int:
@@ -270,21 +330,56 @@ class TraceViewer:
         self.selected = 0
         self.detail_open = True
         self.scroll_offset = 0
+        # Picker position memory
+        self.pick_sel = 0
+        self.pick_scroll = 0
+        # Per-trace position memory: trace_idx -> (selected, scroll_offset)
+        self._trace_positions: Dict[int, Tuple[int, int]] = {}
         # Live-reload state
         self.monocle_dir = monocle_dir
         self.last_minutes = last_minutes
         self.trace_id_filter = trace_id_filter
         self.limit = limit
         self._known_files: set = {t[0] for t in traces}
+        self._file_mtimes: Dict[str, float] = {}  # fname -> last known mtime
+        if monocle_dir:
+            for t in traces:
+                p = monocle_dir / t[0]
+                if p.exists():
+                    self._file_mtimes[t[0]] = p.stat().st_mtime
         self._new_trace_ids: Dict[str, int] = {}  # trace_id -> fade ticks remaining
         self._fade_ticks = 8  # number of render cycles for fade
 
     def _check_new_traces(self):
-        """Poll monocle_dir for new trace files. Insert new ones at top."""
+        """Poll monocle_dir for new/modified trace files."""
         if not self.monocle_dir:
             return
         files = get_trace_files(self.monocle_dir, self.last_minutes,
                                 self.trace_id_filter, self.limit)
+
+        # Reload modified known files (file exporter appends spans across turns)
+        for f in files:
+            if f.name not in self._known_files:
+                continue
+            cur_mtime = f.stat().st_mtime
+            prev_mtime = self._file_mtimes.get(f.name, 0)
+            if cur_mtime <= prev_mtime:
+                continue
+            self._file_mtimes[f.name] = cur_mtime
+            try:
+                raw = load_trace(f)
+            except Exception:
+                continue
+            roots, total_ms = build_tree(raw)
+            if not roots:
+                continue
+            # Replace in-place
+            for i, (fname, _, _) in enumerate(self.traces):
+                if fname == f.name:
+                    self.traces[i] = (f.name, roots, total_ms)
+                    break
+
+        # Discover new files
         seen_tids = {roots[0].trace_id for _, roots, _ in self.traces if roots}
         new_entries = []
         for f in files:
@@ -301,11 +396,18 @@ class TraceViewer:
             if tid in seen_tids:
                 continue
             self._known_files.add(f.name)
+            self._file_mtimes[f.name] = f.stat().st_mtime
             seen_tids.add(tid)
             self._new_trace_ids[tid] = self._fade_ticks
             new_entries.append((f.name, roots, total_ms))
         if new_entries:
-            # Insert at top (newest first)
+            n = len(new_entries)
+            self.pick_sel += n
+            self.pick_scroll = 0
+            shifted = {}
+            for idx, pos in self._trace_positions.items():
+                shifted[idx + n] = pos
+            self._trace_positions = shifted
             self.traces = new_entries + self.traces
 
     def _fade_attr(self, trace_roots) -> Optional[int]:
@@ -349,9 +451,6 @@ class TraceViewer:
 
     def trace_picker(self, stdscr) -> Optional[int]:
         """Show a trace selection screen with live-reload. Returns selected index or None to quit."""
-        pick_sel = 0
-        pick_scroll = 0
-
         # Use halfdelay for ~2s polling (20 tenths of a second)
         curses.halfdelay(20)
 
@@ -364,7 +463,7 @@ class TraceViewer:
 
             # Header
             safe(stdscr, 0, 0, " " * w, curses.color_pair(C_HEADER))
-            safe(stdscr, 0, 1, "SELECT A TRACE", curses.color_pair(C_HEADER) | curses.A_BOLD)
+            safe(stdscr, 0, 1, "OKAHU TRACE VIEWER", curses.color_pair(C_HEADER) | curses.A_BOLD)
             live_indicator = " LIVE" if self.monocle_dir else ""
             count_str = f"{live_indicator}  {len(self.traces)} traces "
             safe(stdscr, 0, max(0, w - len(count_str) - 1), count_str, curses.color_pair(C_HEADER))
@@ -384,14 +483,14 @@ class TraceViewer:
             max_rows = h - y - 3  # room for footer
 
             # Scroll
-            if pick_sel < pick_scroll:
-                pick_scroll = pick_sel
-            if pick_sel >= pick_scroll + max_rows:
-                pick_scroll = pick_sel - max_rows + 1
+            if self.pick_sel < self.pick_scroll:
+                self.pick_scroll = self.pick_sel
+            if self.pick_sel >= self.pick_scroll + max_rows:
+                self.pick_scroll = self.pick_sel - max_rows + 1
 
-            for idx in range(pick_scroll, min(len(self.traces), pick_scroll + max_rows)):
+            for idx in range(self.pick_scroll, min(len(self.traces), self.pick_scroll + max_rows)):
                 fname, roots, total_ms = self.traces[idx]
-                is_sel = idx == pick_sel
+                is_sel = idx == self.pick_sel
 
                 # Determine base attr: selected, fade-in, or normal
                 fade = self._fade_attr(roots)
@@ -439,7 +538,7 @@ class TraceViewer:
 
             # Detail preview for selected trace
             if self.traces:
-                fname, roots, total_ms = self.traces[pick_sel]
+                fname, roots, total_ms = self.traces[self.pick_sel]
                 fy = h - 3
                 safe(stdscr, fy, 0, "─" * w, curses.color_pair(C_BORDER))
                 safe(stdscr, fy + 1, 2, f"File: {fname}", curses.color_pair(C_DIM))
@@ -463,13 +562,13 @@ class TraceViewer:
                 curses.cbreak()
                 return None
             elif key == curses.KEY_UP or key == ord("k"):
-                pick_sel = max(0, pick_sel - 1)
+                self.pick_sel = max(0, self.pick_sel - 1)
             elif key == curses.KEY_DOWN or key == ord("j"):
-                pick_sel = min(len(self.traces) - 1, pick_sel + 1)
+                self.pick_sel = min(len(self.traces) - 1, self.pick_sel + 1)
             elif key == ord("\n") or key == ord(" "):
                 # Restore normal blocking input before returning
                 curses.cbreak()
-                return pick_sel
+                return self.pick_sel
 
     def run(self, stdscr):
         curses.curs_set(0)
@@ -482,8 +581,12 @@ class TraceViewer:
                 if picked is None:
                     return  # user quit from picker
                 self.trace_idx = picked
-                self.selected = 0
-                self.scroll_offset = 0
+                # Restore per-trace position or reset
+                if picked in self._trace_positions:
+                    self.selected, self.scroll_offset = self._trace_positions[picked]
+                else:
+                    self.selected = 0
+                    self.scroll_offset = 0
 
             back_to_picker = self._view_trace(stdscr)
             if not back_to_picker:
@@ -504,40 +607,39 @@ class TraceViewer:
         lines.append((f"  duration: {dur}", C_DIM))
         lines.append(("", 0))
 
+        h_hint, w_hint = stdscr.getmaxyx()
+        wrap_width = max(40, w_hint - 4)
+
         # Attributes
         if span.attributes:
-            lines.append(("── Attributes ──", C_KEY))
+            lines.append((" ── Attributes ──", C_KEY))
             for k, v in span.attributes.items():
                 if k in ("span.type", "span.subtype"):
                     continue
                 val = str(v)
-                # Wrap long values across multiple lines
                 key_prefix = f"  {k}: "
-                if len(val) <= 200:
+                first_line_width = wrap_width - len(key_prefix)
+                if first_line_width > 10 and len(val) <= first_line_width:
                     lines.append((f"{key_prefix}{val}", C_VAL))
                 else:
                     lines.append((key_prefix, C_KEY))
-                    # Break into ~100 char chunks for readability
-                    chunk_size = 100
-                    for i in range(0, len(val), chunk_size):
-                        lines.append((f"    {val[i:i+chunk_size]}", C_VAL))
+                    for wl in word_wrap(val, wrap_width):
+                        lines.append((wl, C_VAL))
             lines.append(("", 0))
 
-        # Events (full content)
+        # Events (full content with word wrap)
         if span.events:
-            lines.append(("── Events ──", C_EVENT))
+            lines.append((" ── Events ──", C_EVENT))
             for ev in span.events:
                 lines.append((f"  {ev['name']}:", C_EVENT))
                 val = ev["value"]
-                # Show full value, wrapped
-                chunk_size = 100
-                for i in range(0, len(val), chunk_size):
-                    lines.append((f"    {val[i:i+chunk_size]}", C_VAL))
+                for wl in word_wrap(val, wrap_width):
+                    lines.append((wl, C_VAL))
                 lines.append(("", 0))
 
         # Tokens
         if span.tokens:
-            lines.append(("── Tokens ──", C_KEY))
+            lines.append((" ── Tokens ──", C_KEY))
             for k, v in span.tokens.items():
                 lines.append((f"  {k}: {v:,}", C_VAL))
 
@@ -584,7 +686,11 @@ class TraceViewer:
 
     def _view_trace(self, stdscr) -> bool:
         """View a single trace. Returns True to go back to picker, False to quit."""
+        curses.halfdelay(20)
         while True:
+            # Live-reload: pick up new spans appended to this trace's file
+            self._check_new_traces()
+
             stdscr.clear()
             h, w = stdscr.getmaxyx()
             fname, roots, total_ms = self.current
@@ -596,10 +702,10 @@ class TraceViewer:
 
             # ── Header ──
             safe(stdscr, 0, 0, " " * w, curses.color_pair(C_HEADER))
-            safe(stdscr, 0, 1, "TRACE VIEWER", curses.color_pair(C_HEADER) | curses.A_BOLD)
+            safe(stdscr, 0, 1, "OKAHU TRACE VIEWER", curses.color_pair(C_HEADER) | curses.A_BOLD)
             if visible:
                 tid = visible[0].trace_id
-                safe(stdscr, 0, 15, tid, curses.color_pair(C_HEADER))
+                safe(stdscr, 0, 21, tid, curses.color_pair(C_HEADER))
             trace_nav = f" [{self.trace_idx+1}/{len(self.traces)}] "
             status_str = f"OK" if all(s.status != "ERROR" for s in visible) else "ERR"
             sc = C_OK if status_str == "OK" else C_ERR
@@ -607,7 +713,7 @@ class TraceViewer:
             safe(stdscr, 0, max(0, w - len(right) - 1), right, curses.color_pair(C_HEADER))
 
             # ── Span list (waterfall) ──
-            name_col = min(32, w // 3)
+            name_col = min(36, w // 3)
             bar_area = max(15, w - name_col - 15)
             y = 2
 
@@ -631,30 +737,43 @@ class TraceViewer:
 
             for idx in range(self.scroll_offset, min(len(visible), self.scroll_offset + max_span_rows)):
                 span = visible[idx]
-                indent = "  " * span.depth
+                is_sel = idx == self.selected
+
+                # Build tree prefix with connector lines
+                prefix = tree_prefix(span)
                 collapse_marker = ""
                 if span.children:
-                    collapse_marker = "▸ " if span.collapsed else "▾ "
-                else:
-                    collapse_marker = "  "
-                badge = type_badge(span.span_type)
-                label = f"{indent}{collapse_marker}[{badge}] {span.display_name}"
+                    collapse_marker = "▸" if span.collapsed else "▾"
+                label = f"{prefix}{collapse_marker}{span.display_name}"
                 label = label[:name_col - 1]
 
-                is_sel = idx == self.selected
                 if is_sel:
                     safe(stdscr, y, 0, " " * w, curses.color_pair(C_SELECTED))
                     attr = curses.color_pair(C_SELECTED) | curses.A_BOLD
                 else:
                     attr = curses.A_NORMAL
 
-                safe(stdscr, y, 1, label, attr)
+                # Draw tree connectors in dim color, then the name
+                if not is_sel and prefix:
+                    safe(stdscr, y, 1, prefix, curses.color_pair(C_TREE))
+                    rest = f"{collapse_marker}{span.display_name}"
+                    rest = rest[:name_col - 1 - len(prefix)]
+                    safe(stdscr, y, 1 + len(prefix), rest, attr)
+                else:
+                    safe(stdscr, y, 1, label, attr)
 
                 # Bar
                 frac = span.duration_ms / total_ms if total_ms > 0 else 0
                 bar_len = max(1, int(bar_area * frac))
                 bc = bar_color(span.span_type)
                 draw_bar(stdscr, y, name_col, bar_len, bc)
+
+                # Show span_id overlapping the bar when highlighted
+                if is_sel:
+                    sid = span.span_id
+                    if len(sid) > bar_area - 1:
+                        sid = sid[:bar_area - 1]
+                    safe(stdscr, y, name_col + 1, sid, curses.color_pair(bc) | curses.A_BOLD)
 
                 # Duration
                 dur = f"{span.duration_ms:.0f}ms" if span.duration_ms >= 1 else "<1ms"
@@ -723,10 +842,15 @@ class TraceViewer:
 
             # ── Input ──
             key = stdscr.getch()
+            if key == curses.ERR:
+                continue  # halfdelay timeout — re-render with fresh data
             if key == ord("q") or key == ord("Q"):
+                curses.cbreak()
                 return False
             elif key == 27 or key == ord("b") or key == ord("B"):
                 # Esc or b → back to trace picker (or quit if single trace)
+                # Save position for this trace before leaving
+                self._trace_positions[self.trace_idx] = (self.selected, self.scroll_offset)
                 if len(self.traces) > 1:
                     return True
                 else:
@@ -750,9 +874,13 @@ class TraceViewer:
             elif key == ord(" "):
                 self.detail_open = not self.detail_open
             elif key == ord("t") or key == ord("T"):
+                self._trace_positions[self.trace_idx] = (self.selected, self.scroll_offset)
                 self.trace_idx = (self.trace_idx + 1) % len(self.traces)
-                self.selected = 0
-                self.scroll_offset = 0
+                if self.trace_idx in self._trace_positions:
+                    self.selected, self.scroll_offset = self._trace_positions[self.trace_idx]
+                else:
+                    self.selected = 0
+                    self.scroll_offset = 0
 
 
 # ── Non-interactive (print) mode ────────────────────────────────────
@@ -807,9 +935,8 @@ def print_trace(fname: str, roots: List[Span], total_ms: float):
     print(f"  {GRAY}{'─' * 68}{RESET}")
 
     for span in all_spans:
-        indent = "  " * span.depth
-        badge = type_badge(span.span_type)
-        label = f"{indent}[{badge}] {span.display_name}"[:30]
+        prefix = tree_prefix(span)
+        label = f"{prefix}{span.display_name}"[:30]
         frac = span.duration_ms / total_ms if total_ms > 0 else 0
         filled = max(1, int(bar_w * frac))
         empty = bar_w - filled

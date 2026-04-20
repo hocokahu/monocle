@@ -1,45 +1,41 @@
 {
   "version": "1.0",
-  "timestamp": "2026-04-20T18:22:07.432Z",
-  "phase": null,
-  "phase_name": null,
-  "phase_dir": null,
-  "plan": null,
-  "task": null,
-  "total_tasks": null,
+  "timestamp": "2026-04-20T19:50:00.000Z",
   "status": "paused",
   "completed_tasks": [
-    {"id": 1, "name": "Add real JSONL-to-spans worked example in HOOK_PLAN.md", "status": "done", "commit": "00dc6dd5"},
-    {"id": 2, "name": "Implement sub-agent JSONL discovery (discover_subagents, read_subagent_jsonl)", "status": "done", "commit": "5f7a1209"},
-    {"id": 3, "name": "Implement sub-agent span emission (process_subagents)", "status": "done", "commit": "5f7a1209"},
-    {"id": 4, "name": "Rename Tool: Agent to Sub-Agent: {type}, add entity.1.model", "status": "done", "commit": "5f7a1209"},
-    {"id": 5, "name": "Update HOOK_PLAN.md Phase 2 checklist and Agent span table", "status": "done", "commit": "5f7a1209"},
-    {"id": 6, "name": "Investigate mid-turn queue-operation visibility", "status": "done"},
-    {"id": 7, "name": "Investigate sub-agent JSONL file structure and linkage", "status": "done"},
-    {"id": 8, "name": "Remove workflow.claude_code.subagent — subagent spans are children of parent workflow", "status": "done"},
-    {"id": 9, "name": "Change entity.name default from 'general-purpose' to 'sub-agent'", "status": "done"},
-    {"id": 10, "name": "Add HOOK_PLAN.md Table of Contents", "status": "done"},
-    {"id": 11, "name": "Add 'What Do We Want Answered' section to HOOK_PLAN.md (21 questions, 6 categories)", "status": "done"},
-    {"id": 12, "name": "Add Line 252 full JSON example to HOOK_PLAN.md", "status": "done"}
+    {"id": 1, "name": "Fix subagent spans sharing parent trace_id (process inside workflow span)", "status": "done"},
+    {"id": 2, "name": "Add span_name_prefix to distinguish sub-agent turns from parent turns", "status": "done"},
+    {"id": 3, "name": "Remove turn.number attribute and turn_count from SessionState/hook", "status": "done"},
+    {"id": 4, "name": "trace_viewer: word wrap, position memory, OKAHU title, tree lines, span_id on highlight", "status": "done"},
+    {"id": 5, "name": "trace_viewer: fix JSON loading for truncated/partial files", "status": "done"},
+    {"id": 6, "name": "trace_viewer: live-reload modified files (mtime-based)", "status": "done"},
+    {"id": 7, "name": "trace_viewer: tree connector spacing fix", "status": "done"},
+    {"id": 8, "name": "Fix silent ss.turn_count crash preventing workflow span export", "status": "done"}
   ],
   "remaining_tasks": [
-    {"id": 13, "name": "Correlate subagent→parent via parentToolUseID (explicit span link)", "status": "not_started"},
-    {"id": 14, "name": "Verify monocle_apptrace.version 0.7.7+claudecli in traces", "status": "not_started"},
-    {"id": 15, "name": "Capture mid-turn queue-operation messages in spans", "status": "not_started"}
+    {"id": 9, "name": "CRITICAL REGRESSION: removing turn_count broke state save, causing offset to never update — hook re-processes ALL accumulated turns every invocation, producing 100+ span traces. State file has stale offset. Next hook run will do one big catch-up, then normalize. MUST verify workflow span appears in next trace.", "status": "not_started"},
+    {"id": 10, "name": "Correlate subagent→parent via parentToolUseID", "status": "not_started"},
+    {"id": 11, "name": "Verify monocle_apptrace.version 0.7.7+claudecli in traces", "status": "not_started"},
+    {"id": 12, "name": "Capture mid-turn queue-operation messages in spans", "status": "not_started"}
   ],
-  "blockers": [],
-  "human_actions_pending": [],
+  "blockers": [
+    {
+      "description": "Removing turn_count from SessionState caused silent AttributeError in state save dict (line 300 had ss.turn_count). Fixed now, but stale offset in monocle_state.json means next hook invocation will replay all accumulated turns as one big trace. After that catch-up, traces should normalize.",
+      "severity": "blocking"
+    }
+  ],
   "decisions": [
-    {"decision": "Removed workflow.claude_code.subagent span type entirely", "rationale": "No separate workflow span for subagents — internal spans (turns, inference, tools) are children of parent workflow span, distinguishable by scope.agentic.session", "phase": "subagent-support"},
-    {"decision": "entity.1.name defaults to 'sub-agent' when subagent_type not explicitly provided", "rationale": "Don't use 'general-purpose' unless it's explicitly in the JSONL — it was just a code default, not meaningful metadata", "phase": "subagent-support"},
-    {"decision": "Sub-agent workflow spans are children of parent workflow span via OTel context nesting", "rationale": "Shared trace_id without needing explicit parentToolUseID correlation", "phase": "subagent-support"},
-    {"decision": "Agent span renamed from Tool: Agent to Sub-Agent: {type}", "rationale": "span.type is agentic.invocation not agentic.tool.invocation — naming should reflect delegation not tool call", "phase": "subagent-support"},
-    {"decision": "Mid-turn queue-operation messages have no hook event", "rationale": "Only discoverable by scanning JSONL for type=queue-operation in Stop hook", "phase": "investigation"}
+    {"decision": "Subagent spans emitted inside workflow span's OTel context", "rationale": "Ensures subagent spans share parent trace_id instead of getting orphaned with random trace_id"},
+    {"decision": "Removed turn.number attribute entirely", "rationale": "No other Monocle framework uses it; caused confusing numbering across hook invocations"},
+    {"decision": "Span names: 'Claude Code' for parent, 'Sub-Agent: {type}' for subagents", "rationale": "Clear visual distinction without turn numbers"},
+    {"decision": "trace_viewer live-reloads modified files via mtime tracking", "rationale": "File exporter appends spans across hook invocations; viewer must pick up new spans"}
   ],
   "uncommitted_files": [
+    ".claude/scripts/trace_viewer.py",
+    "apptrace/src/monocle_apptrace/instrumentation/metamodel/claude_code/_helper.py",
     "apptrace/src/monocle_apptrace/instrumentation/metamodel/claude_code/transcript_processor.py",
-    "examples/scripts/HOOK_PLAN.md"
+    "apptrace/tests/integration/test_claude_code.py",
+    "examples/scripts/claude_code_hook/monocle_hook.py"
   ],
-  "next_action": "Commit current changes (remove subagent workflow span, entity.name default, HOOK_PLAN updates), then implement parentToolUseID correlation or verify traces in production",
-  "context_notes": "This session: removed the workflow.claude_code.subagent wrapper span, changed entity.1.name default to 'sub-agent', added ToC + 21-question motivation section + Line 252 JSON example to HOOK_PLAN.md. All 4 tests pass. The subagent internal spans now nest directly under the parent workflow span with no intermediate wrapper."
+  "context_notes": "The turn_count removal had a missed reference at monocle_hook.py:300 that caused silent crashes for every hook invocation since. All recent traces (12:28-12:47) are broken (no workflow span, 100+ spans from replayed turns). The fix is in place but needs verification on next hook run. User wants either: keep turn_count internally but don't save to monocle JSON, OR find another way to avoid the offset regression."
 }

@@ -371,7 +371,6 @@ def test_process_transcript_file(setup):
             service_name=SERVICE_NAME,
         )
         assert emitted == 1
-        assert state.turn_count == 1
         assert state.offset > 0
 
         emitted2, state2 = process_transcript_file(
