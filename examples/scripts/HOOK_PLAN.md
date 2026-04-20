@@ -275,6 +275,158 @@ everything else            → span.type: agentic.tool.invocation, entity: tool.
 
 ---
 
+## Real Example: JSONL to Spans
+
+This section shows a real Claude Code round (from trace `0xfc8ac4b80f9a8ed695f83887a431e853`)
+end-to-end: the raw JSONL lines the hook reads, the merge logic, and the Monocle spans produced.
+
+### Source JSONL Lines (Round 1, `msg_01NusABygsi6HGenpY8WUMmw`)
+
+Claude Code writes **streaming snapshots** — multiple JSONL lines for a single LLM call.
+Each assistant snapshot adds content blocks as they arrive. The hook's `build_turns` merges
+them into one logical assistant message before emitting spans.
+
+| Line | Role | Content | Key Fields |
+|------|------|---------|------------|
+| 251 | user | `"i m not asking the id itself..."` (user prompt) | — |
+| 252 | assistant | `thinking` block (streaming snapshot 1) | `id: msg_01NusA...`, `output_tokens: 39` |
+| 253 | assistant | `text`: "You're right — I need to look at..." (snapshot 2) | same `id`, same `output_tokens: 39` |
+| 254 | assistant | `tool_use`: Bash `wc -l` (snapshot 3) | same `id`, `tool_id: toolu_01LN8G...` |
+| 257 | user | `tool_result` for `toolu_01LN8G...` | Bash output: `253 ...jsonl` |
+| 258 | assistant | `tool_use`: Grep `trace_viewer` (snapshot 4, **final**) | same `id`, `stop_reason: tool_use`, `output_tokens: 1259` |
+| 260 | user | `tool_result` for `toolu_01EsZk...` | Grep output: `Found 1 file` |
+
+> **Lines 255–256, 259 are unrelated** (other message types); line numbers are not contiguous
+> because the JSONL file interleaves all session activity.
+
+### How `build_turns` Merges Streaming Snapshots
+
+Lines 252, 253, 254, and 258 all share the same `message.id` (`msg_01NusABygsi6HGenpY8WUMmw`).
+`build_turns` merges them into **one** assistant message:
+
+```
+Merged assistant message:
+  content[0]: thinking  (from line 252)    ← skipped by span builder
+  content[1]: text      (from line 253)    ← inference span output
+  content[2]: tool_use  (from line 254)    ← Bash tool span input
+  content[3]: tool_use  (from line 258)    ← Grep tool span input
+  stop_reason: tool_use                    (from line 258, the final snapshot)
+  output_tokens: 1259                      (from line 258, the final snapshot)
+```
+
+The rule: **last snapshot wins** for `usage`, `stop_reason`, and `model`. Content blocks are
+accumulated across all snapshots for the same `message.id`.
+
+### 3 Spans Produced
+
+From this single merged message + its tool results, the hook emits 3 spans:
+
+#### Span 1: Inference
+
+```json
+{
+  "name": "Claude Inference (1/10)",
+  "context": {
+    "trace_id": "0xfc8ac4b80f9a8ed695f83887a431e853",
+    "span_id": "0xac3ea585a842630c"
+  },
+  "parent_id": "0x7efa8f96eb5d5fa5",
+  "attributes": {
+    "span.type": "inference",
+    "entity.2.name": "claude-opus-4-6",
+    "entity.2.type": "model.llm.claude-opus-4-6",
+    "gen_ai.request.model": "claude-opus-4-6",
+    "gen_ai.response.id": "msg_01NusABygsi6HGenpY8WUMmw"
+  },
+  "events": [
+    { "name": "data.input",  "attributes": { "input": "i m not asking the id itself..." } },
+    { "name": "data.output", "attributes": { "response": "You're right — I need to look at..." } },
+    { "name": "metadata",    "attributes": { "finish_reason": "tool_use", "completion_tokens": 1259 } }
+  ]
+}
+```
+
+**Field mapping:**
+- `gen_ai.response.id` ← `message.id` from line 258
+- `data.input` ← user message from line 251
+- `data.output` ← first `text` block from merged content (line 253)
+- `completion_tokens` ← `message.usage.output_tokens` from line 258 (final snapshot)
+
+#### Span 2: Tool — Bash
+
+```json
+{
+  "name": "Tool: Bash",
+  "context": {
+    "trace_id": "0xfc8ac4b80f9a8ed695f83887a431e853",
+    "span_id": "0x456f256e3f5237a1"
+  },
+  "parent_id": "0x7efa8f96eb5d5fa5",
+  "attributes": {
+    "span.type": "agentic.tool.invocation",
+    "entity.1.type": "tool.claude_code",
+    "entity.1.name": "Bash",
+    "entity.1.description": "Check total lines in session JSONL"
+  },
+  "events": [
+    { "name": "data.input",  "attributes": { "input": "{\"command\": \"wc -l ~/.claude/projects/...jsonl\", \"description\": \"Check total lines in session JSONL\"}" } },
+    { "name": "data.output", "attributes": { "response": "     253 /Users/.../3bd7efcf-...jsonl" } }
+  ]
+}
+```
+
+**Field mapping:**
+- `entity.1.name` ← `tool_use.name` from line 254's content block
+- `entity.1.description` ← `tool_use.input.description` (Bash-specific)
+- `data.input` ← full `tool_use.input` JSON from line 254
+- `data.output` ← `tool_result.content` from line 257 (matched by `tool_use_id: toolu_01LN8G...`)
+
+#### Span 3: Tool — Grep
+
+```json
+{
+  "name": "Tool: Grep",
+  "context": {
+    "trace_id": "0xfc8ac4b80f9a8ed695f83887a431e853",
+    "span_id": "0x652a385e1eda6dc6"
+  },
+  "parent_id": "0x7efa8f96eb5d5fa5",
+  "attributes": {
+    "span.type": "agentic.tool.invocation",
+    "entity.1.type": "tool.claude_code",
+    "entity.1.name": "Grep",
+    "entity.1.description": "trace_viewer in .claude/scripts"
+  },
+  "events": [
+    { "name": "data.input",  "attributes": { "input": "{\"pattern\": \"trace_viewer\", \"path\": \".claude/scripts\", \"output_mode\": \"files_with_matches\"}" } },
+    { "name": "data.output", "attributes": { "response": "Found 1 file\n.claude/scripts/trace_viewer.py" } }
+  ]
+}
+```
+
+**Field mapping:**
+- `entity.1.name` ← `tool_use.name` from line 258's content block
+- `entity.1.description` ← Bash has `description` field; Grep doesn't, so the hook synthesizes it from the input params
+- `data.input` ← full `tool_use.input` JSON from line 258
+- `data.output` ← `tool_result.content` from line 260 (matched by `tool_use_id: toolu_01EsZk...`)
+
+### Key Observations
+
+1. **All 3 spans share the same `parent_id`** (`0x7efa8f96eb5d5fa5`) — this is the
+   `agentic.turn` span that groups one round of user→assistant→tools.
+
+2. **Tool spans are siblings of the inference span**, not children — they represent
+   the tools the model chose to call, each as a separate invocation under the turn.
+
+3. **Streaming merge is invisible** in the output — consumers see one clean inference
+   span even though 4 JSONL lines contributed to it.
+
+4. **`tool_use_id` is the join key** between a `tool_use` content block (in the assistant
+   message) and its `tool_result` (in the next user message). The hook uses this to pair
+   input↔output for each tool span.
+
+---
+
 ## Why the Hook Does Not Use `setup_monocle_telemetry()`
 
 ### How other frameworks work
