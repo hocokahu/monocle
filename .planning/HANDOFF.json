@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "timestamp": "2026-04-20T19:50:00.000Z",
+  "timestamp": "2026-04-20T20:04:40.480Z",
   "status": "paused",
   "completed_tasks": [
     {"id": 1, "name": "Fix subagent spans sharing parent trace_id (process inside workflow span)", "status": "done"},
@@ -13,29 +13,21 @@
     {"id": 8, "name": "Fix silent ss.turn_count crash preventing workflow span export", "status": "done"}
   ],
   "remaining_tasks": [
-    {"id": 9, "name": "CRITICAL REGRESSION: removing turn_count broke state save, causing offset to never update — hook re-processes ALL accumulated turns every invocation, producing 100+ span traces. State file has stale offset. Next hook run will do one big catch-up, then normalize. MUST verify workflow span appears in next trace.", "status": "not_started"},
+    {"id": 9, "name": "Verify turn_count regression is fully resolved — check this session's traces have correct span counts and workflow span", "status": "not_started"},
     {"id": 10, "name": "Correlate subagent→parent via parentToolUseID", "status": "not_started"},
     {"id": 11, "name": "Verify monocle_apptrace.version 0.7.7+claudecli in traces", "status": "not_started"},
     {"id": 12, "name": "Capture mid-turn queue-operation messages in spans", "status": "not_started"}
   ],
-  "blockers": [
-    {
-      "description": "Removing turn_count from SessionState caused silent AttributeError in state save dict (line 300 had ss.turn_count). Fixed now, but stale offset in monocle_state.json means next hook invocation will replay all accumulated turns as one big trace. After that catch-up, traces should normalize.",
-      "severity": "blocking"
-    }
-  ],
+  "blockers": [],
+  "human_actions_pending": [],
   "decisions": [
     {"decision": "Subagent spans emitted inside workflow span's OTel context", "rationale": "Ensures subagent spans share parent trace_id instead of getting orphaned with random trace_id"},
     {"decision": "Removed turn.number attribute entirely", "rationale": "No other Monocle framework uses it; caused confusing numbering across hook invocations"},
     {"decision": "Span names: 'Claude Code' for parent, 'Sub-Agent: {type}' for subagents", "rationale": "Clear visual distinction without turn numbers"},
-    {"decision": "trace_viewer live-reloads modified files via mtime tracking", "rationale": "File exporter appends spans across hook invocations; viewer must pick up new spans"}
+    {"decision": "trace_viewer live-reloads modified files via mtime tracking", "rationale": "File exporter appends spans across hook invocations; viewer must pick up new spans"},
+    {"decision": "User wants turn_count kept internally for offset tracking but turn.number NOT in exported span attributes", "rationale": "Offset management needs turn tracking but the attribute confused trace viewers"}
   ],
-  "uncommitted_files": [
-    ".claude/scripts/trace_viewer.py",
-    "apptrace/src/monocle_apptrace/instrumentation/metamodel/claude_code/_helper.py",
-    "apptrace/src/monocle_apptrace/instrumentation/metamodel/claude_code/transcript_processor.py",
-    "apptrace/tests/integration/test_claude_code.py",
-    "examples/scripts/claude_code_hook/monocle_hook.py"
-  ],
-  "context_notes": "The turn_count removal had a missed reference at monocle_hook.py:300 that caused silent crashes for every hook invocation since. All recent traces (12:28-12:47) are broken (no workflow span, 100+ spans from replayed turns). The fix is in place but needs verification on next hook run. User wants either: keep turn_count internally but don't save to monocle JSON, OR find another way to avoid the offset regression."
+  "uncommitted_files": [],
+  "next_action": "Check .monocle/ for new trace files from this session's 3 turns (resume, Hi, subagent). Verify: (1) each trace has reasonable span count (not 100+), (2) workflow span present, (3) subagent turn shows Sub-Agent spans correctly linked to parent trace_id. Then proceed to task 10 (parentToolUseID correlation).",
+  "context_notes": "Turn_count regression from previous session is believed fixed — last trace at 12:54 showed 15 spans with workflow span. However 12:28-12:52 traces are all broken (truncated JSON, ~470KB each from massive replay). This session ran 3 turns: (1) /gsd-resume-work with extensive tool use, (2) simple 'Hi' test, (3) subagent spawn (haiku agent listed files, returned CHANGELOG.md). These 3 traces should be in .monocle/ after Stop hooks fire. The broken traces from 12:28-12:52 can be cleaned up or ignored."
 }
