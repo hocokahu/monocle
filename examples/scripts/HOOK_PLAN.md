@@ -229,12 +229,15 @@ One per `tool_use` where `name == "Agent"`. Parent: turn span.
 
 | Span Attribute | Transcript JSON Field | Example Value |
 |---|---|---|
-| `span.name` | hardcoded prefix | `"Tool: Agent"` |
+| `span.name` | hardcoded prefix + subagent_type | `"Sub-Agent: Explore"` |
 | `span.type` | hardcoded | `"agentic.invocation"` |
 | `scope.agentic.session` | hook payload `sessionId` | `"5dfd59f4-7eee-..."` |
 | `entity.1.type` | hardcoded | `"agent.claude_code"` |
-| `entity.1.name` | `content[].input.subagent_type` | `"general-purpose"` |
-| `entity.1.description` | `content[].input.description` | `"Calculate 1+1"` |
+| `entity.1.name` | `content[].input.subagent_type` | `"Explore"` |
+| `entity.1.description` | `content[].input.description` | `"Find HOOK_PLAN.md location"` |
+| `entity.1.model` | `content[].input.model` (if present) | `"haiku"` |
+| `entity.1.from_agent` | hardcoded | `"Claude"` |
+| `entity.1.from_agent_span_id` | parent invocation span_id | `"70fb8834d8058664"` |
 | event `data.input` → `input` | `content[].input` (JSON stringified) | `'{"subagent_type":...}'` |
 | event `data.output` → `response` | matched `tool_result.content` by `tool_use_id` | `"The result is 2."` |
 | `status.code` | hardcoded | `"ok"` |
@@ -593,11 +596,39 @@ Session: 5dfd59f4-7eee-4de8-8c1c-c77ab630b1b4 (scope, not span)
 ### Phase 2: Subagent Support
 
 **Features:**
-- [ ] Discover `subagents/` directory
-- [ ] Parse subagent JSONL files
-- [ ] Correlate via `parentToolUseID`
-- [ ] Emit `agentic.invocation` spans for agent spawns
-- [ ] Link subagent spans to parent trace
+- [x] Discover `subagents/` directory via `discover_subagents()` in `_helper.py`
+- [x] Parse subagent JSONL files via `read_subagent_jsonl()` — filters to user/assistant messages
+- [x] Read `agent-{id}.meta.json` for `agentType` and `description`
+- [x] Emit subagent workflow→turn→invocation→inference+tool spans via `process_subagents()`
+- [x] Link subagent spans to parent trace (shared trace_id via OTel context nesting)
+- [x] Rename `"Tool: Agent"` to `"Sub-Agent: {type}"` span name
+- [x] Track `subagents_processed` in state to avoid re-emitting
+- [x] Capture requested `model` on Agent span as `entity.1.model`
+- [ ] Correlate subagent→parent via `parentToolUseID` (subagent spans share trace but lack explicit parent link to the Agent tool_use span)
+
+**Subagent file layout:**
+```
+{session-id}/subagents/
+├── agent-a831441352ab78bfd.jsonl       # subagent transcript
+├── agent-a831441352ab78bfd.meta.json   # {"agentType": "Explore", "description": "..."}
+├── agent-aa4639f52dc3b7d07.jsonl
+└── agent-aa4639f52dc3b7d07.meta.json
+```
+
+**Span hierarchy for subagents:**
+```
+workflow (parent session)
+├── Turn N (agentic.turn)
+│   └── Claude Invocation (agentic.invocation)
+│       ├── Inference (inference)
+│       └── Sub-Agent: Explore (agentic.invocation)  ← parent Agent tool span
+│
+└── Sub-Agent Workflow: Explore (workflow, subtype=subagent)  ← child of parent workflow
+    └── Turn 1 (agentic.turn)
+        └── Claude Invocation (agentic.invocation)
+            ├── Inference (inference) — model from meta.json / JSONL
+            └── Tool: Glob (agentic.tool.invocation)
+```
 
 ### Phase 3: Rich Attributes
 

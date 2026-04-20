@@ -383,6 +383,91 @@ def parse_command_skill(user_text: str) -> Optional[Dict[str, str]]:
     }
 
 
+@dataclass
+class SubagentInfo:
+    """Metadata about a discovered subagent JSONL file."""
+    agent_id: str
+    jsonl_path: Path
+    agent_type: str  # from meta.json agentType
+    description: str  # from meta.json description
+    turns: List["Turn"] = field(default_factory=list)
+
+
+def discover_subagents(
+    transcript_path: Path,
+    already_processed: List[str],
+) -> List[SubagentInfo]:
+    """Find subagent JSONL files under {session_id}/subagents/.
+
+    Claude Code stores subagent transcripts at:
+      {project_dir}/{session_id}/subagents/agent-{agent_id}.jsonl
+      {project_dir}/{session_id}/subagents/agent-{agent_id}.meta.json
+
+    The meta.json contains {"agentType": "Explore", "description": "..."}.
+
+    Returns SubagentInfo for each subagent NOT in already_processed.
+    """
+    # transcript_path is {project_dir}/{session_id}.jsonl
+    session_dir = transcript_path.parent / transcript_path.stem
+    subagents_dir = session_dir / "subagents"
+    if not subagents_dir.is_dir():
+        return []
+
+    results: List[SubagentInfo] = []
+    for jsonl_file in sorted(subagents_dir.glob("agent-*.jsonl")):
+        agent_id = jsonl_file.stem  # "agent-a831441352ab78bfd"
+        if agent_id in already_processed:
+            continue
+
+        meta_file = jsonl_file.with_suffix(".meta.json")
+        agent_type = "general-purpose"
+        description = ""
+        if meta_file.exists():
+            try:
+                meta = json.loads(meta_file.read_text(encoding="utf-8"))
+                agent_type = meta.get("agentType", agent_type)
+                description = meta.get("description", description)
+            except Exception:
+                pass
+
+        results.append(SubagentInfo(
+            agent_id=agent_id,
+            jsonl_path=jsonl_file,
+            agent_type=agent_type,
+            description=description,
+        ))
+
+    return results
+
+
+def read_subagent_jsonl(path: Path) -> List[Dict[str, Any]]:
+    """Read all messages from a subagent JSONL file.
+
+    Subagent JSONL entries have the same structure as parent session entries
+    (user/assistant messages with tool_use/tool_result) but also include
+    extra fields like agentId and progress entries. We filter to only
+    user/assistant message types that build_turns can process.
+    """
+    msgs: List[Dict[str, Any]] = []
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    entry = json.loads(line)
+                    # Only keep entries with message.role (user/assistant messages)
+                    msg = entry.get("message")
+                    if isinstance(msg, dict) and msg.get("role") in ("user", "assistant"):
+                        msgs.append(entry)
+                except Exception:
+                    continue
+    except Exception:
+        pass
+    return msgs
+
+
 def classify_tool(tool_name: str) -> str:
     """Return span type based on tool name."""
     if tool_name == "Agent":

@@ -219,10 +219,10 @@ def main() -> int:
         from opentelemetry.sdk.resources import Resource, SERVICE_NAME as SVC_NAME
         from monocle_apptrace.exporters.monocle_exporters import get_monocle_exporter
         from monocle_apptrace.instrumentation.metamodel.claude_code._helper import (
-            SessionState, build_turns, read_new_jsonl,
+            SessionState, build_turns, discover_subagents, read_new_jsonl,
         )
         from monocle_apptrace.instrumentation.metamodel.claude_code.transcript_processor import (
-            process_transcript,
+            process_subagents, process_transcript,
         )
     except ImportError as e:
         error(f"Missing dependency: {e}")
@@ -298,6 +298,21 @@ def main() -> int:
                 user_name=GIT_USER_NAME,
             )
             ss.turn_count += len(turns)
+
+            # Process subagent JSONL files (if any)
+            subagents = discover_subagents(transcript_path, ss.subagents_processed)
+            if subagents:
+                debug(f"Found {len(subagents)} new subagent(s): {[sa.agent_id for sa in subagents]}")
+                sa_emitted = process_subagents(
+                    subagents=subagents,
+                    tracer=tracer,
+                    parent_session_id=session_id,
+                    sdk_version=sdk_version,
+                    service_name=WORKFLOW_NAME,
+                    user_name=GIT_USER_NAME,
+                )
+                debug(f"Subagent spans emitted: {sa_emitted}")
+                ss.subagents_processed.extend(sa.agent_id for sa in subagents)
 
             # Save state
             state[key] = {
