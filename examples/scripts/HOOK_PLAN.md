@@ -675,7 +675,7 @@ flowchart TD
         SM["State Mgmt"] ~~~ TP["Transcript Parser"] ~~~ SB["Span Builder"] ~~~ OE["OTel Export"]
     end
 
-    HOOK --> BACKEND["OpenTelemetry Backend<br/>(Monocle, Jaeger, OTLP, etc.)"]
+    HOOK --> BACKEND["Okahu"]
 ```
 
 ### 8.1 Span Hierarchy
