@@ -594,6 +594,7 @@ class TraceViewer:
 
     def _span_detail_screen(self, stdscr, span: "Span"):
         """Full-screen scrollable detail view for a span."""
+        curses.cbreak()
         scroll = 0
 
         # Build all lines as (text, color_pair) tuples
@@ -670,6 +671,7 @@ class TraceViewer:
 
             key = stdscr.getch()
             if key == ord("q") or key == ord("Q") or key == 27:
+                curses.halfdelay(20)
                 return
             elif key == curses.KEY_UP or key == ord("k"):
                 scroll = max(0, scroll - 1)
@@ -683,15 +685,14 @@ class TraceViewer:
                 scroll = 0
             elif key == ord("G"):  # bottom
                 scroll = max(0, len(lines) - (h - 2))
+            elif key == curses.KEY_RESIZE:
+                continue
 
     def _view_trace(self, stdscr) -> bool:
         """View a single trace. Returns True to go back to picker, False to quit."""
-        curses.halfdelay(20)
+        curses.cbreak()
         while True:
-            # Live-reload: pick up new spans appended to this trace's file
-            self._check_new_traces()
-
-            stdscr.clear()
+            stdscr.erase()
             h, w = stdscr.getmaxyx()
             fname, roots, total_ms = self.current
             visible = self.visible_spans
@@ -834,7 +835,7 @@ class TraceViewer:
             # ── Footer ──
             fy = h - 1
             safe(stdscr, fy, 0, " " * w, curses.color_pair(C_HEADER))
-            keys = "↑↓ Navigate  ←→ Collapse  Enter Open  Space Detail  t Trace  Esc Back  q Quit"
+            keys = "↑↓ Navigate  ←→ Collapse  Enter Open  Space Detail  r Refresh  t Trace  Esc Back  q Quit"
             safe(stdscr, fy, 1, keys, curses.color_pair(C_HEADER))
             safe(stdscr, fy, max(0, w - len(fname) - 2), fname[:w - 2], curses.color_pair(C_HEADER))
 
@@ -842,8 +843,6 @@ class TraceViewer:
 
             # ── Input ──
             key = stdscr.getch()
-            if key == curses.ERR:
-                continue  # halfdelay timeout — re-render with fresh data
             if key == ord("q") or key == ord("Q"):
                 curses.cbreak()
                 return False
@@ -852,6 +851,7 @@ class TraceViewer:
                 # Save position for this trace before leaving
                 self._trace_positions[self.trace_idx] = (self.selected, self.scroll_offset)
                 if len(self.traces) > 1:
+                    curses.halfdelay(20)
                     return True
                 else:
                     return False
@@ -873,6 +873,8 @@ class TraceViewer:
                     self._span_detail_screen(stdscr, visible[self.selected])
             elif key == ord(" "):
                 self.detail_open = not self.detail_open
+            elif key == ord("r") or key == ord("R"):
+                self._check_new_traces()
             elif key == ord("t") or key == ord("T"):
                 self._trace_positions[self.trace_idx] = (self.selected, self.scroll_offset)
                 self.trace_idx = (self.trace_idx + 1) % len(self.traces)
