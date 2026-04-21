@@ -2,99 +2,121 @@
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [What Do We Want Answered by Instrumenting Claude CLI?](#what-do-we-want-answered-by-instrumenting-claude-cli)
-- [Claude Code Hook System](#claude-code-hook-system)
-  - [Available Hooks](#available-hooks)
-  - [Hook Payload (Stop)](#hook-payload-stop)
-  - [Configuration](#configuration)
-- [Transcript File Structure](#transcript-file-structure)
-  - [Locations](#locations)
-  - [JSONL Record Types](#jsonl-record-types)
-- [Monocle Span Mapping](#monocle-span-mapping)
-  - [Transcript JSON → Monocle Span Mapping](#transcript-json--monocle-span-mapping)
-  - [Tool Classification Logic](#tool-classification-logic)
-  - [JSON-to-Span ID Linkage](#json-to-span-id-linkage)
-- [Real Example: JSONL to Spans](#real-example-jsonl-to-spans)
-  - [Source JSONL Lines (Round 1)](#source-jsonl-lines-round-1-msg_01nusabygsi6hgenpY8wumMw)
-  - [How `build_turns` Merges Streaming Snapshots](#how-build_turns-merges-streaming-snapshots)
-  - [3 Spans Produced](#3-spans-produced)
-  - [Key Observations](#key-observations)
-- [Why the Hook Does Not Use `setup_monocle_telemetry()`](#why-the-hook-does-not-use-setup_monocle_telemetry)
-- [Architecture](#architecture)
-  - [Span Hierarchy](#span-hierarchy)
-- [Implementation Plan](#implementation-plan)
-  - [Phase 1: Core Hook (MVP)](#phase-1-core-hook-mvp)
-  - [Phase 2: Subagent Support](#phase-2-subagent-support)
-  - [Phase 3: Rich Attributes](#phase-3-rich-attributes)
-  - [Phase 4: Production Hardening](#phase-4-production-hardening)
-- [Configuration](#configuration-1)
-  - [Environment Variables](#environment-variables)
-  - [State File](#state-file)
-- [Advantages Over Langfuse](#advantages-over-langfuse)
-- [File Structure](#file-structure)
-  - [Installation Script](#installation-script)
-- [Testing](#testing)
-- [Open Questions](#open-questions)
-- [References](#references)
+- [1. What Do We Want Answered by Instrumenting Claude CLI?](#1-what-do-we-want-answered-by-instrumenting-claude-cli)
+  - [1.1 Model Selection & Switching](#11-model-selection--switching)
+  - [1.2 Developer Productivity & Knowledge Transfer](#12-developer-productivity--knowledge-transfer)
+  - [1.3 Skills & Tools Effectiveness](#13-skills--tools-effectiveness)
+  - [1.4 MCP Server Usage](#14-mcp-server-usage)
+  - [1.5 Testing & Quality](#15-testing--quality)
+  - [1.6 Cost & Efficiency](#16-cost--efficiency)
+  - [1.7 Organizational Patterns](#17-organizational-patterns)
+  - [1.8 Defining Success](#18-defining-success)
+- [2. Overview](#2-overview)
+  - [2.1 Goals](#21-goals)
+  - [2.2 Non-Goals](#22-non-goals)
+- [3. Claude Code Hook System](#3-claude-code-hook-system)
+  - [3.1 Available Hooks](#31-available-hooks)
+  - [3.2 Hook Payload (Stop)](#32-hook-payload-stop)
+  - [3.3 Configuration](#33-configuration)
+- [4. Transcript File Structure](#4-transcript-file-structure)
+  - [4.1 Locations](#41-locations)
+  - [4.2 JSONL Record Types](#42-jsonl-record-types)
+- [5. Monocle Span Mapping](#5-monocle-span-mapping)
+  - [5.1 Transcript JSON to Monocle Span Mapping](#51-transcript-json-to-monocle-span-mapping)
+  - [5.2 Tool Classification Logic](#52-tool-classification-logic)
+  - [5.3 JSON-to-Span ID Linkage](#53-json-to-span-id-linkage)
+- [6. Real Example: JSONL to Spans](#6-real-example-jsonl-to-spans)
+  - [6.1 Source JSONL Lines (Round 1)](#61-source-jsonl-lines-round-1-msg_01nusabygsi6hgenpY8wumMw)
+  - [6.2 How build_turns Merges Streaming Snapshots](#62-how-build_turns-merges-streaming-snapshots)
+  - [6.3 3 Spans Produced](#63-3-spans-produced)
+  - [6.4 Key Observations](#64-key-observations)
+- [7. Why the Hook Does Not Use setup_monocle_telemetry()](#7-why-the-hook-does-not-use-setup_monocle_telemetry)
+  - [7.1 How Other Frameworks Work](#71-how-other-frameworks-work)
+  - [7.2 Why Claude Code Is Different](#72-why-claude-code-is-different)
+  - [7.3 What the Hook Replicates (and What It Skips)](#73-what-the-hook-replicates-and-what-it-skips)
+  - [7.4 No Other Metamodel Framework Does This](#74-no-other-metamodel-framework-does-this)
+- [8. Architecture](#8-architecture)
+  - [8.1 Span Hierarchy](#81-span-hierarchy)
+- [9. What's Implemented](#9-whats-implemented)
+  - [9.1 Core Hook](#91-core-hook)
+  - [9.2 Subagent Support](#92-subagent-support)
+  - [9.3 Rich Attributes](#93-rich-attributes)
+  - [9.4 Production Hardening](#94-production-hardening)
+- [10. Configuration](#10-configuration)
+  - [10.1 Environment Variables](#101-environment-variables)
+  - [10.2 State File](#102-state-file)
+- [11. File Structure](#11-file-structure)
+  - [11.1 Installation Script](#111-installation-script)
+- [12. References](#12-references)
 
 ---
 
-## What Do We Want Answered by Instrumenting Claude CLI?
+## 1. What Do We Want Answered by Instrumenting Claude CLI?
 
 Instrumenting Claude Code sessions isn't just about collecting telemetry — it's about answering
 concrete questions that help teams ship better software with AI coding agents. These questions
 drive which spans, attributes, and aggregations the hook needs to capture.
 
-### Model Selection & Switching
+### 1.1 Model Selection & Switching
 
 1. **Why was the model changed mid-session?** Did the developer switch manually, or did Claude Code auto-select? Was it a cost decision, a capability gap, or a latency issue? Correlate model changes with the task context (e.g., switched to Opus for a complex refactor, back to Sonnet for simple edits).
 2. **Which model performs best for which task type?** Compare inference quality, token usage, and retry rates across models for categories like debugging, code generation, refactoring, and code review.
 3. **Are developers using the right model for the job?** Detect patterns where Opus is used for trivial tasks (wasted cost) or Haiku for complex reasoning (wasted time on retries).
 
-### Developer Productivity & Knowledge Transfer
+### 1.2 Developer Productivity & Knowledge Transfer
 
 4. **How can developer B be as good as developer A?** Compare session patterns: which skills, tools, and prompting strategies do high-performers use? What's their tool-call-to-result ratio? How do they structure multi-step tasks?
 5. **What distinguishes a productive session from a thrashing one?** Identify markers: ratio of successful tool calls to retries, number of course corrections, time-to-first-useful-output, session duration vs. commits produced.
 6. **Where do developers get stuck?** Detect repeated failed tool calls, long thinking times with no output, or sessions that end without commits — these signal areas where better prompts, skills, or documentation would help.
 
-### Skills & Tools Effectiveness
+### 1.3 Skills & Tools Effectiveness
 
 7. **What skill or tool is bad or very good — and should the team be educated on it?** Rank tools and skills by success rate, time saved, and frequency of use. Surface underused high-value tools and overused low-value ones.
 8. **Which custom skills have the highest ROI?** Track skill invocation frequency, success rate, and downstream outcomes (did the skill lead to a commit? a passing test?).
 9. **Are there tools that consistently fail or produce poor results?** Detect tools with high error rates or results that get immediately discarded (tool output never referenced in subsequent turns).
 
-### MCP Server Usage
+### 1.4 MCP Server Usage
 
 10. **For what scenarios is a specific MCP a must?** (e.g., debugging database queries → BigQuery MCP, investigating API issues → Chrome DevTools MCP). Build a recommendation matrix from observed usage patterns.
 11. **When should MCP be disabled?** Detect MCP servers that add noise — high invocation count but low signal (results rarely used), slow response times that block the session, or MCP calls that consistently return errors.
 12. **Which MCP servers have the best cost-to-value ratio?** Compare MCP call latency and token overhead against how often their results influence the final output.
 
-### Testing & Quality
+### 1.5 Testing & Quality
 
 13. **How to create test cases for a feature — manually first, then automatically?** Track which testing patterns lead to passing CI: does TDD (test-first) produce fewer regressions than test-after? Which test generation skills or prompts yield the most useful tests?
 14. **What's the relationship between session instrumentation coverage and bug rates?** Do well-instrumented sessions (more tool calls, more verification steps) correlate with fewer post-merge bugs?
 15. **Are developers verifying their changes before committing?** Detect sessions where code is committed without running tests, linting, or build checks.
 
-### Cost & Efficiency
+### 1.6 Cost & Efficiency
 
 16. **What's the token cost per commit?** Track total input/output tokens across a session and correlate with git commits produced — identify sessions with high cost but low output.
 17. **How much prompt cache hit rate are we getting?** Monitor `cache_read_input_tokens` vs `cache_creation_input_tokens` to detect inefficient prompt patterns (too many cache misses = context not being reused).
 18. **Are sessions too long?** Detect sessions where context window compression kicks in frequently — a signal that the task should have been broken into smaller pieces.
 
-### Organizational Patterns
+### 1.7 Organizational Patterns
 
 19. **What types of tasks take the longest?** Categorize sessions by outcome (bug fix, new feature, refactor, documentation) and compare duration, token usage, and tool patterns.
 20. **How does team usage evolve over time?** Track adoption curves for new skills, tools, and MCP servers across the team.
 21. **What's the team's overall AI coding maturity?** Aggregate metrics: tool diversity, skill usage, success rates, and session efficiency trends over weeks/months.
 
+### 1.8 Defining Success
+
+How do we know if instrumentation is working and delivering value? Success must be defined at multiple granularities:
+
+- **Per session**: Did the session produce a commit? How many turns to reach the goal? What was the token cost vs. output ratio? Was context window compression triggered (a sign the task was too large)?
+- **Per feature**: Across all sessions that contributed to a feature, what was the total token spend, time invested, and number of regressions introduced? Did the feature ship on the first PR or require follow-up fixes?
+- **Per PR**: How many review cycles before merge? Did CI pass on the first push? What was the ratio of human-written vs. AI-generated code? Were tests included?
+- **Per developer**: What's the developer's tool diversity score, cache hit rate, and average session efficiency over time? Are they improving?
+- **Per team**: What's the team-wide adoption curve for new skills and MCP servers? Is the average token cost per commit trending down? Are high-performers' patterns spreading to the rest of the team?
+- **Per sprint/milestone**: How does AI-assisted velocity compare to pre-instrumentation baselines? Are there categories of work where AI assistance shows diminishing returns?
+
 ---
 
-## Overview
+## 2. Overview
 
 This document outlines the design for a Monocle hook that observes Claude Code CLI sessions, capturing traces with proper span hierarchy, session correlation, and subagent tracking.
 
-### Goals
+### 2.1 Goals
 
 1. **Full observability** - Capture all Claude Code activity: inference, tool calls, subagents
 2. **Session correlation** - Group all spans under `agentic.session` scope
@@ -102,16 +124,16 @@ This document outlines the design for a Monocle hook that observes Claude Code C
 4. **Token tracking** - Capture input/output tokens, cache usage
 5. **Monocle-native spans** - Use proper span types from Monocle's metamodel
 
-### Non-Goals
+### 2.2 Non-Goals
 
 - Real-time streaming (post-hoc transcript parsing is sufficient)
 - Multiple hook points (single Stop hook keeps it simple)
 
 ---
 
-## Claude Code Hook System
+## 3. Claude Code Hook System
 
-### Available Hooks
+### 3.1 Available Hooks
 
 | Hook | When Fired | Use Case |
 |------|------------|----------|
@@ -120,7 +142,7 @@ This document outlines the design for a Monocle hook that observes Claude Code C
 | `Notification` | On notifications | Status updates |
 | `Stop` | Session/turn ends | **Our hook point** |
 
-### Hook Payload (Stop)
+### 3.2 Hook Payload (Stop)
 
 ```json
 {
@@ -130,7 +152,7 @@ This document outlines the design for a Monocle hook that observes Claude Code C
 }
 ```
 
-### Configuration
+### 3.3 Configuration
 
 Add to `~/.claude/settings.json`:
 
@@ -149,18 +171,18 @@ Add to `~/.claude/settings.json`:
 
 ---
 
-## Transcript File Structure
+## 4. Transcript File Structure
 
-### Locations
+### 4.1 Locations
 
 | Platform | Main Transcript | Subagent Transcripts |
 |----------|-----------------|----------------------|
 | **macOS/Linux** | `~/.claude/projects/{project-hash}/{session-id}.jsonl` | `~/.claude/projects/{project-hash}/{session-id}/subagents/agent-{agent-id}.jsonl` |
 | **Windows** | `%APPDATA%\Claude\projects\{project-hash}\{session-id}.jsonl` | `%APPDATA%\Claude\projects\{project-hash}\{session-id}\subagents\agent-{agent-id}.jsonl` |
 
-### JSONL Record Types
+### 4.2 JSONL Record Types
 
-#### User Message
+#### 4.2.1 User Message
 ```json
 {
   "type": "user",
@@ -175,7 +197,7 @@ Add to `~/.claude/settings.json`:
 }
 ```
 
-#### Assistant Message
+#### 4.2.2 Assistant Message
 ```json
 {
   "type": "assistant",
@@ -201,7 +223,7 @@ Add to `~/.claude/settings.json`:
 }
 ```
 
-#### Tool Result (appears as user message)
+#### 4.2.3 Tool Result (appears as user message)
 ```json
 {
   "type": "user",
@@ -218,7 +240,7 @@ Add to `~/.claude/settings.json`:
 }
 ```
 
-#### Subagent Record (in subagents/*.jsonl)
+#### 4.2.4 Subagent Record (in subagents/*.jsonl)
 ```json
 {
   "sessionId": "5dfd59f4-...",
@@ -232,13 +254,13 @@ Add to `~/.claude/settings.json`:
 
 ---
 
-## Monocle Span Mapping
+## 5. Monocle Span Mapping
 
-### Transcript JSON → Monocle Span Mapping
+### 5.1 Transcript JSON to Monocle Span Mapping
 
 The table below shows exactly how each field in the Claude Code transcript JSONL (`~/.claude/projects/{hash}/{session}.jsonl`) maps to Monocle span attributes.
 
-#### Workflow Span (root)
+#### 5.1.1 Workflow Span (root)
 
 This span wraps all turns. It is NOT derived from any transcript JSON — it is synthesized by the processor.
 
@@ -255,7 +277,7 @@ This span wraps all turns. It is NOT derived from any transcript JSON — it is 
 | `workflow.name` | env `MONOCLE_SERVICE_NAME` or default | `"claude-cli"` |
 | `status.code` | hardcoded | `"ok"` |
 
-#### Turn Span (`agentic.turn`)
+#### 5.1.2 Turn Span (`agentic.turn`)
 
 One per user→assistant exchange. Parent: workflow span.
 
@@ -265,7 +287,6 @@ One per user→assistant exchange. Parent: workflow span.
 | `span.type` | hardcoded | `"agentic.turn"` |
 | `span.subtype` | hardcoded | `"turn"` |
 | `scope.agentic.session` | hook payload `sessionId` | `"5dfd59f4-7eee-..."` |
-| `turn.number` | sequential counter (1-based) | `1` |
 | `entity.1.type` | hardcoded | `"agent.claude_code"` |
 | `workflow.name` | env or default | `"claude-cli"` |
 | `monocle.service.name` | env or default | `"claude-cli"` |
@@ -274,7 +295,7 @@ One per user→assistant exchange. Parent: workflow span.
 | event `data.output` → `response` | assistant text + all `tool_result.content` joined | `"Hello! How can I help?"` |
 | `status.code` | hardcoded | `"ok"` |
 
-#### Inference Span (`inference`)
+#### 5.1.3 Inference Span (`inference`)
 
 One per turn (uses last assistant message). Parent: turn span.
 
@@ -298,7 +319,7 @@ One per turn (uses last assistant message). Parent: turn span.
 | event `metadata` → `cache_creation_tokens` | `message.usage.cache_creation_input_tokens` | `759` |
 | `status.code` | hardcoded | `"ok"` |
 
-#### Tool Span (`agentic.tool.invocation`)
+#### 5.1.4 Tool Span (`agentic.tool.invocation`)
 
 One per `tool_use` block (Read, Write, Bash, Edit, Glob, Grep, etc.). Parent: turn span.
 
@@ -313,7 +334,7 @@ One per `tool_use` block (Read, Write, Bash, Edit, Glob, Grep, etc.). Parent: tu
 | event `data.output` → `response` | matched `tool_result.content` by `tool_use_id` | `"README.md\napptrace\n..."` |
 | `status.code` | hardcoded | `"ok"` |
 
-#### Agent Span (`agentic.invocation`)
+#### 5.1.5 Agent Span (`agentic.invocation`)
 
 One per `tool_use` where `name == "Agent"`. Parent: turn span.
 
@@ -332,7 +353,7 @@ One per `tool_use` where `name == "Agent"`. Parent: turn span.
 | event `data.output` → `response` | matched `tool_result.content` by `tool_use_id` | `"The result is 2."` |
 | `status.code` | hardcoded | `"ok"` |
 
-#### MCP Tool Span (`agentic.mcp.invocation`)
+#### 5.1.6 MCP Tool Span (`agentic.mcp.invocation`)
 
 One per `tool_use` where `name.startswith("mcp__")`. Parent: turn span.
 
@@ -347,7 +368,7 @@ One per `tool_use` where `name.startswith("mcp__")`. Parent: turn span.
 | event `data.output` → `response` | matched `tool_result.content` by `tool_use_id` | `'{"traces": [...]}'` |
 | `status.code` | hardcoded | `"ok"` |
 
-### Tool Classification Logic
+### 5.2 Tool Classification Logic
 
 ```
 tool_name == "Agent"       → span.type: agentic.invocation,     entity: agent.claude_code
@@ -355,7 +376,7 @@ tool_name.startswith("mcp__") → span.type: agentic.mcp.invocation, entity: too
 everything else            → span.type: agentic.tool.invocation, entity: tool.claude_code
 ```
 
-### JSON-to-Span ID Linkage
+### 5.3 JSON-to-Span ID Linkage
 
 | Transcript JSON | Used For |
 |---|---|
@@ -368,12 +389,12 @@ everything else            → span.type: agentic.tool.invocation, entity: tool.
 
 ---
 
-## Real Example: JSONL to Spans
+## 6. Real Example: JSONL to Spans
 
 This section shows a real Claude Code round (from trace `0xfc8ac4b80f9a8ed695f83887a431e853`)
 end-to-end: the raw JSONL lines the hook reads, the merge logic, and the Monocle spans produced.
 
-### Source JSONL Lines (Round 1, `msg_01NusABygsi6HGenpY8WUMmw`)
+### 6.1 Source JSONL Lines (Round 1, `msg_01NusABygsi6HGenpY8WUMmw`)
 
 Claude Code writes **streaming snapshots** — multiple JSONL lines for a single LLM call.
 Each assistant snapshot adds content blocks as they arrive. The hook's `build_turns` merges
@@ -392,7 +413,7 @@ them into one logical assistant message before emitting spans.
 > **Lines 255–256, 259 are unrelated** (other message types); line numbers are not contiguous
 > because the JSONL file interleaves all session activity.
 
-#### Line 252: First Streaming Snapshot (the Inference Call)
+#### 6.1.1 Line 252: First Streaming Snapshot (the Inference Call)
 
 This is the first assistant JSONL line for this round — the LLM inference response arriving
 as a streaming snapshot. It carries the full `message` envelope (model, id, usage, stop_reason)
@@ -450,7 +471,7 @@ Key observations:
 - **`cache_creation_input_tokens: 86909`**: the prompt was written to Anthropic's ephemeral 5-minute cache on this call
 - **`parentUuid`** links back to the user message (line 251's `uuid`)
 
-### How `build_turns` Merges Streaming Snapshots
+### 6.2 How `build_turns` Merges Streaming Snapshots
 
 Lines 252, 253, 254, and 258 all share the same `message.id` (`msg_01NusABygsi6HGenpY8WUMmw`).
 `build_turns` merges them into **one** assistant message:
@@ -468,11 +489,11 @@ Merged assistant message:
 The rule: **last snapshot wins** for `usage`, `stop_reason`, and `model`. Content blocks are
 accumulated across all snapshots for the same `message.id`.
 
-### 3 Spans Produced
+### 6.3 3 Spans Produced
 
 From this single merged message + its tool results, the hook emits 3 spans:
 
-#### Span 1: Inference
+#### 6.3.1 Span 1: Inference
 
 ```json
 {
@@ -503,7 +524,7 @@ From this single merged message + its tool results, the hook emits 3 spans:
 - `data.output` ← first `text` block from merged content (line 253)
 - `completion_tokens` ← `message.usage.output_tokens` from line 258 (final snapshot)
 
-#### Span 2: Tool — Bash
+#### 6.3.2 Span 2: Tool — Bash
 
 ```json
 {
@@ -532,7 +553,7 @@ From this single merged message + its tool results, the hook emits 3 spans:
 - `data.input` ← full `tool_use.input` JSON from line 254
 - `data.output` ← `tool_result.content` from line 257 (matched by `tool_use_id: toolu_01LN8G...`)
 
-#### Span 3: Tool — Grep
+#### 6.3.3 Span 3: Tool — Grep
 
 ```json
 {
@@ -561,7 +582,7 @@ From this single merged message + its tool results, the hook emits 3 spans:
 - `data.input` ← full `tool_use.input` JSON from line 258
 - `data.output` ← `tool_result.content` from line 260 (matched by `tool_use_id: toolu_01EsZk...`)
 
-### Key Observations
+### 6.4 Key Observations
 
 1. **All 3 spans share the same `parent_id`** (`0x7efa8f96eb5d5fa5`) — this is the
    `agentic.turn` span that groups one round of user→assistant→tools.
@@ -578,9 +599,9 @@ From this single merged message + its tool results, the hook emits 3 spans:
 
 ---
 
-## Why the Hook Does Not Use `setup_monocle_telemetry()`
+## 7. Why the Hook Does Not Use `setup_monocle_telemetry()`
 
-### How other frameworks work
+### 7.1 How Other Frameworks Work
 
 Every other Monocle metamodel framework (openai, langchain, anthropic, etc.) relies on
 `setup_monocle_telemetry()` to:
@@ -597,7 +618,7 @@ The framework's `METHODS` list tells Monocle which Python methods to wrap (e.g.,
 `openai.ChatCompletion.create`, `langchain.chains.LLMChain.__call__`). When those methods
 are called at runtime, Monocle's wrappers emit spans automatically.
 
-### Why Claude Code is different
+### 7.2 Why Claude Code Is Different
 
 Claude Code is a **compiled CLI binary** (Node.js), not a Python library. There are no
 Python methods to monkey-patch. The `CLAUDE_CODE_METHODS` list is empty (`[]`).
@@ -607,7 +628,7 @@ Instead, the hook:
 - Reads the transcript JSONL **post-hoc** (after the turn completes)
 - Emits spans by calling the tracer directly via `transcript_processor.py`
 
-### What the hook replicates (and what it skips)
+### 7.3 What the Hook Replicates (and What It Skips)
 
 | Step | `setup_monocle_telemetry()` | Hook (`monocle_hook.py`) | Why |
 |------|----------------------------|--------------------------|-----|
@@ -619,18 +640,7 @@ Instead, the hook:
 | 6. Workflow context | `attach(set_value(...))` | Skipped | No long-running context to propagate |
 | 7. Monkey-patching | Wraps framework methods | **Skipped** | Nothing to patch — CLI binary |
 
-### Could the hook use `setup_monocle_telemetry()` instead?
-
-Almost, but not directly:
-
-- `setup_monocle_telemetry()` uses `BatchSpanProcessor`, which buffers spans and flushes
-  them in the background. The hook process exits in <1 second — buffered spans would be
-  lost before the batch flush fires.
-- A `use_simple_processor=True` parameter would need to be added to
-  `setup_monocle_telemetry()` to support short-lived processes like hooks.
-- Until then, the manual setup (4 lines) is the pragmatic choice.
-
-### No other metamodel framework does this
+### 7.4 No Other Metamodel Framework Does This
 
 Claude Code is the only framework in the metamodel that bypasses `setup_monocle_telemetry()`.
 All others use it because they instrument long-running Python processes where monkey-patching
@@ -638,110 +648,85 @@ and batch export work correctly.
 
 ---
 
-## Architecture
+## 8. Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              Claude Code CLI                                 │
-│                                                                             │
-│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐                   │
-│  │   Turn 1    │────▶│   Turn 2    │────▶│   Turn N    │                   │
-│  └──────┬──────┘     └──────┬──────┘     └──────┬──────┘                   │
-│         │                   │                   │                           │
-│         ▼                   ▼                   ▼                           │
-│  ┌─────────────────────────────────────────────────────┐                   │
-│  │              Transcript JSONL File                   │                   │
-│  │  ~/.claude/projects/{hash}/{session}.jsonl          │                   │
-│  └─────────────────────────────────────────────────────┘                   │
-│         │                                                                   │
-│         │ (subagents)                                                       │
-│         ▼                                                                   │
-│  ┌─────────────────────────────────────────────────────┐                   │
-│  │           Subagent Transcript Files                  │                   │
-│  │  {session}/subagents/agent-{id}.jsonl               │                   │
-│  └─────────────────────────────────────────────────────┘                   │
-│                                                                             │
-│  ═══════════════════════════════════════════════════════════════════════   │
-│                          Stop Hook Fires                                    │
-│  ═══════════════════════════════════════════════════════════════════════   │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                         Monocle Hook (monocle_hook.py)                      │
-│                                                                             │
-│  1. Read hook payload (sessionId, transcriptPath)                          │
-│  2. Load incremental state (last processed offset)                         │
-│  3. Parse new JSONL records from main transcript                           │
-│  4. Discover and parse subagent transcripts                                │
-│  5. Build turn structure with tool call/result matching                    │
-│  6. Emit Monocle spans with proper hierarchy                               │
-│  7. Save state for next invocation                                         │
-│                                                                             │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐   │
-│  │ State Mgmt   │  │ Transcript   │  │ Span Builder │  │ OTel Export  │   │
-│  │              │  │ Parser       │  │              │  │              │   │
-│  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                         OpenTelemetry Backend                               │
-│                     (Monocle, Jaeger, OTLP, etc.)                          │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph CLI["Claude Code CLI"]
+        T1["Turn 1"] --> T2["Turn 2"] --> TN["Turn N"]
+        T1 & T2 & TN --> JSONL["Transcript JSONL File<br/>~/.claude/projects/{hash}/{session}.jsonl"]
+        JSONL --> SUB["Subagent Transcript Files<br/>{session}/subagents/agent-{id}.jsonl"]
+        STOP(["Stop Hook Fires"])
+    end
+
+    STOP --> HOOK
+
+    subgraph HOOK["Monocle Hook (monocle_hook.py)"]
+        direction TB
+        S1["1. Read hook payload<br/>(sessionId, transcriptPath)"]
+        S2["2. Load incremental state<br/>(last processed offset)"]
+        S3["3. Parse new JSONL records<br/>from main transcript"]
+        S4["4. Discover and parse<br/>subagent transcripts"]
+        S5["5. Build turn structure<br/>with tool call/result matching"]
+        S6["6. Emit Monocle spans<br/>with proper hierarchy"]
+        S7["7. Save state for<br/>next invocation"]
+        S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7
+
+        SM["State Mgmt"] ~~~ TP["Transcript Parser"] ~~~ SB["Span Builder"] ~~~ OE["OTel Export"]
+    end
+
+    HOOK --> BACKEND["OpenTelemetry Backend<br/>(Monocle, Jaeger, OTLP, etc.)"]
 ```
 
-### Span Hierarchy
+### 8.1 Span Hierarchy
 
-```
-Session: 5dfd59f4-7eee-4de8-8c1c-c77ab630b1b4 (scope, not span)
-│
-├── Turn 1 (agentic.turn)
-│   ├── Inference 1 (inference) - "I'll read the file"
-│   │   └── tool_call decision
-│   ├── Tool: Read (agentic.tool.invocation)
-│   ├── Inference 2 (inference) - "Now I'll edit it"
-│   │   └── tool_call decision
-│   └── Tool: Edit (agentic.tool.invocation)
-│
-├── Turn 2 (agentic.turn)
-│   ├── Inference 1 (inference) - "I'll spawn an agent"
-│   │   └── delegation decision
-│   └── Agent: explorer (agentic.invocation)
-│       │
-│       └── [Subagent Session: a4bf810ad314b91c1]
-│           ├── Turn 1 (agentic.turn)
-│           │   ├── Inference (inference)
-│           │   └── Tool: Grep (agentic.tool.invocation)
-│           └── Turn 2 (agentic.turn)
-│               └── Inference (inference) - turn_end
-│
-└── Turn 3 (agentic.turn)
-    └── Inference (inference) - "Here's the result"
-        └── turn_end decision
+```mermaid
+flowchart TD
+    SESSION["Session: 5dfd59f4-...<br/>(scope, not span)"]
+
+    SESSION --> TURN1["Turn 1 (agentic.turn)"]
+    SESSION --> TURN2["Turn 2 (agentic.turn)"]
+    SESSION --> TURN3["Turn 3 (agentic.turn)"]
+
+    TURN1 --> INF1["Inference 1 (inference)<br/>'I'll read the file'"]
+    TURN1 --> TOOL_READ["Tool: Read<br/>(agentic.tool.invocation)"]
+    TURN1 --> INF2["Inference 2 (inference)<br/>'Now I'll edit it'"]
+    TURN1 --> TOOL_EDIT["Tool: Edit<br/>(agentic.tool.invocation)"]
+
+    TURN2 --> INF3["Inference 1 (inference)<br/>'I'll spawn an agent'"]
+    TURN2 --> AGENT["Agent: explorer<br/>(agentic.invocation)"]
+
+    AGENT --> SUBAGENT["Subagent Session: a4bf810ad314b91c1"]
+    SUBAGENT --> SUB_TURN1["Turn 1 (agentic.turn)"]
+    SUBAGENT --> SUB_TURN2["Turn 2 (agentic.turn)"]
+    SUB_TURN1 --> SUB_INF1["Inference (inference)"]
+    SUB_TURN1 --> TOOL_GREP["Tool: Grep<br/>(agentic.tool.invocation)"]
+    SUB_TURN2 --> SUB_INF2["Inference (inference)<br/>turn_end"]
+
+    TURN3 --> INF4["Inference (inference)<br/>'Here's the result'"]
 ```
 
 ---
 
-## Implementation Plan
+## 9. What's Implemented
 
-### Phase 1: Core Hook (MVP)
+### 9.1 Core Hook
 
 **Files:**
-- `examples/scripts/claude_code_hook/monocle_hook.py` - Main hook script
-- `examples/scripts/claude_code_hook/transcript_parser.py` - JSONL parsing
-- `examples/scripts/claude_code_hook/span_emitter.py` - Monocle span creation
+- `examples/scripts/claude_code_hook/monocle_hook.py` — Main entry point (called by Claude Code Stop hook)
+- `apptrace/src/monocle_apptrace/instrumentation/metamodel/claude_code/transcript_processor.py` — Span building and OTel emission
+- `apptrace/src/monocle_apptrace/instrumentation/metamodel/claude_code/_helper.py` — JSONL parsing, turn building, utilities
 
 **Features:**
-- [ ] Read Stop hook payload
-- [ ] Parse main transcript JSONL incrementally
-- [ ] Build turns (user → assistant with tools)
-- [ ] Match tool_use with tool_result by ID
-- [ ] Emit basic spans: turn, inference, tool
-- [ ] State persistence (offset tracking)
-- [ ] Session scope via `agentic.session`
+- [x] Read Stop hook payload via stdin JSON (`read_hook_payload()`)
+- [x] Parse main transcript JSONL incrementally (`read_new_jsonl()` with byte offset tracking)
+- [x] Build turns — user → assistant with tools (`build_turns()` with streaming snapshot merge)
+- [x] Match `tool_use` with `tool_result` by ID (via `tool_results_by_id` dict)
+- [x] Emit spans: workflow, turn (`agentic.turn`), inference, tool (`agentic.tool.invocation`), MCP (`agentic.mcp.invocation`), agent (`agentic.invocation`)
+- [x] State persistence — offset tracking with `SessionState` dataclass
+- [x] Session scope via `scope.agentic.session` on all non-workflow spans
 
-### Phase 2: Subagent Support
+### 9.2 Subagent Support
 
 **Features:**
 - [x] Discover `subagents/` directory via `discover_subagents()` in `_helper.py`
@@ -752,7 +737,6 @@ Session: 5dfd59f4-7eee-4de8-8c1c-c77ab630b1b4 (scope, not span)
 - [x] Rename `"Tool: Agent"` to `"Sub-Agent: {type}"` span name
 - [x] Track `subagents_processed` in state to avoid re-emitting
 - [x] Capture requested `model` on Agent span as `entity.1.model`
-- [ ] Correlate subagent→parent via `parentToolUseID` (subagent spans share trace but lack explicit parent link to the Agent tool_use span)
 
 **Subagent file layout:**
 ```
@@ -778,39 +762,39 @@ workflow (parent session)
             └── Tool: Glob (agentic.tool.invocation)
 ```
 
-### Phase 3: Rich Attributes
+### 9.3 Rich Attributes
 
 **Features:**
-- [ ] Token usage (input, output, cache)
-- [ ] Model tracking per inference
-- [ ] Inference decision subtypes (tool_call, delegation, turn_end)
-- [ ] Error tracking (failed tool calls)
-- [ ] Timing reconstruction from timestamps
+- [x] Token usage — input, output, cache_read, cache_creation per round and aggregated (`get_usage()`)
+- [x] Model tracking per inference (`message.model` → `entity.2.name`, `gen_ai.request.model`)
+- [x] Inference decision subtypes — `finish_reason` and `finish_type` from `stop_reason` (`get_stop_reason()`)
+- [x] Timing reconstruction from transcript timestamps (`_parse_timestamp_ns()`, `_timed_span`)
 
-### Phase 4: Production Hardening
+### 9.4 Production Hardening
 
 **Features:**
-- [ ] Graceful failure (never block Claude Code)
-- [ ] Log file for debugging
-- [ ] Configuration via environment variables
-- [ ] Large output truncation with metadata
-- [ ] State file locking
+- [x] Graceful failure — all try/except blocks fail silently with logging, hook always exits 0
+- [x] Log file for debugging — `~/.claude/state/monocle_hook.log` with timestamped `[LEVEL]` messages
+- [x] Configuration via environment variables — `MONOCLE_CLAUDE_ENABLED`, `MONOCLE_EXPORTER`, `OKAHU_INGESTION_ENDPOINT`, `OKAHU_API_KEY`, `MONOCLE_WORKFLOW_NAME`, `MONOCLE_CLAUDE_DEBUG`
+- [x] Large output truncation — `MAX_CHARS = 20000` via `truncate()` function
+- [x] State file locking — `FileLock` class using `fcntl` with 2.0s timeout
 
 ---
 
-## Configuration
+## 10. Configuration
 
-### Environment Variables
+### 10.1 Environment Variables
 
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `MONOCLE_CLAUDE_ENABLED` | Enable/disable hook | `true` |
-| `MONOCLE_EXPORTER_ENDPOINT` | OTLP endpoint | `http://localhost:4318` |
-| `MONOCLE_CLAUDE_MAX_CHARS` | Max chars for tool output | `20000` |
+| `MONOCLE_EXPORTER` | Exporter type (okahu, file, console, otlp) | `okahu` |
+| `OKAHU_INGESTION_ENDPOINT` | Okahu ingestion endpoint | — |
+| `OKAHU_API_KEY` | Okahu API key | — |
+| `MONOCLE_WORKFLOW_NAME` | Service name for spans | `claude-code` |
 | `MONOCLE_CLAUDE_DEBUG` | Enable debug logging | `false` |
-| `MONOCLE_SERVICE_NAME` | Service name for spans | `claude-code` |
 
-### State File
+### 10.2 State File
 
 Location: `~/.claude/state/monocle_state.json`
 
@@ -829,119 +813,35 @@ Location: `~/.claude/state/monocle_state.json`
 
 ---
 
-## Advantages Over Langfuse
-
-| Feature | Langfuse | Monocle |
-|---------|----------|---------|
-| Subagent traces | No (black box) | Yes, full hierarchy |
-| Session correlation | Basic session_id | Native `agentic.session` scope |
-| Span types | Generic (generation, tool) | Rich (inference, agentic.*, subtypes) |
-| Token tracking | No | Full (input, output, cache) |
-| Model per inference | Single assumption | Per-inference tracking |
-| Parent-child hierarchy | Flat | Proper span tree |
-| Timing | Message order only | Timestamp-based |
-| Inference decisions | Not captured | tool_call, delegation, turn_end |
-
----
-
-## File Structure
+## 11. File Structure
 
 ```
 examples/scripts/claude_code_hook/
 ├── README.md                 # Setup instructions
 ├── monocle_hook.py          # Main entry point (called by Claude Code)
-├── transcript_parser.py      # JSONL parsing and turn building
-├── span_emitter.py          # Monocle span creation
-├── state_manager.py         # Incremental state persistence
-├── config.py                # Configuration handling
-└── install.sh               # Installation script
+├── e2e_test.py              # End-to-end test suite
+├── run_hook.sh              # Wrapper script for sourcing .env
+├── install.sh               # Interactive installation script
+└── SESSION.md               # Session progress notes
+
+apptrace/src/monocle_apptrace/instrumentation/metamodel/claude_code/
+├── _helper.py               # JSONL parsing, turn building, utilities
+└── transcript_processor.py  # Span building and OTel emission
 ```
 
-### Installation Script
+### 11.1 Installation Script
 
-```bash
-#!/bin/bash
-# install.sh - Install Monocle hook for Claude Code
-
-HOOK_DIR="$HOME/.claude/hooks"
-mkdir -p "$HOOK_DIR"
-
-# Copy hook files
-cp monocle_hook.py "$HOOK_DIR/"
-cp transcript_parser.py "$HOOK_DIR/"
-cp span_emitter.py "$HOOK_DIR/"
-cp state_manager.py "$HOOK_DIR/"
-cp config.py "$HOOK_DIR/"
-
-# Add to Claude Code settings
-SETTINGS="$HOME/.claude/settings.json"
-if [ -f "$SETTINGS" ]; then
-    # Merge hook config (use jq or python)
-    python3 -c "
-import json
-with open('$SETTINGS', 'r') as f:
-    settings = json.load(f)
-settings.setdefault('hooks', {}).setdefault('Stop', []).append({
-    'type': 'command',
-    'command': 'python3 ~/.claude/hooks/monocle_hook.py'
-})
-with open('$SETTINGS', 'w') as f:
-    json.dump(settings, f, indent=2)
-"
-else
-    echo '{"hooks":{"Stop":[{"type":"command","command":"python3 ~/.claude/hooks/monocle_hook.py"}]}}' > "$SETTINGS"
-fi
-
-echo "Monocle hook installed successfully!"
-```
+`install.sh` provides an interactive installer that:
+- Prompts for installation scope (project vs global)
+- Copies `monocle_hook.py` to `~/.claude/hooks/`
+- Modifies `settings.json` or `.claude/settings.local.json` to add the Stop hook
+- Detects `monocle_apptrace` installation and warns if missing
+- Supports `--uninstall` mode to cleanly remove the hook
 
 ---
 
-## Testing
-
-### Manual Testing
-
-1. Install hook
-2. Start Claude Code session
-3. Perform actions (read files, run tools, spawn agents)
-4. Check spans in Monocle/Jaeger UI
-
-### Automated Testing
-
-```python
-# test_transcript_parser.py
-def test_parse_turn():
-    """Test parsing a complete turn from JSONL"""
-
-def test_match_tool_results():
-    """Test matching tool_use with tool_result by ID"""
-
-def test_discover_subagents():
-    """Test finding subagent JSONL files"""
-
-def test_incremental_read():
-    """Test reading only new records since last offset"""
-```
-
----
-
-## Open Questions
-
-1. **Timing accuracy**: Transcript timestamps are when messages were written, not actual execution time. Is this sufficient?
-
-2. **Streaming inference**: Claude streams responses. The transcript captures final state. Do we need intermediate spans?
-
-3. **Error handling**: How should we handle malformed JSONL records? Skip silently or log?
-
-4. **State cleanup**: How long to keep state for old sessions? Auto-prune after N days?
-
-5. **Multiple Claude processes**: Each process writes its own transcript. State keying by session+path handles this, but should we add process ID?
-
----
-
-## References
+## 12. References
 
 - [Claude Code Hooks Documentation](https://docs.anthropic.com/en/docs/claude-code/hooks)
 - [Monocle Span Types](../apptrace/src/monocle_apptrace/instrumentation/common/constants.py)
-- [Langfuse Claude Code Integration](https://langfuse.com/integrations/other/claude-code)
 - [OpenTelemetry Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/)
