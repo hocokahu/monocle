@@ -1,30 +1,35 @@
 {
   "version": "1.0",
-  "timestamp": "2026-04-28T07:52:06.707Z",
+  "timestamp": "2026-04-28T21:52:25Z",
   "status": "paused",
   "completed_tasks": [
-    {"id": 1, "name": "BigQuery trace exploration - found tenant t_0c7a351603a24035a30e947c488688b2 for claude_cli_xe8foi app", "status": "done"},
-    {"id": 2, "name": "CSV export of claude-cli-* trace counts to tmp/claude_cli_traces.csv", "status": "done"},
-    {"id": 3, "name": "Jupyter notebook with 4 sections: trace counts, token usage, cache hit ratio, git push audit", "status": "done"},
-    {"id": 4, "name": "Fixed prompt_tokens normalization for old vs new instrumentation", "status": "done"},
-    {"id": 5, "name": "Fixed unreliable total_tokens - uses SUM(prompt + completion) across all inference spans", "status": "done"},
-    {"id": 6, "name": "Added column definition cells below each table", "status": "done"},
-    {"id": 7, "name": "Added git push audit section (bash + GitHub MCP detection)", "status": "done"}
+    {"id": 1, "name": "BigQuery trace exploration - found tenant", "status": "done"},
+    {"id": 2, "name": "CSV export of trace counts", "status": "done"},
+    {"id": 3, "name": "Notebook sections 1-4: traces, tokens, cache, git audit", "status": "done"},
+    {"id": 4, "name": "Fixed INFERENCE_CTE auto-detection of two BQ data formats", "status": "done"},
+    {"id": 5, "name": "Excluded claude-cli-prototype-* workflows", "status": "done"},
+    {"id": 6, "name": "Per-user cache hit ratio bar chart (Section 2a)", "status": "done"},
+    {"id": 7, "name": "Per-user largest session summary with LLM descriptions (Section 5)", "status": "done"},
+    {"id": 8, "name": "Fixed transcript_processor.py line 328 token counting", "status": "done"},
+    {"id": 9, "name": "Table formatting: hidden index, left-aligned descriptions", "status": "done"}
   ],
   "remaining_tasks": [
-    {"id": 9, "name": "Verify turn_count regression fully resolved (from prior session)", "status": "not_started"},
-    {"id": 10, "name": "Correlate subagent→parent via parentToolUseID", "status": "not_started"},
-    {"id": 11, "name": "Verify monocle_apptrace.version 0.7.7+claudecli in traces", "status": "not_started"},
-    {"id": 12, "name": "Capture mid-turn queue-operation messages in spans", "status": "not_started"}
+    {"id": 10, "name": "Commit transcript_processor.py fix", "status": "not_started"},
+    {"id": 11, "name": "Verify turn_count regression (prior session)", "status": "not_started"},
+    {"id": 12, "name": "Correlate subagent→parent via parentToolUseID", "status": "not_started"},
+    {"id": 13, "name": "Verify monocle_apptrace.version 0.7.7+claudecli in traces", "status": "not_started"},
+    {"id": 14, "name": "Capture mid-turn queue-operation messages in spans", "status": "not_started"}
   ],
   "blockers": [],
   "human_actions_pending": [],
   "decisions": [
-    {"decision": "Use SUM(prompt_tokens + completion_tokens) instead of total_tokens from last span", "rationale": "total_tokens field unreliable - sometimes equals just completion_tokens"},
-    {"decision": "Normalize prompt_tokens: detect old instrumentation where prompt_tokens < cache_read_tokens", "rationale": "Pre-Apr 20 instrumentation recorded prompt_tokens as new tokens only, not total input"},
-    {"decision": "Detect git push via Tool: Bash spans with git push in input AND Tool: mcp__plugin_github_github__* spans", "rationale": "Both paths used - bash for direct git push, MCP for GitHub API"}
+    {"decision": "BQ data never double-counted - use IF() auto-detection for two formats", "rationale": "Ratio analysis of 2,434 spans: all ~0.0 or ~1.0, never ~2.0"},
+    {"decision": "Exclude prototype workflows entirely", "rationale": "Session-wide aggregation bug produced billions of tokens"},
+    {"decision": "ROW_NUMBER() for largest session per user by total_tokens", "rationale": "User wanted one session per user, not all sessions"},
+    {"decision": "First-round spans via name NOT LIKE '%/%'", "rationale": "Multi-round spans have format like 'Claude Inference (4/6)'"},
+    {"decision": "Anthropic SDK in notebook for session summarization", "rationale": "Simpler than external tool, claude-sonnet-4 for cost efficiency"}
   ],
-  "uncommitted_files": ["notebooks/claude_cli_traces.ipynb", "tmp/claude_cli_traces.csv", "examples/my_class.py"],
-  "next_action": "Open notebooks/claude_cli_traces.ipynb in Jupyter to view charts. Consider adding more analysis (model usage breakdown, tool call frequency, session duration). Prior hook work (tasks 9-12) still pending.",
-  "context_notes": "Built BigQuery analysis notebook for Okahu claude-cli app. BQ: project=fluent-radar-408119, dataset=t_0c7a351603a24035a30e947c488688b2. Workflow names in attributes.entity[0].name. Token data in events[2].attributes (metadata event). Okahu MCP auth was initiated but not completed."
+  "uncommitted_files": ["apptrace/src/monocle_apptrace/instrumentation/metamodel/claude_code/transcript_processor.py", "examples/my_class.py"],
+  "next_action": "Commit transcript_processor.py fix as proper commit. Decide on prior hook work (tasks 11-14).",
+  "context_notes": "Two sessions of BQ trace analysis. Notebook complete with 25 cells. transcript_processor.py has uncommitted fix at line 328. notebooks/ is in .gitignore so notebook not tracked."
 }
