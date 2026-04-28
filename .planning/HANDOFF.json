@@ -1,19 +1,18 @@
 {
   "version": "1.0",
-  "timestamp": "2026-04-20T20:04:40.480Z",
+  "timestamp": "2026-04-28T07:52:06.707Z",
   "status": "paused",
   "completed_tasks": [
-    {"id": 1, "name": "Fix subagent spans sharing parent trace_id (process inside workflow span)", "status": "done"},
-    {"id": 2, "name": "Add span_name_prefix to distinguish sub-agent turns from parent turns", "status": "done"},
-    {"id": 3, "name": "Remove turn.number attribute and turn_count from SessionState/hook", "status": "done"},
-    {"id": 4, "name": "trace_viewer: word wrap, position memory, OKAHU title, tree lines, span_id on highlight", "status": "done"},
-    {"id": 5, "name": "trace_viewer: fix JSON loading for truncated/partial files", "status": "done"},
-    {"id": 6, "name": "trace_viewer: live-reload modified files (mtime-based)", "status": "done"},
-    {"id": 7, "name": "trace_viewer: tree connector spacing fix", "status": "done"},
-    {"id": 8, "name": "Fix silent ss.turn_count crash preventing workflow span export", "status": "done"}
+    {"id": 1, "name": "BigQuery trace exploration - found tenant t_0c7a351603a24035a30e947c488688b2 for claude_cli_xe8foi app", "status": "done"},
+    {"id": 2, "name": "CSV export of claude-cli-* trace counts to tmp/claude_cli_traces.csv", "status": "done"},
+    {"id": 3, "name": "Jupyter notebook with 4 sections: trace counts, token usage, cache hit ratio, git push audit", "status": "done"},
+    {"id": 4, "name": "Fixed prompt_tokens normalization for old vs new instrumentation", "status": "done"},
+    {"id": 5, "name": "Fixed unreliable total_tokens - uses SUM(prompt + completion) across all inference spans", "status": "done"},
+    {"id": 6, "name": "Added column definition cells below each table", "status": "done"},
+    {"id": 7, "name": "Added git push audit section (bash + GitHub MCP detection)", "status": "done"}
   ],
   "remaining_tasks": [
-    {"id": 9, "name": "Verify turn_count regression is fully resolved — check this session's traces have correct span counts and workflow span", "status": "not_started"},
+    {"id": 9, "name": "Verify turn_count regression fully resolved (from prior session)", "status": "not_started"},
     {"id": 10, "name": "Correlate subagent→parent via parentToolUseID", "status": "not_started"},
     {"id": 11, "name": "Verify monocle_apptrace.version 0.7.7+claudecli in traces", "status": "not_started"},
     {"id": 12, "name": "Capture mid-turn queue-operation messages in spans", "status": "not_started"}
@@ -21,13 +20,11 @@
   "blockers": [],
   "human_actions_pending": [],
   "decisions": [
-    {"decision": "Subagent spans emitted inside workflow span's OTel context", "rationale": "Ensures subagent spans share parent trace_id instead of getting orphaned with random trace_id"},
-    {"decision": "Removed turn.number attribute entirely", "rationale": "No other Monocle framework uses it; caused confusing numbering across hook invocations"},
-    {"decision": "Span names: 'Claude Code' for parent, 'Sub-Agent: {type}' for subagents", "rationale": "Clear visual distinction without turn numbers"},
-    {"decision": "trace_viewer live-reloads modified files via mtime tracking", "rationale": "File exporter appends spans across hook invocations; viewer must pick up new spans"},
-    {"decision": "User wants turn_count kept internally for offset tracking but turn.number NOT in exported span attributes", "rationale": "Offset management needs turn tracking but the attribute confused trace viewers"}
+    {"decision": "Use SUM(prompt_tokens + completion_tokens) instead of total_tokens from last span", "rationale": "total_tokens field unreliable - sometimes equals just completion_tokens"},
+    {"decision": "Normalize prompt_tokens: detect old instrumentation where prompt_tokens < cache_read_tokens", "rationale": "Pre-Apr 20 instrumentation recorded prompt_tokens as new tokens only, not total input"},
+    {"decision": "Detect git push via Tool: Bash spans with git push in input AND Tool: mcp__plugin_github_github__* spans", "rationale": "Both paths used - bash for direct git push, MCP for GitHub API"}
   ],
-  "uncommitted_files": [],
-  "next_action": "Check .monocle/ for new trace files from this session's 3 turns (resume, Hi, subagent). Verify: (1) each trace has reasonable span count (not 100+), (2) workflow span present, (3) subagent turn shows Sub-Agent spans correctly linked to parent trace_id. Then proceed to task 10 (parentToolUseID correlation).",
-  "context_notes": "Turn_count regression from previous session is believed fixed — last trace at 12:54 showed 15 spans with workflow span. However 12:28-12:52 traces are all broken (truncated JSON, ~470KB each from massive replay). This session ran 3 turns: (1) /gsd-resume-work with extensive tool use, (2) simple 'Hi' test, (3) subagent spawn (haiku agent listed files, returned CHANGELOG.md). These 3 traces should be in .monocle/ after Stop hooks fire. The broken traces from 12:28-12:52 can be cleaned up or ignored."
+  "uncommitted_files": ["notebooks/claude_cli_traces.ipynb", "tmp/claude_cli_traces.csv", "examples/my_class.py"],
+  "next_action": "Open notebooks/claude_cli_traces.ipynb in Jupyter to view charts. Consider adding more analysis (model usage breakdown, tool call frequency, session duration). Prior hook work (tasks 9-12) still pending.",
+  "context_notes": "Built BigQuery analysis notebook for Okahu claude-cli app. BQ: project=fluent-radar-408119, dataset=t_0c7a351603a24035a30e947c488688b2. Workflow names in attributes.entity[0].name. Token data in events[2].attributes (metadata event). Okahu MCP auth was initiated but not completed."
 }
