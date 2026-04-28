@@ -78,7 +78,11 @@ storage/
 traces.txt
 monocle_trace**.json
 
+# Notebooks
+notebooks/
+
 # Temporary files
+tmp/
 *.tmp
 *.bak
 *.orig
