@@ -5,8 +5,8 @@ Entry Point Detector - Find application entry points.
 Detects CLI mains, web routes, workers, and other entry points.
 
 Usage:
-    python entry_detector.py .analyze/ast_data.json
-    python entry_detector.py .analyze/ast_data.json --output .analyze/entry_points.json
+    python entry_detector.py .okahu/ast_data.json
+    python entry_detector.py .okahu/ast_data.json --output .okahu/entry_points.json
 
 Output: JSON with detected entry points and their types
 """
@@ -327,7 +327,7 @@ def main():
     )
     parser.add_argument(
         "--output", "-o",
-        default=".analyze/entry_points.json",
+        default=".okahu/entry_points.json",
         help="Output JSON file path"
     )
     parser.add_argument(

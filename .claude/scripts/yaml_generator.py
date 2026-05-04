@@ -5,9 +5,9 @@ YAML Generator - Generate okahu.yaml from analysis data.
 Takes analysis JSON files and user choices to generate okahu.yaml config.
 
 Usage:
-    python yaml_generator.py .analyze/
-    python yaml_generator.py .analyze/ --output okahu.yaml
-    python yaml_generator.py .analyze/ --choices .analyze/choices.json
+    python yaml_generator.py .okahu/
+    python yaml_generator.py .okahu/ --output okahu.yaml
+    python yaml_generator.py .okahu/ --choices .okahu/choices.json
 
 Output: okahu.yaml configuration file
 """
@@ -29,7 +29,7 @@ class YamlGenerator:
     """Generate okahu.yaml from analysis data."""
 
     def __init__(self, analyze_dir: str, choices: dict = None):
-        self.analyze_dir = Path(analyze_dir)
+        self.okahu_dir = Path(analyze_dir)
         self.choices = choices or {}
         self.ast_data = None
         self.call_graph = None
@@ -38,22 +38,22 @@ class YamlGenerator:
 
     def load_data(self):
         """Load analysis JSON files."""
-        ast_file = self.analyze_dir / "ast_data.json"
+        ast_file = self.okahu_dir / "ast_data.json"
         if ast_file.exists():
             with open(ast_file, 'r') as f:
                 self.ast_data = json.load(f)
 
-        call_graph_file = self.analyze_dir / "call_graph.json"
+        call_graph_file = self.okahu_dir / "call_graph.json"
         if call_graph_file.exists():
             with open(call_graph_file, 'r') as f:
                 self.call_graph = json.load(f)
 
-        entry_file = self.analyze_dir / "entry_points.json"
+        entry_file = self.okahu_dir / "entry_points.json"
         if entry_file.exists():
             with open(entry_file, 'r') as f:
                 self.entry_points = json.load(f)
 
-        arg_file = self.analyze_dir / "arg_analysis.json"
+        arg_file = self.okahu_dir / "arg_analysis.json"
         if arg_file.exists():
             with open(arg_file, 'r') as f:
                 self.arg_analysis = json.load(f)
@@ -260,7 +260,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Generate okahu.yaml from analysis data"
     )
-    parser.add_argument("analyze_dir", help="Path to .analyze/ directory")
+    parser.add_argument("analyze_dir", help="Path to .okahu/ directory")
     parser.add_argument(
         "--output", "-o",
         default="okahu.yaml",
@@ -290,7 +290,7 @@ def main():
             choices = json.load(f)
 
     # Generate
-    generator = YamlGenerator(args.analyze_dir, choices)
+    generator = YamlGenerator(args.okahu_dir, choices)
     config = generator.generate(workflow_name=args.workflow)
 
     # Convert to YAML

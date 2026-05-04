@@ -11,7 +11,7 @@ allowed-tools:
 
 # ok:resume [app_folder]
 
-Resume an instrumentation session by loading `.analyze/SESSION.md` and restoring full context.
+Resume an instrumentation session by loading `.okahu/SESSION.md` and restoring full context.
 
 **Use this when:**
 - Starting a new Claude session
@@ -25,10 +25,10 @@ Resume an instrumentation session by loading `.analyze/SESSION.md` and restoring
 
 ```bash
 # Search for SESSION.md files
-find . -name "SESSION.md" -path "*/.analyze/*" 2>/dev/null
+find . -name "SESSION.md" -path "*/.okahu/*" 2>/dev/null
 ```
 
-If app_folder provided, look in `{app_folder}/.analyze/SESSION.md`.
+If app_folder provided, look in `{app_folder}/.okahu/SESSION.md`.
 
 If multiple found, **USE AskUserQuestion**:
 ```json
@@ -38,8 +38,8 @@ If multiple found, **USE AskUserQuestion**:
     "header": "Session",
     "multiSelect": false,
     "options": [
-      {"label": "examples/.analyze/SESSION.md", "description": "Last updated: 2024-03-16 - my_app scanning"},
-      {"label": "src/.analyze/SESSION.md", "description": "Last updated: 2024-03-15 - payment service"},
+      {"label": "examples/.okahu/SESSION.md", "description": "Last updated: 2024-03-16 - my_app scanning"},
+      {"label": "src/.okahu/SESSION.md", "description": "Last updated: 2024-03-15 - payment service"},
       {"label": "Start new session", "description": "Run /ok-scan on a new folder"}
     ]
   }]
@@ -48,13 +48,13 @@ If multiple found, **USE AskUserQuestion**:
 
 ### Step 2: Load Full Context
 
-1. **Read `.analyze/SESSION.md`** - get conversation history and decisions
-2. **Read `.analyze/entry_points.json`** - if exists, load detected entry points
-3. **Read `.analyze/monocle_support.json`** - if exists, load framework detection
-4. **Read `.analyze/choices.json`** - if exists, load user choices
+1. **Read `.okahu/SESSION.md`** - get conversation history and decisions
+2. **Read `.okahu/entry_points.json`** - if exists, load detected entry points
+3. **Read `.okahu/monocle_support.json`** - if exists, load framework detection
+4. **Read `.okahu/choices.json`** - if exists, load user choices
 5. **Check analysis files**:
    ```bash
-   ls -la .analyze/*.json 2>/dev/null
+   ls -la .okahu/*.json 2>/dev/null
    ```
 
 ### Step 3: Parse Last Session Block
@@ -91,9 +91,9 @@ From SESSION.md, extract the most recent session block:
   2. {from Next Steps}
 
 📊 Analysis Files:
-  - .analyze/entry_points.json ({size})
-  - .analyze/call_graph.json ({size})
-  - .analyze/monocle_support.json ({size})
+  - .okahu/entry_points.json ({size})
+  - .okahu/call_graph.json ({size})
+  - .okahu/monocle_support.json ({size})
 
 💭 Context: {context notes summary}
 ```

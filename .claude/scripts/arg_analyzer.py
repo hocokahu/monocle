@@ -5,8 +5,8 @@ Argument Analyzer - Analyze function arguments for size/risk.
 Flags arguments that might be large or should be excluded from tracing.
 
 Usage:
-    python arg_analyzer.py .analyze/ast_data.json
-    python arg_analyzer.py .analyze/ast_data.json --output .analyze/arg_analysis.json
+    python arg_analyzer.py .okahu/ast_data.json
+    python arg_analyzer.py .okahu/ast_data.json --output .okahu/arg_analysis.json
 
 Output: JSON with argument risk analysis and recommendations
 """
@@ -298,7 +298,7 @@ def main():
     parser.add_argument("ast_file", help="Path to ast_data.json")
     parser.add_argument(
         "--output", "-o",
-        default=".analyze/arg_analysis.json",
+        default=".okahu/arg_analysis.json",
         help="Output JSON file path"
     )
     parser.add_argument(

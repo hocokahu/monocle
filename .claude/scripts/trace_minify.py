@@ -24,6 +24,24 @@ from pathlib import Path
 from typing import Optional
 
 
+def resolve_monocle_dir(dir_arg: str) -> Path:
+    """Resolve the .monocle directory from a path argument.
+
+    Accepts:
+      - ".monocle" (default) → pwd/.monocle
+      - "/test/" → /test/.monocle
+      - "/test/.monocle" → /test/.monocle (as-is)
+      - "examples/test1" → examples/test1/.monocle
+    """
+    p = Path(dir_arg).resolve()
+    if p.name == ".monocle":
+        return p
+    candidate = p / ".monocle"
+    if candidate.is_dir():
+        return candidate
+    return p
+
+
 def parse_timestamp(ts_str: str) -> datetime:
     """Parse ISO timestamp from trace."""
     try:
@@ -248,7 +266,7 @@ def main():
             print(f"Invalid time format: {args.last}", file=sys.stderr)
             sys.exit(1)
 
-    monocle_dir = Path(args.dir)
+    monocle_dir = resolve_monocle_dir(args.dir)
     files = get_trace_files(monocle_dir, last_minutes, args.trace_id)
 
     if not files:

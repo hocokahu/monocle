@@ -57,13 +57,13 @@ Automatically detect mode based on input:
 11. Trace back to entry points
 12. Present all paths: "Found N paths to <method>..."
 13. **USE AskUserQuestion** to select which path(s) to instrument
-14. Save to `.analyze/choices.json`
-15. **Write/update `.analyze/SESSION.md`** with human-readable summary
-16. Suggest `/ok-instrument`
+14. Save to `.okahu/choices.json`
+15. **Write/update `.okahu/SESSION.md`** — update "Entry Points Selected", "Methods to Instrument", and "Methods Covered" sections (see ok-scan.md for full format)
+17. Suggest `/ok-instrument`
 
 ## SESSION.md - ALWAYS UPDATE
 
-Append to `.analyze/SESSION.md` after running:
+Append to `.okahu/SESSION.md` after running:
 
 ```markdown
 ## Find Results (/ok-find)

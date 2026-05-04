@@ -15,7 +15,7 @@ Smart runner for instrumented apps. Automatically determines how to run based on
 
 ## Smart Behavior
 
-1. **Check instrumentation approach** from `.analyze/SESSION.md`
+1. **Check instrumentation approach** from `.okahu/SESSION.md`
 2. **Determine run command**:
    - If command provided → use it
    - If only one entry point detected → use it automatically
@@ -28,10 +28,11 @@ Smart runner for instrumented apps. Automatically determines how to run based on
 
 ### Step 1: Check Prerequisites
 
-1. Read `.analyze/SESSION.md` to determine:
+1. Read `.okahu/SESSION.md` for context on prior decisions
+2. From SESSION.md determine:
    - Instrumentation approach (zero-code or code-based)
    - Entry points detected during scan
-2. If no SESSION.md → tell user: "Run `/ok-instrument` first."
+3. If no SESSION.md → tell user: "Run `/ok-instrument` first."
 
 ### Step 2: Check Okahu Credentials
 
@@ -115,7 +116,7 @@ Smart runner for instrumented apps. Automatically determines how to run based on
 
 **If no command provided:**
 
-1. Check `.analyze/entry_points.json` for detected entry points
+1. Check `.okahu/entry_points.json` for detected entry points
 2. **If exactly ONE entry point** → use it automatically, no prompt needed
 3. **If MULTIPLE entry points or UNCLEAR** → **USE AskUserQuestion**:
 
@@ -138,7 +139,7 @@ Smart runner for instrumented apps. Automatically determines how to run based on
 ```
 
 Note: Build options dynamically from:
-- Detected entry points (`.analyze/entry_points.json`)
+- Detected entry points (`.okahu/entry_points.json`)
 - Common patterns based on detected frameworks (Flask, FastAPI, etc.)
 - Always include "Enter custom command" and "Don't run - exit"
 
@@ -173,14 +174,11 @@ For servers/workers that listen on ports:
 
 ### Step 6: Update SESSION.md
 
-After running (or if user exits), append to `.analyze/SESSION.md`:
-
+After running (or if user exits), **update `.okahu/SESSION.md`** — append to the "Run History" section:
 ```markdown
-## Run (/ok-run)
-- **Command**: flask run -p 8080
-- **Approach**: Zero-code (via okahu-instrument) / Code-based (direct)
-- **Status**: Completed / User exited / Error
-- **Next**: Run `/ok-local-trace` to inspect traces
+## Run History
+_Updated by: /ok-run_
+- YYYY-MM-DD HH:MM: `<command>` — <approach> — <status>
 ```
 
 ## Examples

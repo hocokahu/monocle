@@ -1404,6 +1404,20 @@ Check that spans are created with:
 
 ---
 
+## Step 13: Update SESSION.md
+
+After completing framework instrumentation, **write/update `.okahu/SESSION.md`** — update the "Framework Support Added" section:
+
+```markdown
+## Framework Support Added
+_Updated by: /ok-add-framework_
+- **Framework**: <name> (<package>)
+- **Entity types**: Agent, Tool, Inference, Team (as applicable)
+- **Methods file**: metamodel/<framework>/methods.py
+- **Handler**: <framework>_handler (custom) / default
+- **Registered in**: wrapper_method.py
+```
+
 ## Related Commands
 
 - `/ok-scan` - Analyze codebase for instrumentation points

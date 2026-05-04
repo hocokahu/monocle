@@ -12,7 +12,7 @@ allowed-tools:
 
 # ok:pause [app_folder]
 
-Create a handoff in `.analyze/SESSION.md` to preserve work state across sessions.
+Create a handoff in `.okahu/SESSION.md` to preserve work state across sessions.
 
 **Use this when:**
 - Ending a session mid-work
@@ -25,18 +25,18 @@ Create a handoff in `.analyze/SESSION.md` to preserve work state across sessions
 ### Step 1: Locate Session
 
 ```bash
-# Find .analyze directories
-find . -type d -name ".analyze" 2>/dev/null | head -5
+# Find .okahu directories
+find . -type d -name ".okahu" 2>/dev/null | head -5
 ```
 
-If app_folder provided, use `{app_folder}/.analyze/`.
+If app_folder provided, use `{app_folder}/.okahu/`.
 If multiple found, **USE AskUserQuestion** to select which session.
 
 ### Step 2: Read Current State
 
-1. Read existing `.analyze/SESSION.md` if it exists
-2. Read `.analyze/entry_points.json` for detected entry points
-3. Read `.analyze/monocle_support.json` for framework detection
+1. Read existing `.okahu/SESSION.md` if it exists
+2. Read `.okahu/entry_points.json` for detected entry points
+3. Read `.okahu/monocle_support.json` for framework detection
 4. Check git status for uncommitted files:
    ```bash
    git status --porcelain 2>/dev/null | head -20
@@ -71,7 +71,7 @@ If multiple found, **USE AskUserQuestion** to select which session.
 
 ### Step 4: Write SESSION.md
 
-Append a new session block to `.analyze/SESSION.md`:
+Append a new session block to `.okahu/SESSION.md`:
 
 ```markdown
 ## Session: {YYYY-MM-DD HH:MM}
@@ -108,7 +108,7 @@ Append a new session block to `.analyze/SESSION.md`:
 ### Step 5: Confirm
 
 ```
-✓ Session saved to .analyze/SESSION.md
+✓ Session saved to .okahu/SESSION.md
 
 Current state:
 - Stage: {scan|instrument|run|trace}

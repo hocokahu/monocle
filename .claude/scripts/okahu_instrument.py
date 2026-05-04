@@ -241,12 +241,34 @@ def run_command(command: list):
         return 1
 
 
-def run_python_inline(script: str, args: list):
+def run_python_inline(script: str, args: list, packages: list = None):
     """Run a Python script in the same process (for python commands)."""
     import runpy
-    sys.argv = [script] + args
+    import importlib
+
+    script_dir = os.path.dirname(os.path.abspath(script))
+    if script_dir not in sys.path:
+        sys.path.insert(0, script_dir)
+
+    # wrapt defers patches via post-import hooks. Import each target package
+    # so the patches land on the real module objects before execution.
+    module_name = os.path.splitext(os.path.basename(script))[0]
+    for pkg in (packages or []):
+        try:
+            importlib.import_module(pkg)
+        except Exception:
+            pass
+
+    # If the script's own module was patched, import it and call its __main__
+    # guard via the patched module. runpy re-executes source from disk, which
+    # bypasses wrapt patches entirely.
+    target_module = sys.modules.get(module_name)
+    sys.argv = [os.path.abspath(script)] + args
     try:
-        runpy.run_path(path_name=script, run_name="__main__")
+        if target_module and hasattr(target_module, 'main'):
+            target_module.main()
+        else:
+            runpy.run_path(path_name=script, run_name="__main__")
     except SystemExit as e:
         return e.code if e.code else 0
     except Exception as e:
@@ -330,7 +352,10 @@ def main():
             sys.exit(1)
         script = args[1]
         script_args = args[2:]
-        exit_code = run_python_inline(script, script_args)
+        # Extract unique package names from config for pre-import
+        config = load_config(config_path)
+        packages = list({item['package'] for item in config.get('instrument', []) if 'package' in item})
+        exit_code = run_python_inline(script, script_args, packages=packages)
     else:
         # For other commands (flask, uvicorn, etc.), we need to inject via env
         # Set up environment for subprocess to pick up instrumentation

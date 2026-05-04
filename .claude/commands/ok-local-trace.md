@@ -37,7 +37,7 @@ Users can say things like:
 
 ## Steps
 
-1. Check if `.monocle/` folder exists in current or app directory
+1. Check if `.monocle/` folder exists in current directory, or in the app directory from `.okahu/SESSION.md`
 2. If **NO local traces found**:
    - Tell user: "No local traces found in .monocle/"
    - **Suggest Okahu MCP**: "Would you like to check Okahu Cloud for remote traces instead?"
@@ -50,7 +50,7 @@ Users can say things like:
    - **For inline display**: Map to `trace_viewer.py --print` or `trace_minify.py` options
    - Run: `python .claude/scripts/trace_viewer.py --print [options]` for inline output
    - Run: `python .claude/scripts/trace_minify.py [options]` for compact debug output
-4. Optionally update `.analyze/SESSION.md` if notable findings
+4. Optionally update `.okahu/SESSION.md` if notable findings
 
 ## Interactive Viewer (trace_viewer.py)
 
@@ -83,7 +83,8 @@ Features:
 ### trace_viewer.py (interactive + print modes)
 
 ```
---dir, -d DIR      Monocle trace directory (default: .monocle)
+--dir, -d DIR      Path to .monocle dir OR parent folder containing .monocle/ (default: .monocle in pwd)
+                   Examples: --dir .monocle, --dir /test/, --dir /test/.monocle (all work)
 --last, -l TIME    Show traces from last N minutes (e.g., 5m, 1h)
 --trace-id, -t ID  Filter by trace ID (partial match)
 --limit, -n N      Max trace files to load (default: 20)
@@ -93,7 +94,8 @@ Features:
 ### trace_minify.py (compact debug output)
 
 ```
---dir, -d DIR      Monocle trace directory (default: .monocle)
+--dir, -d DIR      Path to .monocle dir OR parent folder containing .monocle/ (default: .monocle in pwd)
+                   Examples: --dir .monocle, --dir /test/, --dir /test/.monocle (all work)
 --last, -l TIME    Show traces from last N minutes (e.g., 5m, 1h)
 --trace-id, -t ID  Filter by trace ID (partial match)
 --all, -a          Show all matching traces
@@ -124,7 +126,7 @@ If user chooses Okahu Cloud, ask for app/workflow name and use `mcp__okahu-mcp-s
 
 ## SESSION.md - UPDATE IF NOTABLE
 
-Append to `.analyze/SESSION.md` if errors found or notable observations:
+Append to `.okahu/SESSION.md` if errors found or notable observations:
 
 ```markdown
 ## Local Trace Review (/ok-local-trace)

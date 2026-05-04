@@ -5,9 +5,9 @@ Relevance Scorer - Score module/method importance for tracing.
 Uses call graph to determine which modules are most important to trace.
 
 Usage:
-    python relevance_scorer.py .analyze/call_graph.json
-    python relevance_scorer.py .analyze/call_graph.json --entry main:main
-    python relevance_scorer.py .analyze/call_graph.json --output .analyze/relevance.json
+    python relevance_scorer.py .okahu/call_graph.json
+    python relevance_scorer.py .okahu/call_graph.json --entry main:main
+    python relevance_scorer.py .okahu/call_graph.json --output .okahu/relevance.json
 
 Output: JSON with modules/methods ranked by importance
 """
@@ -316,7 +316,7 @@ def main():
     )
     parser.add_argument(
         "--output", "-o",
-        default=".analyze/relevance.json",
+        default=".okahu/relevance.json",
         help="Output JSON file path"
     )
     parser.add_argument(

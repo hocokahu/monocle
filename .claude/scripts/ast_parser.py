@@ -6,7 +6,7 @@ Extracts classes, methods, arguments, return types, docstrings, and calls.
 
 Usage:
     python ast_parser.py /path/to/app
-    python ast_parser.py /path/to/app --output .analyze/ast_data.json
+    python ast_parser.py /path/to/app --output .okahu/ast_data.json
 
 Output: JSON with structure:
 {
@@ -64,7 +64,7 @@ class ASTParser:
         'node_modules', 'venv', 'env', '.env',
         '.venv', '.tox', '.pytest_cache', '.mypy_cache',
         'dist', 'build', 'egg-info', '.eggs',
-        '.analyze', '.monocle'
+        '.okahu', '.monocle'
     }
 
     # Files to skip
@@ -401,8 +401,8 @@ def main():
     parser.add_argument("path", help="Path to Python file or directory")
     parser.add_argument(
         "--output", "-o",
-        default=".analyze/ast_data.json",
-        help="Output JSON file path (default: .analyze/ast_data.json)"
+        default=".okahu/ast_data.json",
+        help="Output JSON file path (default: .okahu/ast_data.json)"
     )
     parser.add_argument(
         "--include-init",

@@ -1,0 +1,161 @@
+{
+  "root": "/Users/quanghoc/Documents/GitHub/monocle/examples/cicd",
+  "forward": {
+    "deploy_app:print_log": [],
+    "deploy_app:deploy_azure_blob": [
+      "deploy_app:print_log"
+    ],
+    "deploy_app:main": [
+      "deploy_app:deploy_azure_blob"
+    ],
+    "deploy_app:AzureSQLDeploy.deploy": [
+      "deploy_app:print_log"
+    ],
+    "deploy_app:KustoDeploy.deploy_tables": [
+      "deploy_app:print_log"
+    ],
+    "deploy_app:UserAccountProvision.create_accounts": [
+      "deploy_app:print_log"
+    ]
+  },
+  "reverse": {
+    "deploy_app:print_log": [
+      "deploy_app:deploy_azure_blob",
+      "deploy_app:AzureSQLDeploy.deploy",
+      "deploy_app:KustoDeploy.deploy_tables",
+      "deploy_app:UserAccountProvision.create_accounts"
+    ],
+    "deploy_app:deploy_azure_blob": [
+      "deploy_app:main"
+    ]
+  },
+  "methods": {
+    "deploy_app:print_log": {
+      "type": "function",
+      "module": "deploy_app",
+      "file": "deploy_app.py",
+      "name": "print_log",
+      "lineno": 7,
+      "calls": [
+        "os.path.join",
+        "open",
+        "print",
+        "f.read"
+      ],
+      "is_async": false
+    },
+    "deploy_app:deploy_azure_blob": {
+      "type": "function",
+      "module": "deploy_app",
+      "file": "deploy_app.py",
+      "name": "deploy_azure_blob",
+      "lineno": 13,
+      "calls": [
+        "print_log",
+        "print"
+      ],
+      "is_async": false
+    },
+    "deploy_app:main": {
+      "type": "function",
+      "module": "deploy_app",
+      "file": "deploy_app.py",
+      "name": "main",
+      "lineno": 43,
+      "calls": [
+        "print",
+        "deploy_azure_blob",
+        "AzureSQLDeploy",
+        "sql_deploy.deploy",
+        "KustoDeploy",
+        "kusto_deploy.deploy_tables",
+        "len",
+        "UserAccountProvision",
+        "provision.create_accounts",
+        "sys.exit"
+      ],
+      "is_async": false
+    },
+    "deploy_app:AzureSQLDeploy.deploy": {
+      "type": "method",
+      "module": "deploy_app",
+      "file": "deploy_app.py",
+      "class": "AzureSQLDeploy",
+      "name": "deploy",
+      "lineno": 20,
+      "calls": [
+        "print_log",
+        "print"
+      ],
+      "is_async": false
+    },
+    "deploy_app:KustoDeploy.deploy_tables": {
+      "type": "method",
+      "module": "deploy_app",
+      "file": "deploy_app.py",
+      "class": "KustoDeploy",
+      "name": "deploy_tables",
+      "lineno": 27,
+      "calls": [
+        "print_log",
+        "print"
+      ],
+      "is_async": false
+    },
+    "deploy_app:UserAccountProvision.create_accounts": {
+      "type": "method",
+      "module": "deploy_app",
+      "file": "deploy_app.py",
+      "class": "UserAccountProvision",
+      "name": "create_accounts",
+      "lineno": 38,
+      "calls": [
+        "print_log",
+        "RuntimeError"
+      ],
+      "is_async": false
+    }
+  },
+  "summary": {
+    "total_methods": 6,
+    "total_edges": 5,
+    "most_called": [
+      [
+        "deploy_app:print_log",
+        4
+      ],
+      [
+        "deploy_app:deploy_azure_blob",
+        1
+      ]
+    ],
+    "most_calling": [
+      [
+        "deploy_app:deploy_azure_blob",
+        1
+      ],
+      [
+        "deploy_app:main",
+        1
+      ],
+      [
+        "deploy_app:AzureSQLDeploy.deploy",
+        1
+      ],
+      [
+        "deploy_app:KustoDeploy.deploy_tables",
+        1
+      ],
+      [
+        "deploy_app:UserAccountProvision.create_accounts",
+        1
+      ],
+      [
+        "deploy_app:print_log",
+        0
+      ]
+    ],
+    "leaf_count": 1,
+    "entry_point_count": 4
+  }
+}

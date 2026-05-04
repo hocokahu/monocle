@@ -1,0 +1,18 @@
+{
+  "entry_point": "deploy_app:main",
+  "selected": [
+    "deploy_app:deploy_azure_blob",
+    "deploy_app:AzureSQLDeploy.deploy",
+    "deploy_app:KustoDeploy.deploy_tables",
+    "deploy_app:UserAccountProvision.create_accounts"
+  ],
+  "instrument": [
+    "deploy_app:deploy_azure_blob",
+    "deploy_app:AzureSQLDeploy.deploy",
+    "deploy_app:KustoDeploy.deploy_tables",
+    "deploy_app:UserAccountProvision.create_accounts"
+  ],
+  "covered": [],
+  "removed": [],
+  "arg_handling": {}
+}

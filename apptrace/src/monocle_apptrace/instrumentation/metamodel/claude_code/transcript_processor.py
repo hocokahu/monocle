@@ -325,7 +325,7 @@ def _emit_turn(
                     total_cache_read_t = total_usage.get("cache_read_tokens") or 0
                     total_cache_creation_t = total_usage.get("cache_creation_tokens") or 0
                     total_output_t = total_usage.get("output_tokens") or 0
-                    total_prompt_t = total_input_t + total_cache_read_t + total_cache_creation_t
+                    total_prompt_t = total_input_t
                     if total_prompt_t:
                         round_metadata["prompt_tokens"] = total_prompt_t
                     if total_prompt_t or total_output_t:

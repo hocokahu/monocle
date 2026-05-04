@@ -1,0 +1,99 @@
+{
+  "root": "/Users/quanghoc/Documents/GitHub/monocle/examples/cicd",
+  "methods": {
+    "deploy_app:print_log": {
+      "fqn": "deploy_app:print_log",
+      "score": 0.65,
+      "reasons": [
+        "Leaf method (no calls)",
+        "On path from entry: deploy_app:main"
+      ],
+      "caller_count": 4,
+      "callee_count": 0
+    },
+    "deploy_app:deploy_azure_blob": {
+      "fqn": "deploy_app:deploy_azure_blob",
+      "score": 0.7,
+      "reasons": [
+        "On path from entry: deploy_app:main"
+      ],
+      "caller_count": 1,
+      "callee_count": 1
+    },
+    "deploy_app:main": {
+      "fqn": "deploy_app:main",
+      "score": 0.9,
+      "reasons": [
+        "No callers (orphan or entry)",
+        "On path from entry: deploy_app:main",
+        "Entry point"
+      ],
+      "caller_count": 0,
+      "callee_count": 1
+    },
+    "deploy_app:AzureSQLDeploy.deploy": {
+      "fqn": "deploy_app:AzureSQLDeploy.deploy",
+      "score": 0.4,
+      "reasons": [
+        "No callers (orphan or entry)"
+      ],
+      "caller_count": 0,
+      "callee_count": 1
+    },
+    "deploy_app:KustoDeploy.deploy_tables": {
+      "fqn": "deploy_app:KustoDeploy.deploy_tables",
+      "score": 0.4,
+      "reasons": [
+        "No callers (orphan or entry)"
+      ],
+      "caller_count": 0,
+      "callee_count": 1
+    },
+    "deploy_app:UserAccountProvision.create_accounts": {
+      "fqn": "deploy_app:UserAccountProvision.create_accounts",
+      "score": 0.4,
+      "reasons": [
+        "No callers (orphan or entry)"
+      ],
+      "caller_count": 0,
+      "callee_count": 1
+    }
+  },
+  "modules": {
+    "deploy_app": {
+      "module": "deploy_app",
+      "score": 0.8,
+      "method_count": 6,
+      "max_score": 0.9,
+      "avg_score": 0.58,
+      "methods": [
+        "deploy_app:print_log",
+        "deploy_app:deploy_azure_blob",
+        "deploy_app:main",
+        "deploy_app:AzureSQLDeploy.deploy",
+        "deploy_app:KustoDeploy.deploy_tables",
+        "deploy_app:UserAccountProvision.create_accounts"
+      ]
+    }
+  },
+  "high": [
+    {
+      "module": "deploy_app",
+      "score": 0.8,
+      "method_count": 6,
+      "reasons": [
+        "High method scores"
+      ]
+    }
+  ],
+  "medium": [],
+  "low": [],
+  "summary": {
+    "total_modules": 1,
+    "total_methods": 6,
+    "high_count": 1,
+    "medium_count": 0,
+    "low_count": 0,
+    "recommended_trace": 1
+  }
+}

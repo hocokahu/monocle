@@ -53,19 +53,19 @@ If ALL code uses supported frameworks → just use `setup_monocle_telemetry()`, 
    - **USE AskUserQuestion** with appropriate options (see "Existing Instrumentation" section below)
    - If user chooses "keep as-is" → show next steps and exit
    - If user chooses auto-instrumentation → suggest setup code and skip to step 12
-5. Run `python .claude/scripts/ast_parser.py <path> -o <path>/.analyze/ast_data.json --pretty`
-6. Run `python .claude/scripts/entry_detector.py <path>/.analyze/ast_data.json`
+5. Run `python .claude/scripts/ast_parser.py <path> -o <path>/.okahu/ast_data.json --pretty`
+6. Run `python .claude/scripts/entry_detector.py <path>/.okahu/ast_data.json`
 7. **USE AskUserQuestion** to ask which entry points to analyze (see example below)
-8. Run `python .claude/scripts/call_graph.py <path>/.analyze/ast_data.json`
-9. Run `python .claude/scripts/relevance_scorer.py .analyze/call_graph.json --entry <selected>`
+8. Run `python .claude/scripts/call_graph.py <path>/.okahu/ast_data.json`
+9. Run `python .claude/scripts/relevance_scorer.py .okahu/call_graph.json --entry <selected>`
 10. **USE AskUserQuestion** to ask about medium-relevance modules (multiSelect: true)
-11. Run `python .claude/scripts/arg_analyzer.py <path>/.analyze/ast_data.json`
+11. Run `python .claude/scripts/arg_analyzer.py <path>/.okahu/ast_data.json`
 12. **USE AskUserQuestion** to ask how to handle large args for each flagged method
 13. **Compute minimal instrumentation set** - Avoid overlap by only instrumenting entry points:
-    - Run: `python .claude/scripts/call_graph.py <path>/.analyze/call_graph.json --minimize <path>/.analyze/choices.json -o <path>/.analyze/minimal.json`
+    - Run: `python .claude/scripts/call_graph.py <path>/.okahu/call_graph.json --minimize <path>/.okahu/choices.json -o <path>/.okahu/minimal.json`
     - This removes methods that are already covered by parent calls
     - Example: if `A.method1() -> B.method2()` and both selected, only instrument A
-14. Save choices to `<path>/.analyze/choices.json` with format:
+14. Save choices to `<path>/.okahu/choices.json` with format:
     ```json
     {
       "selected": ["module:Class.method", ...],
@@ -75,12 +75,14 @@ If ALL code uses supported frameworks → just use `setup_monocle_telemetry()`, 
       "arg_handling": { ... }
     }
     ```
-15. **Write/update `<path>/.analyze/SESSION.md`** with human-readable summary (see format below)
+15. **Write/update `<path>/.okahu/SESSION.md`** — the single source of truth (see format below)
 16. Suggest running `/ok-instrument` to generate YAML
 
 ## SESSION.md Format - ALWAYS UPDATE
 
-After each /ok- command, write/append to `.analyze/SESSION.md`:
+After each /ok- command, write/append to `.okahu/SESSION.md`.
+
+**This file must be self-contained.** After `/clear` or a new session, Claude reads only this file to understand what happened. Include enough detail that no other file needs to be read to resume work.
 
 ```markdown
 # Okahu Instrumentation Session
@@ -88,18 +90,54 @@ After each /ok- command, write/append to `.analyze/SESSION.md`:
 ## Last Updated
 YYYY-MM-DD HH:MM
 
+## App
+- **Path**: /absolute/path/to/app/folder
+- **Run command**: `python my_app.py` (or `flask run`, `uvicorn app:app`, etc.)
+
 ## Scan Results (/ok-scan)
-- **App folder**: examples/
 - **Existing instrumentation**: serve.py (or "None")
-- **Entry point selected**: my_app:main
-- **Frameworks detected**: Flask, OpenAI (auto-instrumented)
-- **High-relevance modules**: my_app, my_functions, my_class
-- **Medium modules included**: [list or "skipped"]
-- **Methods selected**: 12
-- **Methods to instrument**: 5 (7 covered by parent calls)
-- **Large args handling**:
-  - PaymentProcessor.charge.metadata → excluded
-  - UserService.create.user_data → truncate 100
+- **Entry point selected**: my_app:main (my_app.py:15, CLI via __main__)
+- **Frameworks detected**: Flask, OpenAI (auto-instrumented) (or "None")
+
+### Methods to Instrument
+| # | Module | Method | Args |
+|---|--------|--------|------|
+| 1 | my_app | main() | — |
+| 2 | billing.processor | PaymentProcessor.charge() | amount: int, card_token: str |
+
+### Methods Covered (traced as child spans, no separate config needed)
+- `billing.gateway.Gateway.submit` — called by PaymentProcessor.charge
+
+### Arg Handling (only if large args flagged)
+- PaymentProcessor.charge.metadata → excluded
+- UserService.create.user_data → truncate 100
+
+## Instrumentation Applied
+_Updated by: /ok-instrument_
+- **Approach**: Zero-code / Code-based
+- **Config file**: okahu.yaml (or entry point file modified)
+- **Methods instrumented**: 5
+
+## Framework Support Added
+_Updated by: /ok-add-framework_
+- **Framework**: <name> (<package>)
+- **Entity types**: Agent, Tool, Inference
+- **Methods file**: metamodel/<framework>/methods.py
+- **Handler**: <framework>_handler (custom) / default
+
+## Run History
+_Updated by: /ok-run_
+- YYYY-MM-DD HH:MM: `flask run -p 8080` — zero-code — completed
+- YYYY-MM-DD HH:MM: `python main.py` — code-based — error
+
+## Analysis Files
+All in `<app_path>/.okahu/`:
+- `ast_data.json` — parsed classes, methods, args
+- `call_graph.json` — caller→callee edges
+- `entry_points.json` — detected entry points
+- `relevance.json` — module relevance scores
+- `arg_analysis.json` — large arg flags
+- `choices.json` — user selections (methods, arg handling)
 
 ## Next Steps
 
@@ -178,21 +216,38 @@ When user selects "Scan for gaps":
 }
 ```
 
-### Module relevance (use multiSelect):
+### Module relevance — show top 10 ranked list
+
+**DO NOT ask a generic open-ended question about modules.** Instead:
+
+1. Read `relevance.json` and rank ALL medium-relevance modules by call count
+2. Take the top 10 (or fewer if less exist)
+3. For each module, show: rank, module path, call count, callers, and a **concrete example** of what a trace span would look like if instrumented
+4. Present as a multiSelect with scroll — user picks which to include
+
 ```json
 {
   "questions": [{
-    "question": "Which medium-relevance modules should be included in tracing?",
-    "header": "Modules",
+    "question": "Select which modules to include in tracing (top 10 by usage):",
+    "header": "Intermediate Modules",
     "multiSelect": true,
     "options": [
-      {"label": "utils/validation.py", "description": "Called 12x by 5 modules - Pure validation logic"},
-      {"label": "helpers/formatting.py", "description": "Called 8x by 3 modules - String formatting"},
-      {"label": "Skip all medium modules", "description": "Only trace high-relevance modules"}
+      {"label": "1. utils/validation.py", "description": "Called 12x by 5 modules → span: validate_input(amount=500, currency='USD') → OK 2ms"},
+      {"label": "2. helpers/cache.py", "description": "Called 9x by 4 modules → span: cache_lookup(key='user:123') → HIT 0.3ms"},
+      {"label": "3. db/connection.py", "description": "Called 8x by 6 modules → span: get_connection(pool='main') → connected 15ms"},
+      {"label": "4. auth/token.py", "description": "Called 7x by 3 modules → span: verify_token(token='eyJ...') → valid 5ms"},
+      {"label": "5. helpers/formatting.py", "description": "Called 5x by 2 modules → span: format_response(data={...}) → formatted 1ms"},
+      {"label": "── Select none ──", "description": "Only trace high-relevance entry points (recommended for minimal overhead)"}
     ]
   }]
 }
 ```
+
+**How to generate the example spans:**
+- Read the module's AST data to find the primary method and its arguments
+- Show a realistic call with sample argument values and a plausible duration
+- Format as: `method_name(arg1=val1, arg2=val2) → result duration`
+- This helps users judge whether the span is worth the overhead
 
 ### Large argument handling:
 ```json
@@ -211,6 +266,18 @@ When user selects "Scan for gaps":
 }
 ```
 
+## SESSION.md — ALL /ok-* Commands Must Read and Update
+
+**Every `/ok-*` command MUST:**
+1. **Read** `<path>/.okahu/SESSION.md` at the start (if it exists) for context on prior decisions
+2. **Update** its own sections after completing work
+
+**Rules:**
+- Create the file on first `/ok-scan` or `/ok-find` run
+- Each command updates ONLY its own sections (don't overwrite other sections)
+- Always update the "Last updated" line with current timestamp and command name
+- If a section doesn't exist yet, append it
+
 ## Scripts Location
 
 Helper scripts are in `.claude/scripts/`:
@@ -220,7 +287,7 @@ Helper scripts are in `.claude/scripts/`:
 - `relevance_scorer.py` - Score module importance
 - `arg_analyzer.py` - Flag large/useless arguments
 
-Analysis output goes to `.analyze/` folder in the target directory.
+Analysis output goes to `.okahu/` folder in the target directory.
 
 ## Related Commands
 

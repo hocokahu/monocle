@@ -1,0 +1,234 @@
+{
+  "root": "/Users/quanghoc/Documents/GitHub/monocle/examples/cicd",
+  "modules": {
+    "deploy_app.py": {
+      "path": "/Users/quanghoc/Documents/GitHub/monocle/examples/cicd/deploy_app.py",
+      "classes": {
+        "AzureSQLDeploy": {
+          "lineno": 19,
+          "end_lineno": 23,
+          "docstring": null,
+          "bases": [],
+          "decorators": [],
+          "methods": {
+            "deploy": {
+              "lineno": 20,
+              "end_lineno": 23,
+              "is_async": false,
+              "docstring": null,
+              "decorators": [],
+              "args": [
+                {
+                  "name": "server_name",
+                  "type": null,
+                  "default": null,
+                  "has_default": false
+                },
+                {
+                  "name": "database_name",
+                  "type": null,
+                  "default": null,
+                  "has_default": false
+                },
+                {
+                  "name": "resource_group",
+                  "type": null,
+                  "default": null,
+                  "has_default": false
+                }
+              ],
+              "returns": null,
+              "calls": [
+                "print_log",
+                "print"
+              ]
+            }
+          },
+          "class_variables": []
+        },
+        "KustoDeploy": {
+          "lineno": 26,
+          "end_lineno": 34,
+          "docstring": null,
+          "bases": [],
+          "decorators": [],
+          "methods": {
+            "deploy_tables": {
+              "lineno": 27,
+              "end_lineno": 34,
+              "is_async": false,
+              "docstring": null,
+              "decorators": [],
+              "args": [
+                {
+                  "name": "cluster_name",
+                  "type": null,
+                  "default": null,
+                  "has_default": false
+                },
+                {
+                  "name": "database_name",
+                  "type": null,
+                  "default": null,
+                  "has_default": false
+                },
+                {
+                  "name": "tables",
+                  "type": null,
+                  "default": null,
+                  "has_default": false
+                }
+              ],
+              "returns": null,
+              "calls": [
+                "print_log",
+                "print"
+              ]
+            }
+          },
+          "class_variables": []
+        },
+        "UserAccountProvision": {
+          "lineno": 37,
+          "end_lineno": 40,
+          "docstring": null,
+          "bases": [],
+          "decorators": [],
+          "methods": {
+            "create_accounts": {
+              "lineno": 38,
+              "end_lineno": 40,
+              "is_async": false,
+              "docstring": null,
+              "decorators": [],
+              "args": [
+                {
+                  "name": "display_name",
+                  "type": null,
+                  "default": null,
+                  "has_default": false
+                },
+                {
+                  "name": "principal_name",
+                  "type": null,
+                  "default": null,
+                  "has_default": false
+                },
+                {
+                  "name": "role",
+                  "type": null,
+                  "default": null,
+                  "has_default": false
+                }
+              ],
+              "returns": null,
+              "calls": [
+                "print_log",
+                "RuntimeError"
+              ]
+            }
+          },
+          "class_variables": []
+        }
+      },
+      "functions": {
+        "print_log": {
+          "lineno": 7,
+          "end_lineno": 10,
+          "is_async": false,
+          "docstring": null,
+          "decorators": [],
+          "args": [
+            {
+              "name": "filename",
+              "type": null,
+              "default": null,
+              "has_default": false
+            }
+          ],
+          "returns": null,
+          "calls": [
+            "os.path.join",
+            "open",
+            "print",
+            "f.read"
+          ]
+        },
+        "deploy_azure_blob": {
+          "lineno": 13,
+          "end_lineno": 16,
+          "is_async": false,
+          "docstring": null,
+          "decorators": [],
+          "args": [
+            {
+              "name": "account_name",
+              "type": null,
+              "default": null,
+              "has_default": false
+            },
+            {
+              "name": "resource_group",
+              "type": null,
+              "default": null,
+              "has_default": false
+            },
+            {
+              "name": "location",
+              "type": null,
+              "default": null,
+              "has_default": false
+            }
+          ],
+          "returns": null,
+          "calls": [
+            "print_log",
+            "print"
+          ]
+        },
+        "main": {
+          "lineno": 43,
+          "end_lineno": 74,
+          "is_async": false,
+          "docstring": null,
+          "decorators": [],
+          "args": [],
+          "returns": null,
+          "calls": [
+            "print",
+            "deploy_azure_blob",
+            "AzureSQLDeploy",
+            "sql_deploy.deploy",
+            "KustoDeploy",
+            "kusto_deploy.deploy_tables",
+            "len",
+            "UserAccountProvision",
+            "provision.create_accounts",
+            "sys.exit"
+          ]
+        }
+      },
+      "imports": [
+        {
+          "type": "import",
+          "module": "os",
+          "alias": null,
+          "lineno": 1
+        },
+        {
+          "type": "import",
+          "module": "sys",
+          "alias": null,
+          "lineno": 2
+        }
+      ],
+      "module_docstring": null
+    }
+  },
+  "summary": {
+    "total_modules": 1,
+    "total_classes": 3,
+    "total_methods": 3,
+    "total_functions": 3
+  }
+}

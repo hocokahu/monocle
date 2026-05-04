@@ -5,8 +5,8 @@ Call Graph Builder - Build caller→callee relationships from AST data.
 Takes ast_data.json and builds forward and reverse call graphs.
 
 Usage:
-    python call_graph.py .analyze/ast_data.json
-    python call_graph.py .analyze/ast_data.json --output .analyze/call_graph.json
+    python call_graph.py .okahu/ast_data.json
+    python call_graph.py .okahu/ast_data.json --output .okahu/call_graph.json
 
 Output: JSON with forward and reverse call mappings
 """
@@ -309,7 +309,7 @@ def main():
     parser.add_argument("ast_file", help="Path to ast_data.json or call_graph.json (for --minimize)")
     parser.add_argument(
         "--output", "-o",
-        default=".analyze/call_graph.json",
+        default=".okahu/call_graph.json",
         help="Output JSON file path"
     )
     parser.add_argument(
@@ -363,7 +363,7 @@ def main():
                     print(f"  {m}")
 
         # Write output if specified
-        if args.output != ".analyze/call_graph.json":
+        if args.output != ".okahu/call_graph.json":
             output_path = Path(args.output)
             output_path.parent.mkdir(parents=True, exist_ok=True)
             with open(output_path, 'w', encoding='utf-8') as f:

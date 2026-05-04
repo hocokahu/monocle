@@ -6,10 +6,11 @@ Reads monocle trace JSON, builds a span tree, and renders an interactive
 curses-based waterfall with arrow-key navigation and detail panels.
 
 Usage:
-    python trace_viewer.py                        # Pick from latest traces
+    python trace_viewer.py                        # Pick from latest traces in pwd/.monocle
     python trace_viewer.py --last 5m              # Traces from last 5 minutes
     python trace_viewer.py --trace-id abc123      # Specific trace
-    python trace_viewer.py --dir .monocle         # Custom directory
+    python trace_viewer.py --dir /test/           # Looks in /test/.monocle/
+    python trace_viewer.py --dir /test/.monocle   # Same — direct path works too
     python trace_viewer.py --print                # Non-interactive (no TTY)
 
 Keys:
@@ -29,6 +30,26 @@ import textwrap
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+
+
+# ── Path resolution ───────────────────────────────────────────────
+
+def resolve_monocle_dir(dir_arg: str) -> Path:
+    """Resolve the .monocle directory from a path argument.
+
+    Accepts:
+      - ".monocle" (default) → pwd/.monocle
+      - "/test/" → /test/.monocle
+      - "/test/.monocle" → /test/.monocle (as-is)
+      - "examples/test1" → examples/test1/.monocle
+    """
+    p = Path(dir_arg).resolve()
+    if p.name == ".monocle":
+        return p
+    candidate = p / ".monocle"
+    if candidate.is_dir():
+        return candidate
+    return p
 
 
 # ── Trace file loading ──────────────────────────────────────────────
@@ -727,7 +748,7 @@ class TraceViewer:
             y += 1
 
             # Calculate how many span rows fit
-            detail_height = 15 if self.detail_open else 0
+            detail_height = min(h // 2, 30) if self.detail_open else 0
             max_span_rows = h - y - detail_height - 2  # 2 for footer
 
             # Scroll if needed
@@ -801,30 +822,43 @@ class TraceViewer:
                     dy += 1
                 dy += 1
 
-                # Attributes (compact, 2 columns)
+                # Attributes (single column, full width)
                 attr_items = [(k, str(v)) for k, v in span.attributes.items()
                               if k not in ("span.type", "span.subtype")]
-                col_w = w // 2 - 2
-                for i in range(0, min(len(attr_items), 8), 2):
-                    k1, v1 = attr_items[i]
-                    safe(stdscr, dy, 2, f"{k1}:", curses.color_pair(C_KEY))
-                    safe(stdscr, dy, 4 + len(k1), v1[:col_w - len(k1) - 5], curses.color_pair(C_VAL))
-                    if i + 1 < len(attr_items):
-                        k2, v2 = attr_items[i + 1]
-                        safe(stdscr, dy, col_w + 2, f"{k2}:", curses.color_pair(C_KEY))
-                        safe(stdscr, dy, col_w + 4 + len(k2), v2[:col_w - len(k2) - 5], curses.color_pair(C_VAL))
+                for k, v in attr_items:
+                    if dy >= h - 2:
+                        break
+                    safe(stdscr, dy, 2, f"{k}:", curses.color_pair(C_KEY))
+                    val_x = 4 + len(k)
+                    max_val_w = w - val_x - 1
+                    safe(stdscr, dy, val_x, v[:max_val_w], curses.color_pair(C_VAL))
+                    remaining = v[max_val_w:]
                     dy += 1
+                    while remaining and dy < h - 2:
+                        safe(stdscr, dy, val_x, remaining[:max_val_w], curses.color_pair(C_VAL))
+                        remaining = remaining[max_val_w:]
+                        dy += 1
 
                 # Events
                 if span.events and dy < h - 2:
                     dy += 1
-                    for ev in span.events[:3]:
+                    for ev in span.events:
+                        if dy >= h - 2:
+                            break
                         val = ev["value"]
-                        if len(val) > w - 8 - len(ev["name"]):
-                            val = val[:w - 12 - len(ev["name"])] + "..."
+                        val_x = 4 + len(ev["name"])
+                        max_val_w = w - val_x - 1
                         safe(stdscr, dy, 2, ev["name"], curses.color_pair(C_EVENT))
-                        safe(stdscr, dy, 4 + len(ev["name"]), val, curses.color_pair(C_VAL))
+                        safe(stdscr, dy, val_x, val[:max_val_w], curses.color_pair(C_VAL))
                         dy += 1
+                        # Wrap remaining text onto continuation lines
+                        remaining = val[max_val_w:]
+                        wrap_x = val_x
+                        wrap_w = w - wrap_x - 1
+                        while remaining and dy < h - 2:
+                            safe(stdscr, dy, wrap_x, remaining[:wrap_w], curses.color_pair(C_VAL))
+                            remaining = remaining[wrap_w:]
+                            dy += 1
 
                 # Tokens
                 if span.tokens and dy < h - 1:
@@ -962,7 +996,7 @@ def print_trace(fname: str, roots: List[Span], total_ms: float):
             print(f"    {CYAN}{k}{RESET}: {v}")
 
         for ev in span.events:
-            val = ev["value"][:80] + "..." if len(ev["value"]) > 80 else ev["value"]
+            val = ev["value"]
             print(f"    {YELLOW}{ev['name']}{RESET}  {val}")
 
         if span.tokens:
@@ -997,7 +1031,7 @@ def main():
     parser.add_argument("--print", "-p", action="store_true", help="Non-interactive print mode")
     args = parser.parse_args()
 
-    monocle_dir = Path(args.dir)
+    monocle_dir = resolve_monocle_dir(args.dir)
     last_min = parse_time(args.last)
     files = get_trace_files(monocle_dir, last_min, args.trace_id, args.limit)
 

@@ -1,0 +1,211 @@
+{
+  "root": "/Users/quanghoc/Documents/GitHub/monocle/examples/cicd",
+  "methods": {
+    "deploy_app:print_log": {
+      "args": {
+        "filename": {
+          "name": "filename",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "filename"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "deploy_app:deploy_azure_blob": {
+      "args": {
+        "account_name": {
+          "name": "account_name",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "resource_group": {
+          "name": "resource_group",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "location": {
+          "name": "location",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "account_name",
+          "resource_group",
+          "location"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "deploy_app:main": {
+      "args": {},
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "deploy_app:AzureSQLDeploy.deploy": {
+      "args": {
+        "server_name": {
+          "name": "server_name",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "database_name": {
+          "name": "database_name",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "resource_group": {
+          "name": "resource_group",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "server_name",
+          "database_name",
+          "resource_group"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "deploy_app:KustoDeploy.deploy_tables": {
+      "args": {
+        "cluster_name": {
+          "name": "cluster_name",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "database_name": {
+          "name": "database_name",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "tables": {
+          "name": "tables",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "cluster_name",
+          "database_name",
+          "tables"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    },
+    "deploy_app:UserAccountProvision.create_accounts": {
+      "args": {
+        "display_name": {
+          "name": "display_name",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "principal_name": {
+          "name": "principal_name",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        },
+        "role": {
+          "name": "role",
+          "type": null,
+          "risk": "low",
+          "reasons": [],
+          "recommendation": "include"
+        }
+      },
+      "output": {
+        "type": null,
+        "risk": "unknown",
+        "recommendation": "include"
+      },
+      "recommendations": {
+        "include": [
+          "display_name",
+          "principal_name",
+          "role"
+        ],
+        "exclude": [],
+        "truncate": [],
+        "sensitive": []
+      }
+    }
+  },
+  "summary": {
+    "total_methods": 6,
+    "total_args": 13,
+    "high_risk_args": 0,
+    "sensitive_args": 0,
+    "high_risk_methods": [],
+    "sensitive_methods": []
+  }
+}

@@ -18,9 +18,10 @@ Add monocle tracing to your application. Supports two approaches.
 ## Prerequisites Check
 
 **FIRST, check if scan/find was run:**
-1. Look for `.analyze/choices.json` or `.analyze/ast_data.json`
+1. Look for `.okahu/choices.json` or `.okahu/ast_data.json`
 2. If NOT found → tell user: "No analysis found. Run `/ok-scan` or `/ok-find` first."
-3. If found → continue
+3. If found → **read `.okahu/SESSION.md`** (if it exists) for context on prior decisions
+4. Continue
 
 ## Step 1: Ask User Which Approach
 
@@ -44,7 +45,7 @@ Add monocle tracing to your application. Supports two approaches.
 
 If user selects **Zero-code**:
 
-1. Read `.analyze/choices.json` and analysis files
+1. Read `.okahu/choices.json` and analysis files
 2. **Use the `instrument` field, NOT `selected`** - This contains only entry points to avoid overlap
    - If A calls B, and both were selected, only A is in `instrument`
    - B is still traced as a child span when A runs
@@ -52,25 +53,26 @@ If user selects **Zero-code**:
    - Methods from `instrument` field (minimal set)
    - Arg filters (include/exclude/truncate)
    - Output extractors
-3. Show preview of generated YAML
-4. **USE AskUserQuestion** to confirm or request edits
+   - **Skip orchestrator-only methods** (like `main()`) that have no meaningful inputs or outputs. The `workflow_name` already creates a root span for grouping. Only instrument methods that capture useful data (args, return values).
+3. **Print the full YAML as regular text output** so the user can see it in the terminal. Use a fenced code block with `yaml` syntax highlighting. Do NOT put the YAML in the `preview` field of AskUserQuestion — it doesn't render in the CLI.
+4. **THEN USE AskUserQuestion** to confirm or request edits (no preview field needed — the YAML is already visible above)
 5. Write `okahu.yaml` to app folder
-6. **Update `.analyze/SESSION.md`**:
+6. **Update `.okahu/SESSION.md`** — update the "Instrumentation Applied" section:
    ```markdown
-   ## Instrumentation (/ok-instrument)
+   ## Instrumentation Applied
+   _Updated by: /ok-instrument_
    - **Approach**: Zero-code
    - **Config file**: okahu.yaml
    - **Methods instrumented**: 5
-   - **Next**: Run `/ok-run` to execute with tracing
    ```
-7. Tell user: "Run `/ok-run <your command>` to execute with tracing"
+8. Tell user: "Run `/ok-run <your command>` to execute with tracing"
 
 ## Step 2B: Code-based Instrumentation
 
 If user selects **Code-based**:
 
-1. Read `.analyze/choices.json` - use `instrument` field (minimal set, no overlap)
-2. Detect entry point file from `.analyze/entry_points.json`
+1. Read `.okahu/choices.json` - use `instrument` field (minimal set, no overlap)
+2. Detect entry point file from `.okahu/entry_points.json`
 3. **USE AskUserQuestion** to confirm which file to modify:
    ```json
    {
@@ -96,15 +98,15 @@ If user selects **Code-based**:
    )
    ```
 5. **Check requirements.txt** - ensure `monocle_apptrace` is listed, add if missing
-6. **Update `.analyze/SESSION.md`**:
+6. **Update `.okahu/SESSION.md`** — update the "Instrumentation Applied" section:
    ```markdown
-   ## Instrumentation (/ok-instrument)
+   ## Instrumentation Applied
+   _Updated by: /ok-instrument_
    - **Approach**: Code-based
    - **File modified**: main.py
    - **Setup code added**: Lines 1-15
-   - **Next**: Run your app normally (python main.py, flask run, etc.)
    ```
-7. Tell user: "Setup code added. Run your app normally - tracing is enabled."
+8. Tell user: "Setup code added. Run your app normally - tracing is enabled."
 
 ## Generated okahu.yaml Format (Zero-code)
 
@@ -138,6 +140,55 @@ Instrument: A.run() only (B and C are covered as child spans)
 ```
 
 If you need to override this, use the `selected` field instead, but expect duplicate spans.
+
+## Final Output — Show Full Trace Examples
+
+**DO NOT use a compact boxed summary at the end.** The box gets cut off in the terminal.
+
+Instead, after instrumentation is complete, print a **full-screen output** showing concrete examples of what the user will get. Use plain text, no boxes:
+
+```
+Instrumentation complete. Here's what your traces will look like:
+
+
+EXAMPLE 1: PaymentProcessor.charge()
+─────────────────────────────────────
+When you call PaymentProcessor.charge(amount=500, currency="USD"):
+
+  payment.charge                              ├── 245ms
+    ├─ gateway.submit(amount=500)             │   ├── 180ms
+    │   └─ http.post(url="/api/charge")       │   │   └── 165ms
+    └─ ledger.record(tx_id="tx_abc123")       │   └── 12ms
+
+  Captured inputs:  amount=500, currency="USD"
+  Captured outputs: transaction_id="tx_abc123", status="success"
+  Excluded args:    metadata (configured)
+
+
+EXAMPLE 2: UserService.create()
+───────────────────────────────
+When you call UserService.create(email="user@example.com"):
+
+  user.create                                 ├── 89ms
+    ├─ validator.check(email="user@exam...")   │   ├── 3ms
+    └─ repo.save(user_id="u_789")             │   └── 45ms
+
+  Captured inputs:  email="user@exam..." (truncated to 100)
+  Captured outputs: user_id="u_789"
+
+
+Next steps:
+  /ok-run <your command>     Run your app with tracing enabled
+  /ok-local-trace            View traces after running
+```
+
+**Rules for the final output:**
+- Show one example per instrumented entry point (up to 5)
+- Include the child spans that will appear (from the call graph)
+- Show realistic argument values based on the method signatures
+- Show which args are captured, excluded, or truncated per the config
+- Use plain markdown with horizontal rules — NO box-drawing characters that might wrap
+- Let the output breathe — full width, no cramming into a box
 
 ## SKIP PATTERNS - DO NOT INCLUDE
 

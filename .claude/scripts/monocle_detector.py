@@ -6,7 +6,7 @@ Scans Python files for imports of frameworks that monocle auto-instruments.
 
 Usage:
     python monocle_detector.py /path/to/app
-    python monocle_detector.py /path/to/app --output .analyze/monocle_support.json
+    python monocle_detector.py /path/to/app --output .okahu/monocle_support.json
 
 Output: JSON with detected frameworks and recommendations
 """
@@ -163,7 +163,7 @@ class MonocleDetector:
 
     SKIP_DIRS = {
         '__pycache__', '.git', 'venv', 'env', '.venv',
-        'node_modules', '.tox', 'dist', 'build', '.analyze', '.monocle'
+        'node_modules', '.tox', 'dist', 'build', '.okahu', '.monocle'
     }
 
     def __init__(self, root_path: str):
@@ -420,7 +420,7 @@ def main():
     parser.add_argument("path", help="Path to Python file or directory")
     parser.add_argument(
         "--output", "-o",
-        default=".analyze/monocle_support.json",
+        default=".okahu/monocle_support.json",
         help="Output JSON file path"
     )
     parser.add_argument(

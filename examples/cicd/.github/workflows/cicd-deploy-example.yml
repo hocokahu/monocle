@@ -1,0 +1,56 @@
+name: CI/CD Deploy Example
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install "monocle_apptrace @ git+https://github.com/hocokahu/monocle.git@hoc/claude-skill#subdirectory=apptrace" pyyaml
+
+      - name: Load .env and set exporters
+        run: |
+          if [ -f .env ]; then
+            export $(grep -v '^#' .env | xargs)
+          fi
+          EXPORTERS="file"
+          if [ -n "$OKAHU_API_KEY" ]; then
+            EXPORTERS="file,okahu"
+            echo "OKAHU_API_KEY=$OKAHU_API_KEY" >> $GITHUB_ENV
+          fi
+          if [ -n "$OKAHU_INGESTION_ENDPOINT" ]; then
+            echo "OKAHU_INGESTION_ENDPOINT=$OKAHU_INGESTION_ENDPOINT" >> $GITHUB_ENV
+          fi
+          echo "MONOCLE_EXPORTERS=$EXPORTERS" >> $GITHUB_ENV
+
+      - name: Run deployment pipeline
+        run: |
+          if [ -f okahu.yaml ]; then
+            python -m monocle_apptrace --config okahu.yaml deploy_app.py
+          else
+            python deploy_app.py
+          fi
+        continue-on-error: true
+
+      - name: Upload deployment log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-log
+          path: output.txt
+
+      - name: Upload traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monocle-traces
+          path: .monocle/
