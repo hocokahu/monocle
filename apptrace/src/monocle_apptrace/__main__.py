@@ -193,6 +193,9 @@ def main():
         except Exception:
             pass
 
+    from monocle_apptrace.instrumentation.common.instrumentor import get_tracer_provider
+    _provider = get_tracer_provider()
+
     module_name = os.path.splitext(os.path.basename(script))[0]
     sys.argv = [os.path.abspath(script)] + script_args
 
@@ -209,18 +212,8 @@ def main():
         print(f"[monocle] Error: {e}")
         exit_code = 1
     finally:
-        try:
-            from monocle_apptrace.instrumentation.common.instrumentor import get_tracer_provider
-            provider = get_tracer_provider()
-            print(f"[monocle] flush: provider={type(provider).__name__ if provider else None}, "
-                  f"has_flush={hasattr(provider, 'force_flush') if provider else False}", flush=True)
-            if provider and hasattr(provider, 'force_flush'):
-                result = provider.force_flush(timeout_millis=5000)
-                print(f"[monocle] flush: result={result}", flush=True)
-            else:
-                print("[monocle] flush: SKIPPED - no provider or no force_flush", flush=True)
-        except Exception as flush_err:
-            print(f"[monocle] flush: ERROR - {flush_err}", flush=True)
+        if _provider and hasattr(_provider, 'force_flush'):
+            _provider.force_flush(timeout_millis=5000)
 
     sys.exit(exit_code)
 
