@@ -195,6 +195,12 @@ def main():
 
     from monocle_apptrace.instrumentation.common.instrumentor import get_tracer_provider
     _provider = get_tracer_provider()
+    print(f"[monocle] provider captured: type={type(_provider).__name__ if _provider else None}, "
+          f"has_flush={hasattr(_provider, 'force_flush') if _provider else False}", flush=True)
+    if _provider and hasattr(_provider, '_active_span_processor'):
+        proc = _provider._active_span_processor
+        print(f"[monocle] processor: type={type(proc).__name__}, "
+              f"processors={[type(p).__name__ for p in getattr(proc, '_span_processors', [])]}", flush=True)
 
     module_name = os.path.splitext(os.path.basename(script))[0]
     sys.argv = [os.path.abspath(script)] + script_args
@@ -212,8 +218,12 @@ def main():
         print(f"[monocle] Error: {e}")
         exit_code = 1
     finally:
+        print(f"[monocle] flush: provider={type(_provider).__name__ if _provider else None}", flush=True)
         if _provider and hasattr(_provider, 'force_flush'):
-            _provider.force_flush(timeout_millis=5000)
+            result = _provider.force_flush(timeout_millis=5000)
+            print(f"[monocle] flush result={result}", flush=True)
+        else:
+            print("[monocle] flush SKIPPED", flush=True)
 
     sys.exit(exit_code)
 
