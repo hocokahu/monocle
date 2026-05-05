@@ -194,9 +194,14 @@ def main():
         except Exception as e:
             print(f"[monocle] import failed: {pkg}: {e}", flush=True)
 
-    from monocle_apptrace.instrumentation.common.instrumentor import get_tracer_provider
+    from monocle_apptrace.instrumentation.common.instrumentor import get_tracer_provider, get_monocle_instrumentor
     _provider = get_tracer_provider()
+    _instrumentor = get_monocle_instrumentor()
     print(f"[monocle] provider={type(_provider).__name__ if _provider else None}", flush=True)
+    if _instrumentor:
+        print(f"[monocle] instrumented methods: {len(_instrumentor.instrumented_method_list)}", flush=True)
+        for m in _instrumentor.instrumented_method_list[:10]:
+            print(f"[monocle]   - {m.get('package')}.{m.get('object','')}.{m.get('method')}", flush=True)
 
     module_name = os.path.splitext(os.path.basename(script))[0]
     sys.argv = [os.path.abspath(script)] + script_args
@@ -204,6 +209,12 @@ def main():
     target_module = sys.modules.get(module_name)
     print(f"[monocle] module={module_name}, in_sys_modules={target_module is not None}, "
           f"has_main={hasattr(target_module, 'main') if target_module else False}", flush=True)
+    if target_module:
+        import wrapt
+        for attr_name in ['deploy_azure_blob', 'AzureSQLDeploy', 'KustoDeploy', 'UserAccountProvision']:
+            attr = getattr(target_module, attr_name, None)
+            is_wrapped = isinstance(attr, wrapt.FunctionWrapper) if attr and callable(attr) else False
+            print(f"[monocle]   {attr_name}: wrapped={is_wrapped}, type={type(attr).__name__}", flush=True)
 
     exit_code = 0
     try:
@@ -217,8 +228,12 @@ def main():
         print(f"[monocle] Error: {e}")
         exit_code = 1
     finally:
+        proc = getattr(_provider, '_active_span_processor', None)
+        span_procs = getattr(proc, '_span_processors', []) if proc else []
+        print(f"[monocle] flush: processors={len(span_procs)}", flush=True)
         if _provider and hasattr(_provider, 'force_flush'):
-            _provider.force_flush(timeout_millis=5000)
+            result = _provider.force_flush(timeout_millis=5000)
+            print(f"[monocle] flush result={result}", flush=True)
 
     sys.exit(exit_code)
 
