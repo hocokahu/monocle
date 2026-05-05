@@ -283,7 +283,7 @@ def setup_monocle_telemetry(
                                        handlers=span_handlers, union_with_default_methods = union_with_default_methods)
     # instrumentor.app_name = workflow_name
     if not instrumentor.is_instrumented_by_opentelemetry:
-        instrumentor.instrument(trace_provider=get_tracer_provider())
+        instrumentor.instrument(tracer_provider=get_tracer_provider())
         set_monocle_instrumentor(instrumentor)
 
     set_monocle_setup_signature(current_signature)

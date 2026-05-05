@@ -171,18 +171,16 @@ def main():
         workflow_name = config.get('workflow_name', Path(script).stem)
         wrapper_methods = _build_wrapper_methods(config)
 
-        result = setup_monocle_telemetry(
+        setup_monocle_telemetry(
             workflow_name=workflow_name,
             wrapper_methods=wrapper_methods,
             union_with_default_methods=True,
         )
-        print(f"[monocle] setup returned: {type(result).__name__ if result else None}", flush=True)
 
         packages = list({item['package'] for item in config.get('instrument', []) if 'package' in item})
     else:
         workflow_name = Path(script).stem
-        result = setup_monocle_telemetry(workflow_name=workflow_name)
-        print(f"[monocle] setup returned: {type(result).__name__ if result else None}", flush=True)
+        setup_monocle_telemetry(workflow_name=workflow_name)
         packages = []
 
     script_dir = os.path.dirname(os.path.abspath(script))
@@ -197,16 +195,6 @@ def main():
 
     from monocle_apptrace.instrumentation.common.instrumentor import get_tracer_provider
     _provider = get_tracer_provider()
-    from opentelemetry import trace as _trace
-    _otel_provider = _trace.get_tracer_provider()
-    print(f"[monocle] otel provider: {type(_otel_provider).__name__}, "
-          f"has_flush={hasattr(_otel_provider, 'force_flush')}", flush=True)
-    print(f"[monocle] provider captured: type={type(_provider).__name__ if _provider else None}, "
-          f"has_flush={hasattr(_provider, 'force_flush') if _provider else False}", flush=True)
-    if _provider and hasattr(_provider, '_active_span_processor'):
-        proc = _provider._active_span_processor
-        print(f"[monocle] processor: type={type(proc).__name__}, "
-              f"processors={[type(p).__name__ for p in getattr(proc, '_span_processors', [])]}", flush=True)
 
     module_name = os.path.splitext(os.path.basename(script))[0]
     sys.argv = [os.path.abspath(script)] + script_args
@@ -224,15 +212,8 @@ def main():
         print(f"[monocle] Error: {e}")
         exit_code = 1
     finally:
-        provider = _provider or _otel_provider
-        print(f"[monocle] flush: using={type(provider).__name__ if provider else None} "
-              f"(monocle={type(_provider).__name__ if _provider else None}, "
-              f"otel={type(_otel_provider).__name__ if _otel_provider else None})", flush=True)
-        if provider and hasattr(provider, 'force_flush'):
-            result = provider.force_flush(timeout_millis=5000)
-            print(f"[monocle] flush result={result}", flush=True)
-        else:
-            print("[monocle] flush SKIPPED", flush=True)
+        if _provider and hasattr(_provider, 'force_flush'):
+            _provider.force_flush(timeout_millis=5000)
 
     sys.exit(exit_code)
 
