@@ -210,9 +210,9 @@ def main():
         exit_code = 1
     finally:
         try:
-            from opentelemetry import trace as _trace
-            provider = _trace.get_tracer_provider()
-            if hasattr(provider, 'force_flush'):
+            from monocle_apptrace.instrumentation.common.instrumentor import get_tracer_provider
+            provider = get_tracer_provider()
+            if provider and hasattr(provider, 'force_flush'):
                 provider.force_flush(timeout_millis=5000)
         except Exception:
             pass
