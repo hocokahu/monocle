@@ -190,18 +190,23 @@ def main():
     for pkg in packages:
         try:
             importlib.import_module(pkg)
-        except Exception:
-            pass
+            print(f"[monocle] imported package: {pkg}", flush=True)
+        except Exception as e:
+            print(f"[monocle] import failed: {pkg}: {e}", flush=True)
 
     from monocle_apptrace.instrumentation.common.instrumentor import get_tracer_provider
     _provider = get_tracer_provider()
+    print(f"[monocle] provider={type(_provider).__name__ if _provider else None}", flush=True)
 
     module_name = os.path.splitext(os.path.basename(script))[0]
     sys.argv = [os.path.abspath(script)] + script_args
 
+    target_module = sys.modules.get(module_name)
+    print(f"[monocle] module={module_name}, in_sys_modules={target_module is not None}, "
+          f"has_main={hasattr(target_module, 'main') if target_module else False}", flush=True)
+
     exit_code = 0
     try:
-        target_module = sys.modules.get(module_name)
         if target_module and hasattr(target_module, 'main'):
             target_module.main()
         else:
