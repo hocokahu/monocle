@@ -97,6 +97,9 @@ class SpanHandler:
         workflow_name = SpanHandler.get_workflow_name(span=span)
         if workflow_name:
             span.set_attribute("workflow.name", workflow_name)
+        github_run_id = os.environ.get("GITHUB_RUN_ID")
+        if github_run_id:
+            span.set_attribute("github.run_id", github_run_id)
 
     @staticmethod
     def set_workflow_properties(span: Span, to_wrap = None):
