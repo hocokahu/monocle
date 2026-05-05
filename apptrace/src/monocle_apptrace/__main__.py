@@ -212,10 +212,15 @@ def main():
         try:
             from monocle_apptrace.instrumentation.common.instrumentor import get_tracer_provider
             provider = get_tracer_provider()
+            print(f"[monocle] flush: provider={type(provider).__name__ if provider else None}, "
+                  f"has_flush={hasattr(provider, 'force_flush') if provider else False}", flush=True)
             if provider and hasattr(provider, 'force_flush'):
-                provider.force_flush(timeout_millis=5000)
-        except Exception:
-            pass
+                result = provider.force_flush(timeout_millis=5000)
+                print(f"[monocle] flush: result={result}", flush=True)
+            else:
+                print("[monocle] flush: SKIPPED - no provider or no force_flush", flush=True)
+        except Exception as flush_err:
+            print(f"[monocle] flush: ERROR - {flush_err}", flush=True)
 
     sys.exit(exit_code)
 
