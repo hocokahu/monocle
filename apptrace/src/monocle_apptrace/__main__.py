@@ -138,6 +138,23 @@ def _build_wrapper_methods(config):
     return wrapper_methods
 
 
+def _set_ci_scopes():
+    """Register CI environment metadata as monocle scopes for fact-based trace lookup."""
+    from monocle_apptrace.instrumentation.common.utils import set_scopes
+    scopes = {}
+    github_run_id = os.environ.get("GITHUB_RUN_ID")
+    if github_run_id:
+        scopes["git.run.id"] = f"github_{github_run_id}"
+    github_sha = os.environ.get("GITHUB_SHA")
+    if github_sha:
+        scopes["git.commit.hash"] = github_sha
+    github_workflow = os.environ.get("GITHUB_WORKFLOW")
+    if github_workflow:
+        scopes["git.workflow.name"] = github_workflow
+    if scopes:
+        set_scopes(scopes)
+
+
 def main():
     args = sys.argv[1:]
 
@@ -186,6 +203,8 @@ def main():
     script_dir = os.path.dirname(os.path.abspath(script))
     if script_dir not in sys.path:
         sys.path.insert(0, script_dir)
+
+    _set_ci_scopes()
 
     for pkg in packages:
         try:
