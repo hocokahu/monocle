@@ -210,10 +210,10 @@ def main():
         exit_code = 1
     finally:
         try:
-            from monocle_apptrace.instrumentation.common.instrumentor import get_monocle_span_processor
-            processor = get_monocle_span_processor()
-            if processor:
-                processor.force_flush(timeout_millis=5000)
+            from opentelemetry import trace as _trace
+            provider = _trace.get_tracer_provider()
+            if hasattr(provider, 'force_flush'):
+                provider.force_flush(timeout_millis=5000)
         except Exception:
             pass
 
