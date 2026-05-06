@@ -461,6 +461,8 @@ def process_transcript(
     sdk_version: str,
     service_name: str = SERVICE_NAME,
     user_name: Optional[str] = None,
+    repo_origin: Optional[str] = None,
+    repo_upstream: Optional[str] = None,
     subagents: Optional[List[SubagentInfo]] = None,
 ) -> int:
     """Emit Monocle-compatible spans for a list of turns.
@@ -499,6 +501,10 @@ def process_transcript(
     }
     if user_name:
         workflow_attrs["user.name"] = user_name
+    if repo_origin:
+        workflow_attrs["repo.origin"] = repo_origin
+    if repo_upstream:
+        workflow_attrs["repo.upstream"] = repo_upstream
 
     with _timed_span(tracer, "workflow", workflow_attrs, workflow_start_ns, workflow_end_ns) as workflow_span:
         workflow_span.set_status(StatusCode.OK)

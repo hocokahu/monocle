@@ -83,6 +83,35 @@ def _git_user_field(field: str) -> Optional[str]:
 
 GIT_USER_NAME = _git_user_field("name")
 
+# --- Git Repo Identity (extract org/repo from remote URLs) ---
+def _extract_repo_slug(url: Optional[str]) -> Optional[str]:
+    """Extract 'org/repo' from a git remote URL (SSH or HTTPS)."""
+    if not url:
+        return None
+    import re
+    # SSH: git@github.com:org/repo.git
+    m = re.match(r"git@[^:]+:(.+?)(?:\.git)?$", url)
+    if m:
+        return m.group(1)
+    # HTTPS: https://github.com/org/repo.git
+    m = re.match(r"https?://[^/]+/(.+?)(?:\.git)?$", url)
+    if m:
+        return m.group(1)
+    return None
+
+def _git_remote_url(remote: str) -> Optional[str]:
+    """Read the URL for a named remote from git config."""
+    try:
+        cfg = _read_git_config()
+        section = f'remote "{remote}"'
+        value = cfg.get(section, "url", fallback=None)
+        return value.strip() if value and value.strip() else None
+    except Exception:
+        return None
+
+GIT_REPO_ORIGIN = _extract_repo_slug(_git_remote_url("origin"))
+GIT_REPO_UPSTREAM = _extract_repo_slug(_git_remote_url("upstream"))
+
 # --- Logging (fail-open, never block) ---
 def _log(level: str, message: str) -> None:
     try:
@@ -271,6 +300,10 @@ def main() -> int:
             resource_attrs = {SVC_NAME: WORKFLOW_NAME}
             if GIT_USER_NAME:
                 resource_attrs["user.name"] = GIT_USER_NAME
+            if GIT_REPO_ORIGIN:
+                resource_attrs["repo.origin"] = GIT_REPO_ORIGIN
+            if GIT_REPO_UPSTREAM:
+                resource_attrs["repo.upstream"] = GIT_REPO_UPSTREAM
             resource = Resource.create(resource_attrs)
             provider = TracerProvider(resource=resource)
             exporters = get_monocle_exporter()
@@ -289,6 +322,8 @@ def main() -> int:
                 sdk_version=sdk_version,
                 service_name=WORKFLOW_NAME,
                 user_name=GIT_USER_NAME,
+                repo_origin=GIT_REPO_ORIGIN,
+                repo_upstream=GIT_REPO_UPSTREAM,
                 subagents=subagents,
             )
             if subagents:
