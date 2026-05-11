@@ -80,6 +80,9 @@ def _build_input_output_processor(span_name, package=None, class_name=None, meth
     def get_output_result(arguments):
         result = arguments.get('result')
         if result is None:
+            ex = arguments.get('exception')
+            if ex is not None:
+                return f"{type(ex).__name__}: {ex}"
             return ""
         try:
             if hasattr(result, '__dict__') and not isinstance(result, (str, int, float, bool, list, dict)):
