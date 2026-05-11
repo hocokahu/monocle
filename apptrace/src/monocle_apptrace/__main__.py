@@ -75,18 +75,18 @@ def _build_input_output_processor(span_name, package=None, class_name=None, meth
                     input_data[k] = v
             except Exception:
                 input_data[k] = str(v)[:200]
-        return json.dumps(input_data)[:1000]
+        return json.dumps(input_data)
 
     def get_output_result(arguments):
         result = arguments.get('result')
         if result is None:
-            return "None"
+            return ""
         try:
             if hasattr(result, '__dict__') and not isinstance(result, (str, int, float, bool, list, dict)):
-                return f"<{type(result).__name__}>: {str(result)[:200]}"
-            return json.dumps(result)[:500]
+                return f"<{type(result).__name__}>: {str(result)}"
+            return json.dumps(result)
         except Exception:
-            return str(result)[:500]
+            return str(result)
 
     return {
         "type": "custom",
