@@ -8,13 +8,18 @@ Usage:
 """
 import importlib
 import inspect
+import io
 import json
 import os
 import runpy
 import sys
+import threading
+from functools import wraps
 from pathlib import Path
 
 from monocle_apptrace import setup_monocle_telemetry
+
+_captured_stdout = threading.local()
 
 
 def _load_yaml_config(config_path):
@@ -79,17 +84,25 @@ def _build_input_output_processor(span_name, package=None, class_name=None, meth
 
     def get_output_result(arguments):
         result = arguments.get('result')
+        captured = getattr(_captured_stdout, 'value', '')
         if result is None:
             ex = arguments.get('exception')
+            parts = []
+            if captured:
+                parts.append(captured)
             if ex is not None:
-                return f"{type(ex).__name__}: {ex}"
-            return ""
+                parts.append(f"{type(ex).__name__}: {ex}")
+            return "\n".join(parts) if parts else ""
         try:
             if hasattr(result, '__dict__') and not isinstance(result, (str, int, float, bool, list, dict)):
-                return f"<{type(result).__name__}>: {str(result)}"
-            return json.dumps(result)
+                output = f"<{type(result).__name__}>: {str(result)}"
+            else:
+                output = json.dumps(result)
         except Exception:
-            return str(result)
+            output = str(result)
+        if captured:
+            output = captured + "\n" + output
+        return output
 
     return {
         "type": "custom",
@@ -114,6 +127,57 @@ def _build_input_output_processor(span_name, package=None, class_name=None, meth
             }
         ]
     }
+
+
+def _stdout_capturing_wrapper(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        buf = io.StringIO()
+        old_stdout = sys.stdout
+        sys.stdout = _TeeWriter(old_stdout, buf)
+        try:
+            return func(*args, **kwargs)
+        finally:
+            sys.stdout = old_stdout
+            _captured_stdout.value = buf.getvalue().rstrip()
+    return wrapper
+
+
+class _TeeWriter:
+    """Write to both the original stdout and a capture buffer."""
+    def __init__(self, original, capture):
+        self._original = original
+        self._capture = capture
+
+    def write(self, s):
+        self._original.write(s)
+        self._capture.write(s)
+
+    def flush(self):
+        self._original.flush()
+        self._capture.flush()
+
+    def __getattr__(self, name):
+        return getattr(self._original, name)
+
+
+def _patch_methods_for_capture(config):
+    for item in config.get('instrument', []):
+        package = item.get('package')
+        class_name = item.get('class')
+        method_name = item.get('method')
+        try:
+            mod = importlib.import_module(package)
+            if class_name:
+                cls = getattr(mod, class_name, None)
+                if cls and hasattr(cls, method_name):
+                    setattr(cls, method_name, _stdout_capturing_wrapper(getattr(cls, method_name)))
+            else:
+                func = getattr(mod, method_name, None)
+                if func:
+                    setattr(mod, method_name, _stdout_capturing_wrapper(func))
+        except Exception:
+            pass
 
 
 def _build_wrapper_methods(config):
@@ -182,6 +246,10 @@ def main():
     script = args[0]
     script_args = args[1:]
 
+    script_dir = os.path.dirname(os.path.abspath(script))
+    if script_dir not in sys.path:
+        sys.path.insert(0, script_dir)
+
     if config_path:
         if not Path(config_path).exists():
             print(f"[monocle] ERROR: Config not found: {config_path}")
@@ -189,31 +257,28 @@ def main():
 
         config = _load_yaml_config(config_path)
         workflow_name = config.get('workflow_name', Path(script).stem)
-        wrapper_methods = _build_wrapper_methods(config)
+        packages = list({item['package'] for item in config.get('instrument', []) if 'package' in item})
 
+        for pkg in packages:
+            try:
+                importlib.import_module(pkg)
+            except Exception:
+                pass
+
+        _patch_methods_for_capture(config)
+
+        wrapper_methods = _build_wrapper_methods(config)
         setup_monocle_telemetry(
             workflow_name=workflow_name,
             wrapper_methods=wrapper_methods,
             union_with_default_methods=True,
         )
-
-        packages = list({item['package'] for item in config.get('instrument', []) if 'package' in item})
     else:
         workflow_name = Path(script).stem
         setup_monocle_telemetry(workflow_name=workflow_name)
         packages = []
 
-    script_dir = os.path.dirname(os.path.abspath(script))
-    if script_dir not in sys.path:
-        sys.path.insert(0, script_dir)
-
     _set_ci_scopes()
-
-    for pkg in packages:
-        try:
-            importlib.import_module(pkg)
-        except Exception:
-            pass
 
     from monocle_apptrace.instrumentation.common.instrumentor import get_tracer_provider
     _provider = get_tracer_provider()
